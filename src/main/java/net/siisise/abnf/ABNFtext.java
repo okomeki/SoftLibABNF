@@ -61,6 +61,7 @@ public class ABNFtext extends AbstractABNF {
      * 1文字単位でor分割
      *
      * ABNFor(text) も同じ
+     *
      * @param chlist
      * @return
      */

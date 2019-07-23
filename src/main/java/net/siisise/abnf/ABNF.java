@@ -24,23 +24,23 @@ public interface ABNF extends BNF {
     public static ABNF text(String text) {
         return new ABNFtext(text);
     }
-    
+
     public static ABNF list(String chlist) {
         return new ABNFor(chlist);
     }
-    
+
     public static ABNFbin bin(int ch) {
         return new ABNFbin(ch);
     }
-    
+
     public static ABNFbin bin(String str) {
         return new ABNFbin(str);
     }
 
     public static ABNFrange range(int min, int max) {
-        return new ABNFrange(min,max);
+        return new ABNFrange(min, max);
     }
-    
+
     public ABNF copy(ABNFReg reg);
 
     class B<X> {

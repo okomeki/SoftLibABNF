@@ -107,7 +107,7 @@ public class ABNFor extends AbstractABNF {
             B subret = sub.find(d, subnames);
             if (subret != null && (ret == null || ret.ret.length() < subret.ret.length())) {
                 if (ret != null) {
-                    System.out.println("+******DUUPP****+" + subret + "(" +sub.toString()+ ")");
+                    System.out.println("+******DUUPP****+" + subret + "(" + sub.toString() + ")");
                 }
                 ret = subret;
             }
@@ -135,7 +135,7 @@ public class ABNFor extends AbstractABNF {
             C subret = sub.findx(d, parsers);
             if (subret != null && (ret == null || ret.ret.length() < subret.ret.length())) {
                 if (ret != null) {
-                    System.out.println("+******DUUPP****+" + subret + "(" +sub.toString()+ ")");
+                    System.out.println("+******DUUPP****+" + subret + "(" + sub.toString() + ")");
                 }
                 ret = subret;
             }

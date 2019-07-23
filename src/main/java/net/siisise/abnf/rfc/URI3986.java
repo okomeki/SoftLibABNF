@@ -37,8 +37,8 @@ public class URI3986 {
             + " / [ *4( h16 \":\" ) h16 ] \"::\"              ls32 "
             + " / [ *5( h16 \":\" ) h16 ] \"::\"              h16 "
             + " / [ *6( h16 \":\" ) h16 ] \"::\"");
-    static final ABNF IPliteral = REG.rule("IP-literal", "\"[\" ( IPv6address / IPvFuture ) \"]\"");
     static final ABNF IPvFuture = REG.rule("IPvFuture", "\"v\" 1*HEXDIG \".\" 1*( unreserved / sub-delims / \":\" )");
+    static final ABNF IPliteral = REG.rule("IP-literal", "\"[\" ( IPv6address / IPvFuture ) \"]\"");
     static final ABNF regName = REG.rule("reg-name", unreserved.or(pctEncoded, subDelims).x());
     static final ABNF host = REG.rule("host", IPliteral.or(IPv4address, regName));
     static final ABNF port = REG.rule("port", ABNF5234.DIGIT.x());
@@ -61,10 +61,6 @@ public class URI3986 {
     static final ABNF relativePart = REG.rule("relative-part", "\"//\" authority path-abempty / path-absolute"
             + " / path-noscheme / path-empty");
     static final ABNF relativeRef = REG.rule("relative-ref", "relative-part [ \"?\" query ] [ \"#\" fragment ]");
-    static final ABNF URIreference = REG.rule("URI-reference", URI.or(relativeRef));
+    public static final ABNF URIreference = REG.rule("URI-reference", URI.or(relativeRef));
     static final ABNF absoluteURI = REG.rule("absolute-URI", "scheme \":\" hier-part [ \"?\" query ]");
-
-    public static void main(String[] argv) {
-        System.out.println(URIreference.eq("http://siisise.net/uss"));
-    }
 }

@@ -13,8 +13,8 @@ public class URI2396 {
 
     static final ABNFReg REG = new ABNFReg();
 
-    static final ABNF lowalpha = REG.rule("lowalpha",ABNF.range('a', 'z'));
-    static final ABNF upalpha = REG.rule("upalpha",ABNF.range('A', 'Z'));
+    static final ABNF lowalpha = REG.rule("lowalpha", ABNF.range('a', 'z'));
+    static final ABNF upalpha = REG.rule("upalpha", ABNF.range('A', 'Z'));
     static final ABNF alpha = REG.rule("alpha", lowalpha.or(upalpha));
     static final ABNF digit = REG.rule("digit", ABNF5234.DIGIT);
     static final ABNF alphanum = REG.rule("alphanum", alpha.or(digit));
@@ -62,9 +62,5 @@ public class URI2396 {
     static final ABNF relativeURI = REG.rule("relativeURI", "( net-path / abs-path / rel-path ) [ \"?\" query ]");
     static final ABNF fragment = REG.rule("fragment", uric.x());
     // 4. URI参照
-    static final ABNF URIreference = REG.rule("URI-reference", "[ absoluteURI / relativeURI ] [ \"#\" fragment ]");
-    
-    public static void main(String[] argv) {
-        System.out.println(URIreference.eq("http://user@siisise.net/a/b/c"));
-    }
+    public static final ABNF URIreference = REG.rule("URI-reference", "[ absoluteURI / relativeURI ] [ \"#\" fragment ]");
 }

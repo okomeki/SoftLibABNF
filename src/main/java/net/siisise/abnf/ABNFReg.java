@@ -18,11 +18,11 @@ import net.siisise.io.Packet;
 public class ABNFReg {
 
     Map<String, ABNF> reg = new HashMap<>();
-    
+
     ABNFReg parseReg;
 
-    public Map<String,Class<? extends ABNFParser>> CL = new HashMap<>();
-    
+    public Map<String, Class<? extends ABNFParser>> CL = new HashMap<>();
+
     /**
      * 名前の参照を先に済ませる
      */
@@ -54,8 +54,9 @@ public class ABNFReg {
 
     /**
      * いろいろ未定
-     * @param up 
-     * @param exParser 
+     *
+     * @param up
+     * @param exParser
      */
     public ABNFReg(ABNFReg up, ABNFReg exParser) {
         //reg = new HashMap<>(up.reg); // 複製しておくのが簡単
@@ -67,16 +68,16 @@ public class ABNFReg {
         });
         parseReg = exParser;
     }
-    
+
     public ABNFReg(ABNFReg up) {
-        this(up,null);
+        this(up, null);
     }
-    
+
     /**
      * 参照リンク優先
-     * 
+     *
      * @param name
-     * @return 
+     * @return
      */
     public ABNF ref(String name) {
         ABNF bnf = reg.get(name);
@@ -87,10 +88,10 @@ public class ABNFReg {
     }
 
     /**
-     * 直リンク優先
-     * 差し替えが困難
+     * 直リンク優先 差し替えが困難
+     *
      * @param name
-     * @return 
+     * @return
      */
     public ABNF href(String name) {
         ABNF bnf = reg.get(name);
@@ -99,7 +100,7 @@ public class ABNFReg {
         }
         return bnf;
     }
-    
+
     /**
      * ref の参照先を変えないよう書き換えたい
      *
@@ -121,32 +122,33 @@ public class ABNFReg {
 
     /**
      * 仮
+     *
      * @param name
      * @param cl
      * @param abnf
-     * @return 
+     * @return
      */
     public ABNF rule(String name, Class<? extends ABNFParser> cl, ABNF abnf) {
-        abnf = rule(name,abnf);
+        abnf = rule(name, abnf);
         CL.put(name, cl);
         return abnf;
     }
 
     /**
-     * 
+     *
      * @param rule name = value
-     * @return 
+     * @return
      */
     public ABNF rule(String rule) {
         ABNF abnf;
-        if ( parseReg == null ) {
+        if (parseReg == null) {
             abnf = new Rule(this).parse(rule);
         } else {
-            abnf = parse("rule",rule);
+            abnf = parse("rule", rule);
         }
         return rule(abnf.getName(), abnf);
     }
-    
+
     private <T extends ABNF> T parse(String name, String rl) {
         try {
             return (T) parseReg.CL.get(name).getConstructor(this.getClass(), parseReg.getClass()).newInstance(this, parseReg).parse(rl);
@@ -165,16 +167,16 @@ public class ABNFReg {
      */
     public ABNF rule(String name, String elements) {
         ABNF abnf;
-        if ( parseReg == null ) {
+        if (parseReg == null) {
             abnf = new Elements(this).parse(elements);
         } else {
-            abnf = parse("elements",elements);
+            abnf = parse("elements", elements);
         }
         return rule(name, abnf);
     }
 
     public List<ABNF> rulelist(String rulelist) {
-        List<ABNF> list = parse("rulelist",rulelist);
+        List<ABNF> list = parse("rulelist", rulelist);
         list.forEach((abnf) -> {
             reg.put(abnf.getName(), abnf);
         });
