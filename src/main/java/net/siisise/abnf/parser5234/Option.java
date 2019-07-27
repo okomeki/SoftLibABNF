@@ -15,8 +15,8 @@ public class Option extends ABNFSub<ABNF> {
         super(ABNF5234.option, reg, Alternation.class);
     }
 
-    public Option(ABNFReg reg, ABNFReg base) {
-        super(ABNF5234.option, reg, base, "alternation");
+    public Option(ABNF abnf, ABNFReg reg, ABNFReg base) {
+        super(abnf, reg, base, "alternation");
     }
 
     @Override

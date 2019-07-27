@@ -24,13 +24,17 @@ public class ABNFSub<T> extends ABNFList<T, T> {
         super(def, reg, subs);
     }
 
-//    public ABNFSub(ABNF def, Class<? extends ABNFParser<T>> subc) {
-//        super(def, subc);
-//    }
     protected ABNFSub(ABNF def, ABNFReg reg, Class<? extends ABNFParser<T>> subc) {
         super(def, reg, subc);
     }
 
+    /**
+     * 
+     * @param def
+     * @param reg 名前空間参照用
+     * @param base Parser駆動用
+     * @param subcn 
+     */
     protected ABNFSub(ABNF def, ABNFReg reg, ABNFReg base, String subcn) {
         super(def, reg, base, subcn);
     }

@@ -13,7 +13,7 @@ import net.siisise.io.Packet;
 public class Rule extends ABNFBaseParser<ABNF, ABNF> {
 
     /**
-     * 
+     * @deprecated  
      * @param reg ABNF Parserの定義は不要のはず
      */
     public Rule(ABNFReg reg) {
@@ -36,7 +36,7 @@ public class Rule extends ABNFBaseParser<ABNF, ABNF> {
         ABNF f = (ABNF) ret.get(subs[0].getBNF()).get(0);
 
         if (defined.equals("=/")) {
-            ABNF val = reg.ref(name);
+            ABNF val = reg.href(name);
             if (val instanceof ABNFReg.ABNFRef) {
                 throw new java.lang.UnsupportedOperationException();
             }

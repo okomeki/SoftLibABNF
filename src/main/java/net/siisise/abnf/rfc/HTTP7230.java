@@ -3,21 +3,27 @@ package net.siisise.abnf.rfc;
 import net.siisise.abnf.ABNF;
 import net.siisise.abnf.ABNFReg;
 import net.siisise.abnf.parser5234.ABNF5234;
+import net.siisise.abnf.parser5234.Repetition;
 
 /**
+ * RFC 7230 Hypertext Transfer Protocol (HTTP/1.1): Message Syntax and Routing
+ * Section 7の拡張あり
  *
+ * @see https://tools.ietf.org/html/rfc7230 Section 7
  * @see URI3986
  * @author okome
  */
 public class HTTP7230 {
 
-    static final ABNFReg PAR = new ABNFReg(ABNF5234.REG);
-    static final ABNFReg REG = new ABNFReg(URI3986.REG);
-    
-    // ABNF Parsetの拡張実験
+    static final ABNFReg PAR = new ABNFReg(ABNF5234.copyREG(), ABNF5234.REG);
+
+    // Section 7 ABNF Parsetの拡張実験
     static final ABNF repList = PAR.rule("rep-list", ABNF5234.DIGIT.x().pl(ABNF.bin('#'), ABNF5234.DIGIT.x()).or(ABNF5234.DIGIT.ix()));
-    static final ABNF repeatList = PAR.rule("repeat-list", repList.pl(PAR.ref("element")));
-    static final ABNF repor = PAR.rule("repor",PAR.ref("repetition").or(repeatList));
+    static final ABNF orgrepetition = PAR.rule("orgrepetition", Repetition.class, PAR.href("repetition")); // 改名
+    static final ABNF httprepetition = PAR.rule("httprepetition", HTTP7230Repetition.class, repList.pl(PAR.ref("element")));
+    static final ABNF repetition = PAR.rule("repetition", HTTP7230RepetitionSelect.class, "orgrepetition / httprepetition");
+
+    static final ABNFReg REG = new ABNFReg(URI3986.REG, PAR);
 
     static final ABNF URIreference = URI3986.URIreference;
     static final ABNF absoluteURI = URI3986.absoluteURI;
@@ -102,12 +108,17 @@ public class HTTP7230 {
     static final ABNF lastChunk = REG.rule("last-chunk", "1*(\"0\") [ chunk-ext ] CRLF");
     static final ABNF chunkedBody = REG.rule("chunked-body", "*chunk last-chunk trailer-part CRLF");
 
+    //4.3.
     static final ABNF rank = REG.rule("rank", "( \"0\" [ \".\" 0*3DIGIT ] ) / ( \"1\" [ \".\" 0*3(\"0\") ] )");
     static final ABNF tRanking = REG.rule("t-ranking", "OWS \";\" OWS \"q=\" rank");
     static final ABNF tCodings = REG.rule("t-codings", "\"trailers\" / ( transfer-coding [ t-renking ] )");
     static final ABNF TE = REG.rule("TE", "#t-codings");
+    // まだ
 
     // 3.メッセージ形式
     static final ABNF HTTPmessage = REG.rule("HTTP-message", "start-line *( header-field CRLF ) CRLF [ message-body ]");
 
+    public static void main(String[] argv) {
+        throw new java.lang.UnsupportedOperationException("4.3.まで");
+    }
 }

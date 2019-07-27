@@ -17,10 +17,23 @@ public abstract class ABNFList<T, M> extends ABNFBaseParser<T, M> {
         super(def, reg, sub);
     }
 
+    /**
+     * @deprecated 参照をもっと弱くする
+     * @param def
+     * @param reg
+     * @param subc 
+     */
     protected ABNFList(ABNF def, ABNFReg reg, Class<? extends ABNFParser<M>> subc) {
         super(def, reg, subc);
     }
 
+    /**
+     * 
+     * @param def
+     * @param reg 名前空間参照用
+     * @param base Parser駆動用
+     * @param subcn 
+     */
     protected ABNFList(ABNF def, ABNFReg reg, ABNFReg base, String subcn) {
         super(def, reg, base, subcn);
     }

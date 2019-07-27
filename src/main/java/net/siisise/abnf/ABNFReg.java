@@ -1,5 +1,6 @@
 package net.siisise.abnf;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
@@ -63,7 +64,7 @@ public class ABNFReg {
         up.CL.keySet().forEach((key) -> {
             CL.put(key, up.CL.get(key));
         });
-        up.reg.keySet().forEach((key) -> {
+        up.reg.keySet().forEach((key) -> { // 循環参照対策が必要
             reg.put(key, up.reg.get(key).copy(this));
         });
         parseReg = exParser;
@@ -134,6 +135,10 @@ public class ABNFReg {
         return abnf;
     }
 
+    public ABNF rule(String name, Class<? extends ABNFParser> cl, String rule) {
+        return rule(name, cl, rule(name, rule));
+    }
+
     /**
      *
      * @param rule name = value
@@ -144,14 +149,43 @@ public class ABNFReg {
         if (parseReg == null) {
             abnf = new Rule(this).parse(rule);
         } else {
-            abnf = parse("rule", rule);
+            abnf = baseParse("rule", rule);
         }
         return rule(abnf.getName(), abnf);
     }
 
-    private <T extends ABNF> T parse(String name, String rl) {
+    /**
+     * Parser構築用
+     * 参照空間とABNF Parserが別に存在する場合が多い
+     * 裏側(ABNF Parser)を駆動する
+     * @param <T>
+     * @param name
+     * @param src
+     * @return 
+     */
+    public <T extends ABNF> T baseParse(String name, String src) {
         try {
-            return (T) parseReg.CL.get(name).getConstructor(this.getClass(), parseReg.getClass()).newInstance(this, parseReg).parse(rl);
+            Constructor<? extends ABNFParser> c = parseReg.CL.get(name).getConstructor(ABNF.class,ABNFReg.class, ABNFReg.class);
+            return (T) c.newInstance(parseReg.reg.get(name),this, parseReg).parse(src);
+        } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException
+                | IllegalArgumentException | InvocationTargetException ex) {
+            throw new java.lang.UnsupportedOperationException(ex);
+        }
+    }
+
+    /**
+     * ユーザ側のParser(JSONなど)を駆動する
+     * BASEのみで参照先がないなど
+     * @param <T>
+     * @param name
+     * @param src
+     * @return 
+     */
+    public <T> T parse(String name, String src) {
+        try {
+//            System.out.println(name);
+            Constructor<? extends ABNFParser> c = CL.get(name).getConstructor(ABNF.class, ABNFReg.class,ABNFReg.class);
+            return (T) c.newInstance(reg.get(name),this,this).parse(src);
         } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException
                 | IllegalArgumentException | InvocationTargetException ex) {
             throw new java.lang.UnsupportedOperationException(ex);
@@ -170,13 +204,13 @@ public class ABNFReg {
         if (parseReg == null) {
             abnf = new Elements(this).parse(elements);
         } else {
-            abnf = parse("elements", elements);
+            abnf = baseParse("elements", elements);
         }
         return rule(name, abnf);
     }
 
     public List<ABNF> rulelist(String rulelist) {
-        List<ABNF> list = parse("rulelist", rulelist);
+        List<ABNF> list = baseParse("rulelist", rulelist);
         list.forEach((abnf) -> {
             reg.put(abnf.getName(), abnf);
         });

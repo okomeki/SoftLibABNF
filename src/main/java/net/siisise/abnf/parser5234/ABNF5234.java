@@ -3,10 +3,10 @@ package net.siisise.abnf.parser5234;
 import java.util.HashMap;
 import net.siisise.abnf.ABNF;
 import net.siisise.abnf.ABNFReg;
-import net.siisise.abnf.ABNFor;
 
 /**
  * RFC 7230, RFC 7405 などに拡張があるので取り込む方法も考える
+ *
  * @author okome
  */
 public class ABNF5234 {
@@ -40,7 +40,7 @@ public class ABNF5234 {
     public static final ABNF proseVal = REG.rule("prose-val", ProseVal.class, ABNF.text('<').pl(ABNF.range(0x20, 0x3d).or(ABNF.range(0x3f, 0x7e)).x(), ABNF.bin('>')));
     public static final ABNF numVal = REG.rule("num-val", NumVal.class, ABNF.text('%').pl(binVal.or(decVal, hexVal)));
     public static final ABNF rulename = REG.rule("rulename", Rulename.class, ALPHA.pl(ALPHA.or(DIGIT, ABNF.bin('-')).x()));
-    public static final ABNFor element = new ABNFor(rulename);
+    public static final ABNF element = REG.rule("element", Element.class, rulename.or(REG.ref("group"), REG.ref("option"), REG.ref("char-val"), REG.ref("num-val"), REG.ref("prose-val")));
     public static final ABNF comment = REG.rule("comment", ABNF.bin(';').pl(WSP.or(VCHAR).x(), CRLF));
 //    public static final ABNF repeat = REG.rule("repeat",DIGIT.ix().or(DIGIT.x().pl(new ABNFbin('*'), DIGIT.x())));
     public static final ABNF repeat = REG.rule("repeat", DIGIT.x().pl(ABNF.bin('*'), DIGIT.x()).or(DIGIT.ix()));
@@ -57,21 +57,55 @@ public class ABNF5234 {
     public static final ABNF rulelist = REG.rule("rulelist", Rulelist.class, rule.or(cWsp.x().pl(cNl)).ix());
 
     static {
-        element.add(group, option, charVal, numVal, proseVal);
-        REG.rule("element", Element.class, element);
-        
+//        element.add(group, option, charVal, numVal, proseVal);
+//        REG.rule("element", Element.class, element);
+
         // REG.CL側へ追加したいかもしれない
         // 組み換え可能要素なので両方で持つといいのかもしれない
         // BASE側が使われることが多い
-        BASE.CL = new HashMap(REG.CL);
+        //BASE.CL = new HashMap(REG.CL);
+    }
+
+    /**
+     * 複製できる弱結合版
+     *
+     * @return
+     */
+    public static ABNFReg copyREG() {
+        ABNFReg reg = new ABNFReg(BASE);
+
+        reg.rule("char-val", CharVal.class, ABNF5234.charVal);
+        reg.rule("bin-val", ABNF5234.binVal);
+        reg.rule("dec-val", ABNF5234.decVal);
+        reg.rule("hex-val", ABNF5234.hexVal);
+        reg.rule("prose-val", ProseVal.class, ABNF5234.proseVal);
+        reg.rule("num-val", NumVal.class, ABNF.text('%').pl(reg.ref("bin-val").or(reg.ref("dec-val"), reg.ref("hex-val"))));
+        reg.rule("rulename", Rulename.class, ABNF5234.rulename);
+        reg.rule("element", Element.class, reg.ref("rulename").or(reg.ref("group"), reg.ref("option"), reg.ref("char-val"), reg.ref("num-val"), reg.ref("prose-val")));
+        reg.rule("comment", ABNF5234.comment);
+//    public static final ABNF repeat = REG.rule("repeat",DIGIT.ix().or(DIGIT.x().pl(new ABNFbin('*'), DIGIT.x())));
+        reg.rule("repeat", DIGIT.x().pl(ABNF.bin('*'), DIGIT.x()).or(DIGIT.ix()));
+        reg.rule("repetition", Repetition.class, reg.ref("repeat").c().pl(reg.ref("element")));
+        reg.rule("c-nl", reg.ref("comment").or(CRLF));
+        reg.rule("c-wsp", WSP.or(cNl.pl(WSP)));
+        reg.rule("concatenation", Concatenation.class, reg.ref("repetition").pl(cWsp.ix().pl(reg.ref("repetition")).x()));
+        reg.rule("alternation", Alternation.class, reg.ref("concatenation").pl(cWsp.x().pl(ABNF.text('/'), cWsp.x(), reg.ref("concatenation")).x()));
+        ABNF group = reg.rule("group", Group.class, ABNF.bin('(').pl(cWsp.x(), reg.ref("alternation"), cWsp.x(), ABNF.bin(')')));
+        ABNF option = reg.rule("option", Option.class, ABNF.bin('[').pl(cWsp.x(), reg.ref("alternation"), cWsp.x(), ABNF.bin(']')));
+        ABNF elements = reg.rule("elements", Elements.class, reg.ref("alternation").pl(cWsp.x()));
+        ABNF definedAs = reg.rule("defined-as", ABNF5234.definedAs);
+        ABNF rule = reg.rule("rule", Rule.class, reg.ref("rulename").pl(definedAs, reg.ref("elements"), cNl));
+        ABNF rulelist = reg.rule("rulelist", Rulelist.class, reg.ref("rule").or(cWsp.x().pl(cNl)).ix());
+
+        return reg;
     }
 
     /*
     public ABNF elements(String value) throws ABNFParseException {
         if (elements.eq(value)) {
-            return new Elements(REG).parse(value);
+            return new Elements(REG).exParse(value);
         }
         throw new ABNFParseException(value);
     }
-*/
+     */
 }

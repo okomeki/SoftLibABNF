@@ -18,7 +18,7 @@ public class Group extends ABNFSub<ABNF> {
         super(ABNF5234.group, reg, Alternation.class);
     }
 
-    public Group(ABNFReg reg, ABNFReg base) {
-        super(ABNF5234.group, reg, base, "alternation");
+    public Group(ABNF def, ABNFReg reg, ABNFReg base) {
+        super(def, reg, base, "alternation");
     }
 }

@@ -14,7 +14,7 @@ import net.siisise.abnf.parser5234.Element;
  */
 public class ABNF7405 {
 
-    static ABNFReg REG = new ABNFReg(ABNF5234.REG);
+    static ABNFReg REG = new ABNFReg(ABNF5234.copyREG(),ABNF5234.REG);
     
     static final ABNF caseInsensitiveString = REG.rule("case-insensitive-string","[ \"%i\" ] quoted-string");
     static final ABNF caseSensitiveString = REG.rule("case-sensitive-string","\"%s\" quoted-string");

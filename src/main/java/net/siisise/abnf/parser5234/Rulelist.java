@@ -10,11 +10,11 @@ import net.siisise.abnf.parser.ABNFToList;
  * @author okome
  */
 public class Rulelist extends ABNFToList<ABNF, ABNF> {
-
+/*
     public Rulelist(ABNFReg reg) {
         super(ABNF5234.rulelist, reg, Rule.class);
     }
-
+*/
     public Rulelist(ABNFReg reg, ABNFReg base) {
         super(ABNF5234.rulelist, reg, base, "rule");
     }

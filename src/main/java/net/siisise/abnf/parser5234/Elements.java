@@ -14,7 +14,7 @@ public class Elements extends ABNFSub<ABNF> {
         super(ABNF5234.elements, reg, Alternation.class);
     }
 
-    public Elements(ABNFReg reg, ABNFReg base) {
-        super(ABNF5234.elements, reg, base, "alternation");
+    public Elements(ABNF abnf, ABNFReg reg, ABNFReg base) {
+        super(abnf, reg, base, "alternation");
     }
 }

@@ -1,6 +1,7 @@
 package net.siisise.abnf.parser;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,6 +25,7 @@ public abstract class ABNFBaseParser<T, M> implements ABNFParser<T> {
     protected ABNFReg base;
     protected ABNFParser<? extends M>[] subs;
     protected Class<? extends ABNFParser<? extends M>>[] subc;
+    protected String[] subName;
 
     protected ABNFBaseParser(ABNF def, ABNFParser<M>... subs) {
         this.def = def;
@@ -41,6 +43,12 @@ public abstract class ABNFBaseParser<T, M> implements ABNFParser<T> {
         this.reg = reg;
     }
 
+    /**
+     * @deprecated 参照をもっと弱くする
+     * @param def
+     * @param reg
+     * @param subc 
+     */
     public ABNFBaseParser(ABNF def, ABNFReg reg, Class<? extends ABNFParser<? extends M>>... subc) {
         this.def = def;
         this.reg = reg;
@@ -50,8 +58,8 @@ public abstract class ABNFBaseParser<T, M> implements ABNFParser<T> {
     /**
      * 
      * @param def
-     * @param reg
-     * @param base
+     * @param reg 名前空間参照用
+     * @param base Parser駆動用
      * @param subns 
      */
     public ABNFBaseParser(ABNF def, ABNFReg reg, ABNFReg base, String... subns) {
@@ -59,8 +67,10 @@ public abstract class ABNFBaseParser<T, M> implements ABNFParser<T> {
         this.reg = reg;
         this.base = base;
         subc = new Class[subns.length];
+        subName = new String[subns.length];
         
         for ( int i = 0; i < subns.length; i++ ) {
+            subName[i] = subns[i];
             subc[i] = (Class<? extends ABNFParser<? extends M>>) base.CL.get(subns[i]);
         }
     }
@@ -73,8 +83,15 @@ public abstract class ABNFBaseParser<T, M> implements ABNFParser<T> {
             try {
                 subs = new ABNFParser[subc.length];
                 for (int i = 0; i < subc.length; i++) {
-                    subs[i] = subc[i].getConstructor(ABNFReg.class).newInstance(reg);
-//                    subs[i] = subc[i].getConstructor().newInstance();
+                    if ( base != null ) {
+                        System.out.println(subName[i]);
+                        subc[i] = (Class<? extends ABNFParser<? extends M>>)base.CL.get(subName[i]);
+                        Constructor<? extends ABNFParser<? extends M>> cnst = subc[i].getConstructor(ABNF.class,ABNFReg.class,ABNFReg.class);
+                        subs[i] = cnst.newInstance(base.href(subName[i]),reg,base);
+                    } else {
+                        subs[i] = subc[i].getConstructor(ABNFReg.class).newInstance(reg);
+//                      subs[i] = subc[i].getConstructor().newInstance();
+                    }
                 }
             } catch (InstantiationException ex) {
                 Logger.getLogger(ABNFBaseParser.class.getName()).log(Level.SEVERE, null, ex);
@@ -90,6 +107,7 @@ public abstract class ABNFBaseParser<T, M> implements ABNFParser<T> {
                 throw new java.lang.UnsupportedOperationException();
             } catch (NoSuchMethodException ex) {
                 Logger.getLogger(ABNFBaseParser.class.getName()).log(Level.SEVERE, null, ex);
+//                System.out.println("");
                 throw new java.lang.UnsupportedOperationException();
             } catch (SecurityException ex) {
                 Logger.getLogger(ABNFBaseParser.class.getName()).log(Level.SEVERE, null, ex);

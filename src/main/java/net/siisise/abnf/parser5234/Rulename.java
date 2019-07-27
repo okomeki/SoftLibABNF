@@ -16,8 +16,8 @@ public class Rulename extends ABNFBaseParser<ABNF, ABNF> {
         super(ABNF5234.rulename, reg);
     }
 
-    public Rulename(ABNFReg reg, ABNFReg base) {
-        super(ABNF5234.rulename, reg, base);
+    public Rulename(ABNF def, ABNFReg reg, ABNFReg base) {
+        super(def, reg, base);
     }
 
     @Override

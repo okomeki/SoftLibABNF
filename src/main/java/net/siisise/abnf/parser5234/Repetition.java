@@ -16,19 +16,26 @@ public class Repetition extends ABNFBaseParser<ABNF, ABNF> {
         super(ABNF5234.repetition, reg, Element.class);
     }
 
-    public Repetition(ABNFReg reg, ABNFReg base) {
-        super(ABNF5234.repetition, reg, base, "element");
+    /**
+     * abnfの他、ABNF5234のrepeat も参照する
+     * @param abnf
+     * @param reg
+     * @param base 
+     */
+    public Repetition(ABNF abnf, ABNFReg reg, ABNFReg base) {
+        super(abnf, reg, base, "element");
     }
 
     @Override
     public ABNF parse(Packet pac) {
         inst();
 //        System.out.println("rep: " + strd(pac));
-        ABNF.C<Object> ret = def.findx(pac, x(ABNF5234.repeat), subs[0]);
+        ABNF repeat = ABNF5234.repeat; // base.href("repeat");
+        ABNF.C<Object> ret = def.findx(pac, x(repeat), subs[0]);
         if (ret == null) {
             return null;
         }
-        List<Object> rep = ret.get(ABNF5234.repeat);
+        List<Object> rep = ret.get(repeat);
         ABNF ele = (ABNF) ret.get(subs[0].getBNF()).get(0);
 //        System.out.println("ee;:" + strd(element));
         //ABNF ele = subs[0].parse(element);

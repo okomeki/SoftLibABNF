@@ -10,7 +10,7 @@ import net.siisise.abnf.parser5234.ABNF5234;
  */
 public class URI3986 {
 
-    static final ABNFReg REG = new ABNFReg(ABNF5234.BASE);
+    static final ABNFReg REG = new ABNFReg(ABNF5234.BASE,ABNF5234.REG);
 
     static final ABNF pctEncoded = REG.rule("pct-encoded", ABNF.bin('%').pl(ABNF5234.HEXDIG, ABNF5234.HEXDIG));
     static final ABNF genDelims = REG.rule("gen-delims", ABNF.list(":/?#[]@"));

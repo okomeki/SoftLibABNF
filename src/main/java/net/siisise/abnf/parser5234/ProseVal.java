@@ -14,6 +14,10 @@ public class ProseVal extends ABNFBaseParser<ABNF,ABNF> {
     public ProseVal(ABNFReg reg) {
         super(ABNF5234.proseVal);
     }
+    
+    public ProseVal(ABNF abnf, ABNFReg reg, ABNFReg base) {
+        super(abnf);
+    }
 
     @Override
     public ABNF parse(Packet pac) {

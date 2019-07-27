@@ -16,8 +16,8 @@ public class Concatenation extends ABNFList<ABNF, ABNF> {
         super(ABNF5234.concatenation, reg, Repetition.class);
     }
 
-    public Concatenation(ABNFReg reg, ABNFReg base) {
-        super(ABNF5234.concatenation, reg, base, "repetition");
+    public Concatenation(ABNF abnf, ABNFReg reg, ABNFReg base) {
+        super(abnf, reg, base, "repetition");
     }
 
     @Override

@@ -14,7 +14,7 @@ public class Element extends ABNFSelect<ABNF> {
         super(ABNF5234.element, reg, Rulename.class, Group.class, Option.class, CharVal.class, NumVal.class, ProseVal.class);
     }
  
-    public Element(ABNFReg reg, ABNFReg base) {
-        super(ABNF5234.element, reg, base, "rulename", "group", "option", "char-val", "num-val", "prose-val");
+    public Element(ABNF def, ABNFReg reg, ABNFReg base) {
+        super(def, reg, base, "rulename", "group", "option", "char-val", "num-val", "prose-val");
     }
 }

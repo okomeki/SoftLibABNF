@@ -65,7 +65,7 @@ public class IRI3987 {
     static final ABNF ipathNoscheme = REG.rule("ipath-noscheme", "isegment-nz-nc *( \"/\" isegment )");
     static final ABNF ipathAbsolute = REG.rule("ipath-absolute", "\"/\" [ isegment-nz *( \"/\" isegment ) ]");
     static final ABNF ipathAbempty = REG.rule("ipath-abempty", "*( \"/\" isegment )");
-    static final ABNF ipath = REG.rule("ipath", "ipath-abempty / ipath-absolute / ipath-noscheme / ipath-rootless / ipath-empty");
+    static final ABNF ipath = REG.rule("ipath", ipathAbempty.or(ipathAbsolute,ipathNoscheme,ipathRootless,ipathEmpty));
     static final ABNF iregName = REG.rule("ireg-name", "*( iunreserved / pct-encoded / sub-delims )");
     static final ABNF ihost = REG.rule("ihost", IPliteral.or(IPv4address, iregName));
     static final ABNF iuserinfo = REG.rule("iuserinfo", "*( iunreserved / pct-encoded / sub-delims / \":\" )");
