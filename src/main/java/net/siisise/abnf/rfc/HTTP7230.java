@@ -58,6 +58,17 @@ public class HTTP7230 {
     static final ABNF ctext = REG.rule("ctext", "HTAB / SP / %x21-27 / %x2A-5B / %x5D-7E / obs-text");
     static final ABNF comment = REG.rule("comment", "\"(\" *( ctext / quoted-pair / comment ) \")\"");
 
+    // 5.3.1.
+    static final ABNF originForm = REG.rule("origin-form","absolute-path [ \"?\" query ]");
+    // 5.3.2.
+    static final ABNF absoluteForm = REG.rule("absolute-form",absoluteURI);
+    // 5.3.3.
+    static final ABNF authorityForm = REG.rule("authorityForm",authority);
+    // 5.3.4.
+    static final ABNF asteriskForm = REG.rule("asteriskForm",ABNF.bin("*"));
+    // 5.3.
+    static final ABNF requestTarget = REG.rule("request-target",originForm.or(absoluteForm,authorityForm,asteriskForm));
+
     // 3.1. start-line
     // 3.1.1. request-line
     static final ABNF method = REG.rule("method", "token");
@@ -108,17 +119,34 @@ public class HTTP7230 {
     static final ABNF lastChunk = REG.rule("last-chunk", "1*(\"0\") [ chunk-ext ] CRLF");
     static final ABNF chunkedBody = REG.rule("chunked-body", "*chunk last-chunk trailer-part CRLF");
 
-    //4.3.
+    // 4.3.
     static final ABNF rank = REG.rule("rank", "( \"0\" [ \".\" 0*3DIGIT ] ) / ( \"1\" [ \".\" 0*3(\"0\") ] )");
     static final ABNF tRanking = REG.rule("t-ranking", "OWS \";\" OWS \"q=\" rank");
     static final ABNF tCodings = REG.rule("t-codings", "\"trailers\" / ( transfer-coding [ t-renking ] )");
     static final ABNF TE = REG.rule("TE", "#t-codings");
-    // まだ
-
+    
+    // 4.4.
+    static final ABNF Trailer = REG.rule("Trailer","1#field-name");
+    
+    // 5.4.
+    static final ABNF Host = REG.rule("Host","uri-host [ \":\" port ]");
     // 3.メッセージ形式
     static final ABNF HTTPmessage = REG.rule("HTTP-message", "start-line *( header-field CRLF ) CRLF [ message-body ]");
+    // 5.7.
+    static final ABNF receivedProtocol = REG.rule("received-protocol","[ protocol-name \"/\" ] protocol-version");
+    static final ABNF pseudonym = REG.rule("pseudonym",token); // pseudo + anonymous  疑似匿名 (仮名)
+    static final ABNF receivedBy = REG.rule("received-by","( uri-host [ \":\" port ] ) / pseudonym");
+    static final ABNF Via = REG.rule("Via","1#( received-protocol RWS received-by [ RWS comment ] )");
+    // 6.1.
+    static final ABNF connectionOption = REG.rule("connection-option",token);    
+    static final ABNF Connection = REG.rule("Connection","1#connection-option");
+    // 6.7.
+    static final ABNF protocolName = REG.rule("protocol-name",token);
+    static final ABNF protocolVersion = REG.rule("protocol-version",token);
+    static final ABNF protocol = REG.rule("protocol","protocol-name [\"/\" protocol-version]");
+    static final ABNF Upgrade = REG.rule("Upgrade","1#protocol");
 
     public static void main(String[] argv) {
-        throw new java.lang.UnsupportedOperationException("4.3.まで");
+        throw new java.lang.UnsupportedOperationException("");
     }
 }
