@@ -7,7 +7,8 @@ import net.siisise.abnf.ABNFor;
 import net.siisise.abnf.parser.ABNFList;
 
 /**
- *
+ * or 相当.
+ * 先頭一致なのでアナログな解釈と異なる場合もあるかもしれない
  * @author okome
  */
 public class Alternation extends ABNFList<ABNF, ABNF> {

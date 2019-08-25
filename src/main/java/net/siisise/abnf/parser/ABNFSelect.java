@@ -5,7 +5,7 @@ import net.siisise.abnf.ABNFReg;
 import net.siisise.io.Packet;
 
 /**
- *
+ * 一致するものを選択する (分岐)
  * @author okome
  * @param <T>
  */

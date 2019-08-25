@@ -5,7 +5,7 @@ import net.siisise.abnf.ABNF;
 import net.siisise.abnf.ABNFReg;
 
 /**
- *
+ * 要素を抽出するだけ
  * @author okome
  * @param <T>
  */

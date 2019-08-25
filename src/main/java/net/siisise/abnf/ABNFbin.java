@@ -10,7 +10,7 @@ import net.siisise.io.Packet;
 import net.siisise.io.PacketA;
 
 /**
- *
+ * バイナリ表現
  * @author okome
  */
 public class ABNFbin extends AbstractABNF {

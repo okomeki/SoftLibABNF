@@ -1,10 +1,10 @@
 package net.siisise.abnf.parser5234;
 
-import java.util.HashMap;
 import net.siisise.abnf.ABNF;
 import net.siisise.abnf.ABNFReg;
 
 /**
+ * ABNFの定義をJavaで書いてみたりしたもの
  * RFC 7230, RFC 7405 などに拡張があるので取り込む方法も考える
  *
  * @author okome
@@ -31,6 +31,10 @@ public class ABNF5234 {
     public static final ABNF WSP = BASE.rule("WSP", SP.or(HTAB));
     public static final ABNF LWSP = BASE.rule("LWSP", WSP.or(CRLF.pl(WSP)).x());
 
+    /**
+     * 各ABNFの定義をParserを使わずJavaで書いたもの
+     * 
+     */
     public static final ABNFReg REG = new ABNFReg(BASE);
 
     public static final ABNF charVal = REG.rule("char-val", CharVal.class, DQUOTE.pl(ABNF.range(0x20, 0x21).or(ABNF.range(0x23, 0x7e)).x(), DQUOTE));
@@ -40,31 +44,24 @@ public class ABNF5234 {
     public static final ABNF proseVal = REG.rule("prose-val", ProseVal.class, ABNF.text('<').pl(ABNF.range(0x20, 0x3d).or(ABNF.range(0x3f, 0x7e)).x(), ABNF.bin('>')));
     public static final ABNF numVal = REG.rule("num-val", NumVal.class, ABNF.text('%').pl(binVal.or(decVal, hexVal)));
     public static final ABNF rulename = REG.rule("rulename", Rulename.class, ALPHA.pl(ALPHA.or(DIGIT, ABNF.bin('-')).x()));
-    public static final ABNF element = REG.rule("element", Element.class, rulename.or(REG.ref("group"), REG.ref("option"), REG.ref("char-val"), REG.ref("num-val"), REG.ref("prose-val")));
     public static final ABNF comment = REG.rule("comment", ABNF.bin(';').pl(WSP.or(VCHAR).x(), CRLF));
 //    public static final ABNF repeat = REG.rule("repeat",DIGIT.ix().or(DIGIT.x().pl(new ABNFbin('*'), DIGIT.x())));
+    /**
+     * orで短いものをそれを含む長いものの前に配置すると誤判定するので順序を入れ換えるなど
+     */
     public static final ABNF repeat = REG.rule("repeat", DIGIT.x().pl(ABNF.bin('*'), DIGIT.x()).or(DIGIT.ix()));
-    public static final ABNF repetition = REG.rule("repetition", Repetition.class, repeat.c().pl(element));
+    public static final ABNF repetition = REG.rule("repetition", Repetition.class, repeat.c().pl(REG.ref("element")));
     static final ABNF cNl = REG.rule("c-nl", comment.or(CRLF));
-    public static final ABNF cWsp = REG.rule("c-wsp", WSP.or(cNl.pl(WSP)));
+    static final ABNF cWsp = REG.rule("c-wsp", WSP.or(cNl.pl(WSP)));
     public static final ABNF concatenation = REG.rule("concatenation", Concatenation.class, repetition.pl(cWsp.ix().pl(repetition).x()));
     public static final ABNF alternation = REG.rule("alternation", Alternation.class, concatenation.pl(cWsp.x().pl(ABNF.text('/'), cWsp.x(), concatenation).x()));
     public static final ABNF group = REG.rule("group", Group.class, ABNF.bin('(').pl(cWsp.x(), alternation, cWsp.x(), ABNF.bin(')')));
     public static final ABNF option = REG.rule("option", Option.class, ABNF.bin('[').pl(cWsp.x(), alternation, cWsp.x(), ABNF.bin(']')));
+    public static final ABNF element = REG.rule("element", Element.class, rulename.or(group, option, charVal, numVal, proseVal));
     public static final ABNF elements = REG.rule("elements", Elements.class, alternation.pl(cWsp.x()));
     public static final ABNF definedAs = REG.rule("defined-as", cWsp.x().pl(ABNF.bin('=').or(ABNF.bin("=/")), cWsp.x()));
     public static final ABNF rule = REG.rule("rule", Rule.class, rulename.pl(definedAs, elements, cNl));
     public static final ABNF rulelist = REG.rule("rulelist", Rulelist.class, rule.or(cWsp.x().pl(cNl)).ix());
-
-    static {
-//        element.add(group, option, charVal, numVal, proseVal);
-//        REG.rule("element", Element.class, element);
-
-        // REG.CL側へ追加したいかもしれない
-        // 組み換え可能要素なので両方で持つといいのかもしれない
-        // BASE側が使われることが多い
-        //BASE.CL = new HashMap(REG.CL);
-    }
 
     /**
      * 複製できる弱結合版
@@ -83,29 +80,20 @@ public class ABNF5234 {
         reg.rule("rulename", Rulename.class, ABNF5234.rulename);
         reg.rule("element", Element.class, reg.ref("rulename").or(reg.ref("group"), reg.ref("option"), reg.ref("char-val"), reg.ref("num-val"), reg.ref("prose-val")));
         reg.rule("comment", ABNF5234.comment);
-//    public static final ABNF repeat = REG.rule("repeat",DIGIT.ix().or(DIGIT.x().pl(new ABNFbin('*'), DIGIT.x())));
         reg.rule("repeat", DIGIT.x().pl(ABNF.bin('*'), DIGIT.x()).or(DIGIT.ix()));
         reg.rule("repetition", Repetition.class, reg.ref("repeat").c().pl(reg.ref("element")));
         reg.rule("c-nl", reg.ref("comment").or(CRLF));
         reg.rule("c-wsp", WSP.or(cNl.pl(WSP)));
         reg.rule("concatenation", Concatenation.class, reg.ref("repetition").pl(cWsp.ix().pl(reg.ref("repetition")).x()));
         reg.rule("alternation", Alternation.class, reg.ref("concatenation").pl(cWsp.x().pl(ABNF.text('/'), cWsp.x(), reg.ref("concatenation")).x()));
-        ABNF group = reg.rule("group", Group.class, ABNF.bin('(').pl(cWsp.x(), reg.ref("alternation"), cWsp.x(), ABNF.bin(')')));
-        ABNF option = reg.rule("option", Option.class, ABNF.bin('[').pl(cWsp.x(), reg.ref("alternation"), cWsp.x(), ABNF.bin(']')));
-        ABNF elements = reg.rule("elements", Elements.class, reg.ref("alternation").pl(cWsp.x()));
-        ABNF definedAs = reg.rule("defined-as", ABNF5234.definedAs);
-        ABNF rule = reg.rule("rule", Rule.class, reg.ref("rulename").pl(definedAs, reg.ref("elements"), cNl));
-        ABNF rulelist = reg.rule("rulelist", Rulelist.class, reg.ref("rule").or(cWsp.x().pl(cNl)).ix());
+        reg.rule("group", Group.class, ABNF.bin('(').pl(cWsp.x(), reg.ref("alternation"), cWsp.x(), ABNF.bin(')')));
+        reg.rule("option", Option.class, ABNF.bin('[').pl(cWsp.x(), reg.ref("alternation"), cWsp.x(), ABNF.bin(']')));
+        reg.rule("elements", Elements.class, reg.ref("alternation").pl(cWsp.x()));
+        reg.rule("defined-as", ABNF5234.definedAs);
+        reg.rule("rule", Rule.class, reg.ref("rulename").pl(definedAs, reg.ref("elements"), cNl));
+        reg.rule("rulelist", Rulelist.class, reg.ref("rule").or(cWsp.x().pl(cNl)).ix());
 
         return reg;
     }
 
-    /*
-    public ABNF elements(String value) throws ABNFParseException {
-        if (elements.eq(value)) {
-            return new Elements(REG).exParse(value);
-        }
-        throw new ABNFParseException(value);
-    }
-     */
 }

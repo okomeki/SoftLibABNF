@@ -43,7 +43,7 @@ public interface ABNF extends BNF {
 
     public ABNF copy(ABNFReg reg);
 
-    class B<X> {
+    static class B<X> {
 
         public Packet ret;
         Map<String, List<Packet>> subs = new HashMap<>();
@@ -105,7 +105,7 @@ public interface ABNF extends BNF {
         }
     }
 
-    class C<X> {
+    static class C<X> {
 
         public Packet ret;
         Map<String, List<X>> subs = new HashMap<>();
@@ -137,8 +137,19 @@ public interface ABNF extends BNF {
         }
     }
 
+    /**
+     * 先頭一致でパースする
+     * @param pac
+     * @return 一致した範囲
+     */
     Packet is(Packet pac);
 
+    /**
+     * 先頭一致でパースする
+     * 
+     * @param val
+     * @return 一致ありなし
+     */
     boolean is(String val);
 
     /**
@@ -153,7 +164,8 @@ public interface ABNF extends BNF {
     public <X> C<X> findx(Packet pac, ABNFParser<? extends X>... parsers);
 
     /**
-     *
+     * 完全一致の判定
+     * valの最後まで一致するかどうか判定する
      * @param val
      * @return
      */

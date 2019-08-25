@@ -8,6 +8,8 @@ import net.siisise.abnf.parser5234.Repetition;
 /**
  * RFC 7230 Hypertext Transfer Protocol (HTTP/1.1): Message Syntax and Routing
  * Section 7の拡張あり
+ * 
+ * obsなし版も作りたい?
  *
  * @see https://tools.ietf.org/html/rfc7230 Section 7
  * @see URI3986
@@ -71,7 +73,7 @@ public class HTTP7230 {
 
     // 3.1. start-line
     // 3.1.1. request-line
-    static final ABNF method = REG.rule("method", "token");
+    static final ABNF method = REG.rule("method", token);
     static final ABNF requestLine = REG.rule("request-line", "method SP request-target SP HTTP-version CRLF");
     // 3.1.2. status-line
     static final ABNF statusCode = REG.rule("status-code", "3DIGIT");
@@ -86,7 +88,7 @@ public class HTTP7230 {
     static final ABNF RWS = REG.rule("RWS", "1*( SP / HTAB )");
     static final ABNF BWS = REG.rule("BWS", OWS);
 
-    static final ABNF fieldName = REG.rule("field-name", "token");
+    static final ABNF fieldName = REG.rule("field-name", token);
     static final ABNF obsFold = REG.rule("obs-fold", "CRLF 1*( SP / HTAB )");
     static final ABNF fieldVchar = REG.rule("field-vchar", "VCHAR / obs-text");
     static final ABNF fieldContent = REG.rule("field-content", "field-vchar [ 1*( SP / HTAB ) field-vchar ]");
@@ -117,34 +119,33 @@ public class HTTP7230 {
     static final ABNF chunkData = REG.rule("chunk-data", ABNF5234.OCTET.ix());
     static final ABNF chunk = REG.rule("chunk", "chunk-size [ chunk-ext ] CRLF chunk-data CRLF");
     static final ABNF lastChunk = REG.rule("last-chunk", "1*(\"0\") [ chunk-ext ] CRLF");
-    static final ABNF chunkedBody = REG.rule("chunked-body", "*chunk last-chunk trailer-part CRLF");
+    public static final ABNF chunkedBody = REG.rule("chunked-body", "*chunk last-chunk trailer-part CRLF");
+
+    // 3.メッセージ形式
+    public static final ABNF HTTPmessage = REG.rule("HTTP-message", "start-line *( header-field CRLF ) CRLF [ message-body ]");
 
     // 4.3.
     static final ABNF rank = REG.rule("rank", "( \"0\" [ \".\" 0*3DIGIT ] ) / ( \"1\" [ \".\" 0*3(\"0\") ] )");
     static final ABNF tRanking = REG.rule("t-ranking", "OWS \";\" OWS \"q=\" rank");
     static final ABNF tCodings = REG.rule("t-codings", "\"trailers\" / ( transfer-coding [ t-renking ] )");
-    static final ABNF TE = REG.rule("TE", "#t-codings");
-    
+    public static final ABNF TE = REG.rule("TE", "#t-codings");
     // 4.4.
-    static final ABNF Trailer = REG.rule("Trailer","1#field-name");
-    
+    public static final ABNF Trailer = REG.rule("Trailer","1#field-name");
     // 5.4.
-    static final ABNF Host = REG.rule("Host","uri-host [ \":\" port ]");
-    // 3.メッセージ形式
-    static final ABNF HTTPmessage = REG.rule("HTTP-message", "start-line *( header-field CRLF ) CRLF [ message-body ]");
+    public static final ABNF Host = REG.rule("Host","uri-host [ \":\" port ]");
     // 5.7.
     static final ABNF receivedProtocol = REG.rule("received-protocol","[ protocol-name \"/\" ] protocol-version");
     static final ABNF pseudonym = REG.rule("pseudonym",token); // pseudo + anonymous  疑似匿名 (仮名)
     static final ABNF receivedBy = REG.rule("received-by","( uri-host [ \":\" port ] ) / pseudonym");
-    static final ABNF Via = REG.rule("Via","1#( received-protocol RWS received-by [ RWS comment ] )");
+    public static final ABNF Via = REG.rule("Via","1#( received-protocol RWS received-by [ RWS comment ] )");
     // 6.1.
     static final ABNF connectionOption = REG.rule("connection-option",token);    
-    static final ABNF Connection = REG.rule("Connection","1#connection-option");
+    public static final ABNF Connection = REG.rule("Connection","1#connection-option");
     // 6.7.
     static final ABNF protocolName = REG.rule("protocol-name",token);
     static final ABNF protocolVersion = REG.rule("protocol-version",token);
     static final ABNF protocol = REG.rule("protocol","protocol-name [\"/\" protocol-version]");
-    static final ABNF Upgrade = REG.rule("Upgrade","1#protocol");
+    public static final ABNF Upgrade = REG.rule("Upgrade","1#protocol");
 
     public static void main(String[] argv) {
         throw new java.lang.UnsupportedOperationException("");

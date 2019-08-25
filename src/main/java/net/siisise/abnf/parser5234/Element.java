@@ -5,7 +5,8 @@ import net.siisise.abnf.ABNFReg;
 import net.siisise.abnf.parser.ABNFSelect;
 
 /**
- *
+ * ABNF element の Parser.
+ * 選択するだけ
  * @author okome
  */
 public class Element extends ABNFSelect<ABNF> {

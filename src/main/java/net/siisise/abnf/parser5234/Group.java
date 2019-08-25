@@ -5,7 +5,7 @@ import net.siisise.abnf.ABNFReg;
 import net.siisise.abnf.parser.ABNFSub;
 
 /**
- *
+ * groupのParser
  * @author okome
  */
 public class Group extends ABNFSub<ABNF> {

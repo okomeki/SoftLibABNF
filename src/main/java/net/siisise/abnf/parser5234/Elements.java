@@ -5,7 +5,8 @@ import net.siisise.abnf.ABNFReg;
 import net.siisise.abnf.parser.ABNFSub;
 
 /**
- *
+ * elements のParser.
+ * alternationを取り出すだけ
  * @author okome
  */
 public class Elements extends ABNFSub<ABNF> {

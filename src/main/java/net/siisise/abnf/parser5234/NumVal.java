@@ -7,7 +7,7 @@ import net.siisise.abnf.parser.ABNFBaseParser;
 import net.siisise.io.Packet;
 
 /**
- *
+ * 数値系まとめてParser
  * @author okome
  */
 public class NumVal extends ABNFBaseParser<ABNF, ABNF> {

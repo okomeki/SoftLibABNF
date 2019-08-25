@@ -16,6 +16,9 @@ import net.siisise.io.PacketA;
  */
 public abstract class AbstractABNF implements ABNF {
 
+    /**
+     * 名前、またはABNFに近いもの (まだ抜けもある)
+     */
     String name;
 
     @Override

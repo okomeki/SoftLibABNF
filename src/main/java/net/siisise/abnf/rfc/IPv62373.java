@@ -2,13 +2,14 @@ package net.siisise.abnf.rfc;
 
 import net.siisise.abnf.ABNF;
 import net.siisise.abnf.ABNFReg;
+import net.siisise.abnf.parser5234.ABNF5234;
 
 /**
  *
  * @author okome
  */
 public class IPv62373 {
-    static final ABNFReg REG = new ABNFReg();
+    static final ABNFReg REG = new ABNFReg(ABNF5234.BASE);
     
     static final ABNF hex4 = REG.rule("hex4","1*4HEXDIG");
     static final ABNF hexseq = REG.rule("hexseq","hex4 *( \":\" hex4)");

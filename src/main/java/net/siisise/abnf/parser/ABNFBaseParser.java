@@ -84,7 +84,7 @@ public abstract class ABNFBaseParser<T, M> implements ABNFParser<T> {
                 subs = new ABNFParser[subc.length];
                 for (int i = 0; i < subc.length; i++) {
                     if ( base != null ) {
-                        System.out.println(subName[i]);
+//                        System.out.println(subName[i]);
                         subc[i] = (Class<? extends ABNFParser<? extends M>>)base.CL.get(subName[i]);
                         Constructor<? extends ABNFParser<? extends M>> cnst = subc[i].getConstructor(ABNF.class,ABNFReg.class,ABNFReg.class);
                         subs[i] = cnst.newInstance(base.href(subName[i]),reg,base);
@@ -121,11 +121,23 @@ public abstract class ABNFBaseParser<T, M> implements ABNFParser<T> {
         return def;
     }
 
+    /**
+     * pacを解析、完了した部分を先頭から削除する
+     * 先頭一致で解析するのでpacにデータが残る場合もある
+     * 失敗した(一致しなかった)場合、pacは元の状態、戻り値はnullとなる
+     * @param pac 解析対象データ
+     * @return 変換されたデータ 不一致の場合はnull
+     */
     @Override
     public abstract T parse(Packet pac);
 
-    public T parse(String val) {
-        return parse(AbstractABNF.pac(val));
+    /**
+     * 入り口
+     * @param str 解析対象文字列
+     * @return 変換されたデータ 不一致の場合はnull
+     */
+    public T parse(String str) {
+        return parse(AbstractABNF.pac(str));
     }
 
     protected ABNFPacketParser x(ABNF def) {
