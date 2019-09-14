@@ -9,7 +9,7 @@ import net.siisise.io.PacketA;
  */
 public class ABNFpl extends AbstractABNF {
 
-    private final ABNF[] list;
+    protected final ABNF[] list;
 
     public ABNFpl(ABNF[] list) {
         this.list = list;

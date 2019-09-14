@@ -6,6 +6,7 @@ import net.siisise.abnf.ABNFReg;
 /**
  * ABNFの定義をJavaで書いてみたりしたもの
  * RFC 7230, RFC 7405 などに拡張があるので取り込む方法も考える
+ * ABNFは最長一致判定が苦手なので使い方によっては書き換える必要もある
  *
  * @author okome
  */
@@ -13,7 +14,7 @@ public class ABNF5234 {
 
     public static final ABNFReg BASE = new ABNFReg();
 
-    // classのようなもの
+    // classのようなもの RFC 2234 6.1 Core Rules から変わらず
     public static final ABNF ALPHA = BASE.rule("ALPHA", ABNF.range(0x41, 0x5a).or(ABNF.range(0x61, 0x7a)));
     public static final ABNF BIT = BASE.rule("BIT", ABNF.bin('0').or(ABNF.bin('1')));
     public static final ABNF CHAR = BASE.rule("CHAR", ABNF.range(0x01, 0x7f));

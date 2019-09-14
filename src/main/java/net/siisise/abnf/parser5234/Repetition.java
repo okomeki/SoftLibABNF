@@ -7,7 +7,7 @@ import net.siisise.abnf.parser.ABNFBaseParser;
 import net.siisise.io.Packet;
 
 /**
- * 
+ * リピートはorに展開せよ?
  * @author okome
  */
 public class Repetition extends ABNFBaseParser<ABNF, ABNF> {
