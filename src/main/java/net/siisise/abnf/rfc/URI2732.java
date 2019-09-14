@@ -5,6 +5,7 @@ import net.siisise.abnf.ABNFReg;
 
 /**
  * JavaのURI相当
+ * RFC 2396 + RFC 2732
  * @author okome
  */
 public class URI2732 {
