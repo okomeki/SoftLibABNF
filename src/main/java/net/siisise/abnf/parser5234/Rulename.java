@@ -12,10 +12,6 @@ import net.siisise.io.Packet;
  */
 public class Rulename extends ABNFBaseParser<ABNF, ABNF> {
 
-    public Rulename(ABNFReg reg) {
-        super(ABNF5234.rulename, reg);
-    }
-
     public Rulename(ABNF def, ABNFReg reg, ABNFReg base) {
         super(def, reg, base);
     }

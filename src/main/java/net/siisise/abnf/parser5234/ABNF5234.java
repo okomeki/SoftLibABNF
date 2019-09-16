@@ -12,7 +12,7 @@ import net.siisise.abnf.ABNFReg;
  */
 public class ABNF5234 {
 
-    public static final ABNFReg BASE = new ABNFReg();
+    public static final ABNFReg BASE = new ABNFReg(null, null);
 
     // classのようなもの RFC 2234 6.1 Core Rules から変わらず
     public static final ABNF ALPHA = BASE.rule("ALPHA", ABNF.range(0x41, 0x5a).or(ABNF.range(0x61, 0x7a)));
@@ -36,7 +36,7 @@ public class ABNF5234 {
      * 各ABNFの定義をParserを使わずJavaで書いたもの
      * 
      */
-    public static final ABNFReg REG = new ABNFReg(BASE);
+    public static final ABNFReg REG = new ABNFReg(BASE, null);
 
     public static final ABNF charVal = REG.rule("char-val", CharVal.class, DQUOTE.pl(ABNF.range(0x20, 0x21).or(ABNF.range(0x23, 0x7e)).x(), DQUOTE));
     public static final ABNF binVal = REG.rule("bin-val", ABNF.text('b').pl(BIT.ix(), ABNF.bin('.').pl(BIT.ix()).ix().or(ABNF.bin('-').pl(BIT.ix())).c()));
@@ -70,7 +70,7 @@ public class ABNF5234 {
      * @return
      */
     public static ABNFReg copyREG() {
-        ABNFReg reg = new ABNFReg(BASE);
+        ABNFReg reg = new ABNFReg(BASE, null);
 
         reg.rule("char-val", CharVal.class, ABNF5234.charVal);
         reg.rule("bin-val", ABNF5234.binVal);

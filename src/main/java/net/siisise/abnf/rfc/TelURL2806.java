@@ -10,7 +10,7 @@ import net.siisise.abnf.parser5234.ABNF5234;
  * @author okome
  */
 public class TelURL2806 {
-    public static ABNFReg REG = new ABNFReg(ABNF5234.REG);
+    public static ABNFReg REG = new ABNFReg(ABNF5234.BASE);
     
     static final ABNF dtmfDigit = REG.rule("dtmf-digit","\"*\" / \"#\" / \"A\" / \"B\" / \"C\" / \"D\"");
     static final ABNF waitForDialTone = REG.rule("wait-for-dial-tone","\"w\"");

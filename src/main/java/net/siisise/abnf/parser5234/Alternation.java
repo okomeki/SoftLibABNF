@@ -12,11 +12,7 @@ import net.siisise.abnf.parser.ABNFList;
  * @author okome
  */
 public class Alternation extends ABNFList<ABNF, ABNF> {
-
-    public Alternation(ABNFReg reg) {
-        super(ABNF5234.alternation, reg, Concatenation.class);
-    }
-    
+  
     public Alternation(ABNF def, ABNFReg reg, ABNFReg base) {
         super(def, reg, base, "concatenation");
     }

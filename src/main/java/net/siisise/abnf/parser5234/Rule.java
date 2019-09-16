@@ -12,16 +12,8 @@ import net.siisise.io.Packet;
  */
 public class Rule extends ABNFBaseParser<ABNF, ABNF> {
 
-    /**
-     * @deprecated  
-     * @param reg ABNF Parserの定義は不要のはず
-     */
-    public Rule(ABNFReg reg) {
-        super(ABNF5234.rule, reg, Elements.class);
-    }
-
-    public Rule(ABNFReg reg, ABNFReg base) {
-        super(ABNF5234.rule, reg, base, "elements");
+    public Rule(ABNF abnf, ABNFReg reg, ABNFReg base) {
+        super(abnf, reg, base, "elements");
     }
 
     @Override

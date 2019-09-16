@@ -27,32 +27,17 @@ public abstract class ABNFBaseParser<T, M> implements ABNFParser<T> {
     protected Class<? extends ABNFParser<? extends M>>[] subc;
     protected String[] subName;
 
-    protected ABNFBaseParser(ABNF def, ABNFParser<M>... subs) {
-        this.def = def;
-        this.subs = subs;
-    }
-
-    protected ABNFBaseParser(ABNF def, ABNFReg reg, ABNFParser<M>... subs) {
-        this.def = def;
-        this.reg = reg;
-        this.subs = subs;
-    }
-
-    public ABNFBaseParser(ABNF def, ABNFReg reg) {
-        this.def = def;
-        this.reg = reg;
-    }
-
     /**
-     * @deprecated 参照をもっと弱くする
-     * @param def
-     * @param reg
-     * @param subc 
+     * regが不要な文字系のところ
+     * @param def 
      */
-    public ABNFBaseParser(ABNF def, ABNFReg reg, Class<? extends ABNFParser<? extends M>>... subc) {
+    protected ABNFBaseParser(ABNF def) {
+        this.def = def;
+    }
+
+    protected ABNFBaseParser(ABNF def, ABNFReg reg) {
         this.def = def;
         this.reg = reg;
-        this.subc = subc;
     }
 
     /**
@@ -90,7 +75,6 @@ public abstract class ABNFBaseParser<T, M> implements ABNFParser<T> {
                         subs[i] = cnst.newInstance(base.href(subName[i]),reg,base);
                     } else {
                         subs[i] = subc[i].getConstructor(ABNFReg.class).newInstance(reg);
-//                      subs[i] = subc[i].getConstructor().newInstance();
                     }
                 }
             } catch (InstantiationException ex) {
@@ -140,6 +124,7 @@ public abstract class ABNFBaseParser<T, M> implements ABNFParser<T> {
         return parse(AbstractABNF.pac(str));
     }
 
+    /** たぶん名前空間を使わない簡易パーサの生成 */
     protected ABNFPacketParser x(ABNF def) {
         return new ABNFPacketParser(def, reg);
     }

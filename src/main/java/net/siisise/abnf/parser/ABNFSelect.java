@@ -11,21 +11,6 @@ import net.siisise.io.Packet;
  */
 public class ABNFSelect<T> extends ABNFBaseParser<T, T> {
 
-    protected ABNFSelect(ABNF def, ABNFReg reg) {
-        super(def, reg);
-    }
-
-    protected ABNFSelect(ABNF def, ABNFReg reg, ABNFParser<T>... sub) {
-        super(def, reg, sub);
-    }
-
-//    protected ABNFSelect(ABNF def, Class<? extends ABNFParser<T>>... subc) {
-//        super(def,subc);
-//    }
-    protected ABNFSelect(ABNF def, ABNFReg reg, Class<? extends ABNFParser<? extends T>>... subc) {
-        super(def, reg, subc);
-    }
-
     protected ABNFSelect(ABNF def, ABNFReg reg, ABNFReg base, String...  subcs) {
         super(def, reg, base, subcs);
     }

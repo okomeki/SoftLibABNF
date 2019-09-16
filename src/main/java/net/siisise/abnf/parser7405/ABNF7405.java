@@ -14,7 +14,7 @@ import net.siisise.abnf.parser5234.Element;
  */
 public class ABNF7405 {
 
-    static ABNFReg REG = new ABNFReg(ABNF5234.copyREG(),ABNF5234.REG);
+    public static ABNFReg REG = new ABNFReg(ABNF5234.copyREG());
     
     static final ABNF caseInsensitiveString = REG.rule("case-insensitive-string","[ \"%i\" ] quoted-string");
     static final ABNF caseSensitiveString = REG.rule("case-sensitive-string","\"%s\" quoted-string");
@@ -24,14 +24,4 @@ public class ABNF7405 {
     // ここだけで差し替え
     static final ABNF element = REG.rule("element",Element.class,REG.ref("rulename").or(REG.ref("group"),
             REG.ref("option"),REG.ref("char-val"),REG.ref("num-val"),REG.ref("prose-val")));
-    
-    ABNF rule(String name, String val) {
-        throw new java.lang.UnsupportedOperationException();
-    }
-
-    public static void main(String[] argv ) {
-        // てすと
-        
-    }
-    
 }

@@ -7,14 +7,10 @@ import net.siisise.abnf.parser.ABNFSub;
 /**
  * elements のParser.
  * alternationを取り出すだけ
- * @author okome
+ * 定義のみなので消せる?
  */
 public class Elements extends ABNFSub<ABNF> {
-
-    public Elements(ABNFReg reg) {
-        super(ABNF5234.elements, reg, Alternation.class);
-    }
-
+    
     public Elements(ABNF abnf, ABNFReg reg, ABNFReg base) {
         super(abnf, reg, base, "alternation");
     }

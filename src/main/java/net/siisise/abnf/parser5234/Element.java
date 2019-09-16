@@ -11,10 +11,12 @@ import net.siisise.abnf.parser.ABNFSelect;
  */
 public class Element extends ABNFSelect<ABNF> {
 
-    public Element(ABNFReg reg) {
-        super(ABNF5234.element, reg, Rulename.class, Group.class, Option.class, CharVal.class, NumVal.class, ProseVal.class);
-    }
- 
+    /**
+     * より抽象化したもの
+     * @param def
+     * @param reg
+     * @param base 
+     */
     public Element(ABNF def, ABNFReg reg, ABNFReg base) {
         super(def, reg, base, "rulename", "group", "option", "char-val", "num-val", "prose-val");
     }

@@ -11,7 +11,7 @@ import net.siisise.abnf.parser5234.ABNF5234;
  */
 public class URI2396 {
 
-    static final ABNFReg REG = new ABNFReg();
+    static final ABNFReg REG = new ABNFReg(ABNF5234.BASE,ABNF5234.REG);
 
     static final ABNF lowalpha = REG.rule("lowalpha", ABNF.range('a', 'z'));
     static final ABNF upalpha = REG.rule("upalpha", ABNF.range('A', 'Z'));

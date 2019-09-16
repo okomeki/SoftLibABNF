@@ -11,23 +11,6 @@ import net.siisise.abnf.ABNFReg;
  */
 public class ABNFSub<T> extends ABNFList<T, T> {
 
-//    public ABNFSub(ABNF def, ABNFParser<T> subs) {
-//        super(def, subs);
-//    }
-    /**
-     * 
-     * @param def
-     * @param reg 名前空間参照用
-     * @param subs 
-     */
-    protected ABNFSub(ABNF def, ABNFReg reg, ABNFParser<T> subs) {
-        super(def, reg, subs);
-    }
-
-    protected ABNFSub(ABNF def, ABNFReg reg, Class<? extends ABNFParser<T>> subc) {
-        super(def, reg, subc);
-    }
-
     /**
      * 
      * @param def

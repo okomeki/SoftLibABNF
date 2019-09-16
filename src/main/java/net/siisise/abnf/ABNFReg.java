@@ -7,12 +7,13 @@ import java.util.List;
 import java.util.Map;
 import net.siisise.abnf.parser.ABNFParser;
 import net.siisise.abnf.parser5234.ABNF5234;
-import net.siisise.abnf.parser5234.Elements;
-import net.siisise.abnf.parser5234.Rule;
 import net.siisise.io.Packet;
 
 /**
- * ABNFの名前担当
+ * ABNFの名前担当、Parserの機能もあり
+ * Namespace
+ * 
+ * rule: 基本は RFC 5234 に準拠するが、一部改変したParserの対応も可能
  *
  * @author okome
  */
@@ -51,27 +52,31 @@ public class ABNFReg {
     }
 
     public ABNFReg() {
+        parseReg = ABNF5234.REG;
     }
 
     /**
      * いろいろ未定
-     *
+     * up の定義を複製する
+     * HTTP7230では拡張の実験をしている
      * @param up
-     * @param exParser
+     * @param exParser Parserの種類 ABNF5234.REG,RFC 7405, RFC 7230など微妙に違うとき。利用しないときのみ省略したい
      */
     public ABNFReg(ABNFReg up, ABNFReg exParser) {
-        //reg = new HashMap<>(up.reg); // 複製しておくのが簡単
-        up.CL.keySet().forEach((key) -> {
-            CL.put(key, up.CL.get(key));
-        });
-        up.reg.keySet().forEach((key) -> { // 循環参照対策が必要
-            reg.put(key, up.reg.get(key).copy(this));
-        });
+        if ( up != null ) {
+            //reg = new HashMap<>(up.reg); // 複製しておくのが簡単
+            up.CL.keySet().forEach((key) -> {
+                CL.put(key, up.CL.get(key));
+            });
+            up.reg.keySet().forEach((key) -> { // 循環参照対策が必要
+                reg.put(key, up.reg.get(key).copy(this));
+            });
+        }
         parseReg = exParser;
     }
 
     public ABNFReg(ABNFReg up) {
-        this(up, null);
+        this(up, ABNF5234.REG);
     }
 
     /**
@@ -140,17 +145,12 @@ public class ABNFReg {
     }
 
     /**
-     *
-     * @param rule name = value
+     * 
+     * @param rule name = value 改行を省略可能に改変している
      * @return
      */
     public ABNF rule(String rule) {
-        ABNF abnf;
-        if (parseReg == null) {
-            abnf = new Rule(this).parse(rule);
-        } else {
-            abnf = baseParse("rule", rule);
-        }
+        ABNF abnf = baseParse("rule", rule + "\r\n");
         return rule(abnf.getName(), abnf);
     }
 
@@ -158,20 +158,29 @@ public class ABNFReg {
      * Parser構築用
      * 参照空間とABNF Parserが別に存在する場合が多い
      * 裏側(ABNF Parser)を駆動する
-     * @param <T>
      * @param name
      * @param src
      * @return 
      */
-    public <T extends ABNF> T baseParse(String name, String src) {
+    public ABNF baseParse(String name, String src) {
         try {
-            Constructor<? extends ABNFParser> c = parseReg.CL.get(name).getConstructor(ABNF.class,ABNFReg.class, ABNFReg.class);
-            return (T) c.newInstance(parseReg.reg.get(name),this, parseReg).parse(src);
+            Constructor<? extends ABNFParser> cnst = parseReg.CL.get(name).getConstructor(ABNF.class,ABNFReg.class, ABNFReg.class);
+            return (ABNF) cnst.newInstance(parseReg.reg.get(name),this, parseReg).parse(src);
         } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException
                 | IllegalArgumentException | InvocationTargetException ex) {
             throw new java.lang.UnsupportedOperationException(ex);
         }
     }
+    
+    List<ABNF> listParse(String name, String src) {
+        try {
+            Constructor<? extends ABNFParser> cnst = parseReg.CL.get(name).getConstructor(ABNF.class,ABNFReg.class, ABNFReg.class);
+            return (List<ABNF>) cnst.newInstance(parseReg.reg.get(name),this, parseReg).parse(src);
+        } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException
+                | IllegalArgumentException | InvocationTargetException ex) {
+            throw new java.lang.UnsupportedOperationException(ex);
+        }
+    } 
 
     /**
      * ユーザ側のParser(JSONなど)を駆動する
@@ -200,17 +209,12 @@ public class ABNFReg {
      * @return
      */
     public ABNF rule(String name, String elements) {
-        ABNF abnf;
-        if (parseReg == null) {
-            abnf = new Elements(this).parse(elements);
-        } else {
-            abnf = baseParse("elements", elements);
-        }
+        ABNF abnf = baseParse("elements", elements);
         return rule(name, abnf);
     }
 
     public List<ABNF> rulelist(String rulelist) {
-        List<ABNF> list = baseParse("rulelist", rulelist);
+        List<ABNF> list = listParse("rulelist", rulelist);
         list.forEach((abnf) -> {
             reg.put(abnf.getName(), abnf);
         });

@@ -13,20 +13,6 @@ import net.siisise.io.Packet;
  */
 public abstract class ABNFList<T, M> extends ABNFBaseParser<T, M> {
 
-    protected ABNFList(ABNF def, ABNFReg reg, ABNFParser<M> sub) {
-        super(def, reg, sub);
-    }
-
-    /**
-     * @deprecated 参照をもっと弱くする
-     * @param def
-     * @param reg
-     * @param subc 
-     */
-    protected ABNFList(ABNF def, ABNFReg reg, Class<? extends ABNFParser<M>> subc) {
-        super(def, reg, subc);
-    }
-
     /**
      * 
      * @param def

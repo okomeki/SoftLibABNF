@@ -12,10 +12,6 @@ import net.siisise.io.Packet;
  */
 public class Repetition extends ABNFBaseParser<ABNF, ABNF> {
 
-    public Repetition(ABNFReg reg) {
-        super(ABNF5234.repetition, reg, Element.class);
-    }
-
     /**
      * abnfの他、ABNF5234のrepeat も参照する
      * @param abnf
