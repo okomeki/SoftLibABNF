@@ -28,20 +28,19 @@ public class ABNFReg {
     /**
      * 名前の参照を先に済ませる
      */
-    public class ABNFRef extends AbstractABNF {
+    public class ABNFRef extends FindABNF {
 
         ABNFRef(String name) {
             this.name = name;
         }
 
         @Override
-        public B find(Packet pac, String... names) {
-//            System.out.println("ref:" + name);
-            B ret = reg.get(name).find(pac, names);
-            if (ret == null) {
+        public C findx(Packet pac, ABNFParser... parsers) {
+            C ret = reg.get(name).findx(pac, parsers);
+            if ( ret == null ) {
                 return null;
             }
-            return sub(ret, names);
+            return sub(ret, parsers);
         }
 
         @Override

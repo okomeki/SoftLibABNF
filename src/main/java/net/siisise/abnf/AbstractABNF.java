@@ -1,11 +1,10 @@
 package net.siisise.abnf;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import net.siisise.abnf.parser.ABNFBaseParser;
 import net.siisise.abnf.parser.ABNFParser;
 import net.siisise.io.Packet;
 import net.siisise.io.PacketA;
@@ -20,6 +19,50 @@ public abstract class AbstractABNF implements ABNF {
      * 名前、またはABNFに近いもの (まだ抜けもある)
      */
     String name;
+
+    @Override
+    public String getName() {
+        if (name == null) {
+            return "???";
+        }
+        return name;
+    }
+
+    @Override
+    public ABNF name(String name) {
+        return new ABNFor(name, this); // ?
+    }
+    
+    protected boolean isName(ABNFParser<?>[] parsers) {
+        for (ABNFParser p : parsers ) {
+            if (name.equals(p.getBNF().getName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean is(String val) {
+        return is(pac(val)) != null;
+    }
+    
+    @Override
+    public boolean eq(Packet val) {
+        Packet r = is(val);
+        if (val.length() == 0) {
+            return true;
+        }
+        if (r != null) { // 部分一致
+            val.backWrite(r.toByteArray());
+        }
+        return false;
+    }
+
+    @Override
+    public boolean eq(String val) {
+        return eq(pac(val));
+    }
 
     @Override
     public ABNF pl(ABNF... val) {
@@ -39,72 +82,36 @@ public abstract class AbstractABNF implements ABNF {
         System.arraycopy(val, 0, list, 1, val.length);
         return new ABNFor(list);
     }
-
-    /*    @Override
-    public Packet is(Packet src) {
-        B ret = find(src);
-        if ( ret == null ) {
-            return null;
-        }
-        return ret.ret;
+/*
+    void rollback(Packet src, Packet data) {
+        byte[] d = data.toByteArray();
+        src.backWrite(d);
     }
+*/
+
+    /**
+     * 
+     * @param <X>
+     * @param ret
+     * @param sub 
      */
-    protected boolean isName(String[] names) {
-        List<String> nnn = Arrays.asList(names);
-        return nnn.contains(name);
-    }
-
-    protected boolean isName(String name, String[] names) {
-        for (String n : names) {
-            if (name.equals(n)) {
-                return true;
-            }
-        }
-        return false;
+    static <X> void mix(C<X> ret, C<X> sub) {
+        ret.ret.write(sub.ret.toByteArray());
+        sub.subs.keySet().forEach((key) -> {
+            List<Object> val = (List<Object>) sub.subs.get(key);
+            val.forEach((v) -> {
+                ret.add(key, (X) v);
+            });
+        });
     }
 
     /**
-     * sub要素のない場合の対応
-     *
-     * @param pac
-     * @param names
-     * @return
+     * 
+     * @param <X>
+     * @param cret
+     * @param parsers
+     * @return 
      */
-    @Override
-    public B find(Packet pac, String... names) {
-        Packet r = is(pac);
-        if (r == null) {
-            return null;
-        }
-        return sub(new B(r), names);
-    }
-
-    @Override
-    public <X> C<X> findx(Packet pac, ABNFParser<? extends X>... parsers) {
-//        System.out.println("findx:" +getName()+":"+ strd(pac));
-        List<String> names = new ArrayList<>();
-        for (ABNFParser<? extends X> p : parsers) {
-            names.add(p.getBNF().getName());
-        }
-        B<X> ret = find(pac, names.toArray(new String[parsers.length]));
-        if (ret == null) {
-            return null;
-        }
-//        System.out.println("findx2:" + ret);
-        C<X> cret = new C<>(ret.ret);
-        for (ABNFParser<? extends X> p : parsers) {
-            String pname = p.getBNF().getName();
-            List<Packet> subps = ret.subs.get(pname);
-            if (subps != null) {
-                for (Packet subp : subps) {
-//                    System.out.println("findx2s:" + p.getClass().getName() + " : " + strd(subp));
-                    cret.add(pname, p.parse(subp));
-                }
-            }
-        }
-        return cret; // sub(cret,parsers);
-    }
-
     <X> C<X> sub(C<X> cret, ABNFParser<? extends X>... parsers) {
         for (ABNFParser<? extends X> p : parsers) {
             String pname = p.getBNF().getName();
@@ -116,88 +123,6 @@ public abstract class AbstractABNF implements ABNF {
             }
         }
         return cret;
-    }
-
-    void rollback(Packet src, Packet data) {
-        byte[] d = data.toByteArray();
-        src.backWrite(d);
-    }
-
-    void mix(B<Packet> ret, B<Packet> sub) {
-        ret.ret.write(sub.ret.toByteArray());
-        sub.subs.keySet().forEach((key) -> {
-            List<Packet> val = sub.subs.get(key);
-            val.forEach((v) -> {
-                ret.add(key, v);
-            });
-        });
-    }
-
-    <X> void mix(C<X> ret, C<X> sub) {
-        ret.ret.write(sub.ret.toByteArray());
-        sub.subs.keySet().forEach((key) -> {
-            List<Object> val = (List<Object>) sub.subs.get(key);
-            val.forEach((v) -> {
-                ret.add(key, (X) v);
-            });
-        });
-    }
-
-    /**
-     * 該当すれば sub要素を消す
-     *
-     * @param src
-     * @param names
-     * @return
-     */
-    B sub(B src, String[] names) {
-        List<String> nn = Arrays.asList(names);
-
-        if (nn.contains(name)) {
-            byte[] b = src.ret.toByteArray();
-            src.ret.backWrite(b);
-            Packet p = new PacketA(b);
-            List<Packet> pl = new ArrayList<>();
-            pl.add(p);
-            src.subs.clear();
-            src.subs.put(name, pl); // 上書き
-        }
-
-        return src;
-    }
-
-//    B mix(Packet src, String[] names) {
-//        return sub(new B(src),names);
-//    }
-    @Override
-    public Packet is(Packet src) {
-        B ret = find(src);
-        if (ret == null) {
-            return null;
-        }
-        return ret.ret;
-    }
-
-    @Override
-    public boolean is(String val) {
-        return is(pac(val)) != null;
-    }
-
-    @Override
-    public boolean eq(Packet val) {
-        Packet r = is(val);
-        if (val.length() == 0) {
-            return true;
-        }
-        if (r != null) { // 部分一致
-            val.backWrite(r.toByteArray());
-        }
-        return false;
-    }
-
-    @Override
-    public boolean eq(String val) {
-        return eq(pac(val));
     }
 
     @Override
@@ -218,19 +143,6 @@ public abstract class AbstractABNF implements ABNF {
     @Override
     public ABNF c() {
         return x(0, 1);
-    }
-
-    @Override
-    public String getName() {
-        if (name == null) {
-            return "???";
-        }
-        return name;
-    }
-
-    @Override
-    public ABNF name(String name) {
-        return new ABNFor(name, this); // ?
     }
 
     protected String hex(int ch) {

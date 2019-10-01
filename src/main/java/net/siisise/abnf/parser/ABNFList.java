@@ -32,9 +32,9 @@ public abstract class ABNFList<T, M> extends ABNFBaseParser<T, M> {
         if (sret == null) {
             return null;
         }
-        List<M> r = sret.get(subs[0].getBNF());
+        List<M> mlist = sret.get(subs[0].getBNF());
         // r nullあり
-        return parse(r);
+        return parse(mlist);
     }
 
     /**
