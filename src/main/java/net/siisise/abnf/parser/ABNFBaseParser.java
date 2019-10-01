@@ -124,9 +124,29 @@ public abstract class ABNFBaseParser<T, M> implements ABNFParser<T> {
         return parse(AbstractABNF.pac(str));
     }
 
-    /** たぶん名前空間を使わない簡易パーサの生成 */
-    protected ABNFPacketParser x(ABNF def) {
-        return new ABNFPacketParser(def, reg);
+    /**
+     * たぶん名前空間を使わない簡易パーサの生成
+     * かなにかに改名する?
+     * @param bnf
+     * @return 
+     */
+    protected ABNFPacketParser x(ABNF bnf) {
+        return new ABNFPacketParser(bnf, reg);
+    }
+    
+    /**
+     * x() を省略してABNFで指定したいだけの版
+     * def側へ移したいがregが依存している
+     * @param pac
+     * @param defs
+     * @return 
+     */
+    protected ABNF.C find(Packet pac, ABNF... defs) {
+        ABNFParser[] ps = new ABNFParser[defs.length];
+        for ( int i = 0; i < defs.length; i++ ) {
+            ps[i] = x(defs[i]);
+        }
+        return def.findx(pac, ps);
     }
 
     protected static String str(Packet pac) {

@@ -146,8 +146,4 @@ public class HTTP7230 {
     static final ABNF protocolVersion = REG.rule("protocol-version",token);
     static final ABNF protocol = REG.rule("protocol","protocol-name [\"/\" protocol-version]");
     public static final ABNF Upgrade = REG.rule("Upgrade","1#protocol");
-
-    public static void main(String[] argv) {
-        throw new java.lang.UnsupportedOperationException("");
-    }
 }

@@ -4,7 +4,7 @@ import net.siisise.abnf.ABNF;
 import net.siisise.abnf.ABNFReg;
 
 /**
- *
+ * RFC 3986 のIP-literal を微修正
  * @author okome
  */
 public class RFC6874 {

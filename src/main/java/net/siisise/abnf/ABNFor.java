@@ -4,46 +4,23 @@ import java.util.ArrayList;
 import java.util.List;
 import net.siisise.abnf.parser.ABNFParser;
 import net.siisise.io.Packet;
-import net.siisise.io.PacketA;
 
 /**
  *
  * @author okome
  */
-public class ABNFor extends AbstractABNF {
+public class ABNFor extends FindABNF {
 
     private ABNF[] list;
 
     public ABNFor(ABNF... abnfs) {
-        this.list = abnfs;
+        list = abnfs;
         name = toName(abnfs);
     }
 
-    static String toName(ABNF[] abnfs) {
-        StringBuilder sb = new StringBuilder();
-        //if ( list.length > 1) {
-        sb.append("( ");
-        //}
-        for (ABNF v : abnfs) {
-            String n = v.getName();
-            if (v instanceof ABNFor && n.startsWith("( ") && n.endsWith(" )")) {
-                n = n.substring(2, n.length() - 2);
-                sb.append(n);
-            } else {
-                sb.append(v.getName());
-            }
-            sb.append(" / ");
-        }
-        sb.delete(sb.length() - 3, sb.length());
-        //if ( list.length > 1 ) {
-        sb.append(" )");
-        //}
-        return sb.toString();
-    }
-
-    public ABNFor(String n, ABNF... list) {
+    public ABNFor(String n, ABNF... abnfs) {
         name = n;
-        this.list = list;
+        list = abnfs;
     }
 
     /**
@@ -71,6 +48,28 @@ public class ABNFor extends AbstractABNF {
         this.name = name;
     }
 
+    static String toName(ABNF[] abnfs) {
+        StringBuilder sb = new StringBuilder();
+        //if ( list.length > 1) {
+        sb.append("( ");
+        //}
+        for (ABNF v : abnfs) {
+            String n = v.getName();
+            if (v instanceof ABNFor && n.startsWith("( ") && n.endsWith(" )")) {
+                n = n.substring(2, n.length() - 2);
+                sb.append(n);
+            } else {
+                sb.append(v.getName());
+            }
+            sb.append(" / ");
+        }
+        sb.delete(sb.length() - 3, sb.length());
+        //if ( list.length > 1 ) {
+        sb.append(" )");
+        //}
+        return sb.toString();
+    }
+
     @Override
     public ABNFor copy(ABNFReg reg) {
         ABNF[] l = new ABNF[this.list.length];
@@ -92,52 +91,26 @@ public class ABNFor extends AbstractABNF {
     }
 
     @Override
-    public B find(Packet pac, String... names) {
-//        System.out.println(getName() + ":" + strd(pac) + ":or" + pac.length());
-        ABNF.B ret = null;
-        String[] subnames;
-        subnames = isName(names) ? new String[0] : names;
-
-        for (ABNF sub : list) {
-            byte[] data = pac.toByteArray();
-            pac.backWrite(data);
-            Packet d = new PacketA(data);
-//            System.out.println("x:" + getName() +";"+ strd(d));
-
-            B subret = sub.find(d, subnames);
-            if (subret != null && (ret == null || ret.ret.length() < subret.ret.length())) {
-                if (ret != null) {
-                    System.out.println("+******DUUPP****+" + subret + "(" + sub.toString() + ")");
-                }
-                ret = subret;
-            }
-        }
-        if (ret == null) {
-            return null;
-        }
-//        System.out.println("or " + getName() + " ret:" + ret);
-        byte[] e = new byte[(int) ret.ret.length()];
-        pac.read(e);
-        return sub(ret, names);
-    }
-
-    @Override
     public <X> C<X> findx(Packet pac, ABNFParser<? extends X>... parsers) {
 //        System.out.println(getName() + ":" + strd(pac) + ":or" + pac.length());
         ABNF.C ret = null;
+        byte[] data;
+        ABNFParser[] subps = isName(parsers) ? new ABNFParser[0] : parsers;
 
         for (ABNF sub : list) {
-            byte[] data = pac.toByteArray();
-            pac.backWrite(data);
-            Packet d = new PacketA(data);
 //            System.out.println("x:" + sub.getName() +";"+ strd(d));
 
-            C subret = sub.findx(d, parsers);
-            if (subret != null && (ret == null || ret.ret.length() < subret.ret.length())) {
-                if (ret != null) {
-                    System.out.println("+******DUUPP****+" + subret + "(" + sub.toString() + ")");
+            C subret = sub.findx(pac, subps);
+            if (subret != null) {
+                data = subret.ret.toByteArray();
+                pac.backWrite(data);
+                if (ret == null || ret.ret.length() < data.length) {
+                    subret.ret.backWrite(data);
+                    if (ret != null) {
+                        System.out.println("+******DUUPP****+" + subret + "(" + sub.toString() + ")");
+                    }
+                    ret = subret;
                 }
-                ret = subret;
             }
         }
         if (ret == null) {
@@ -146,6 +119,6 @@ public class ABNFor extends AbstractABNF {
 //        System.out.println("or " + getName() + " ret:" + ret);
         byte[] e = new byte[(int) ret.ret.length()];
         pac.read(e);
-        return sub(ret, parsers);
+        return sub(ret, parsers); // parseが走る
     }
 }

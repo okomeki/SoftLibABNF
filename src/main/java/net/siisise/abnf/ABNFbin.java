@@ -13,7 +13,7 @@ import net.siisise.io.PacketA;
  * バイナリ表現
  * @author okome
  */
-public class ABNFbin extends AbstractABNF {
+public class ABNFbin extends IsABNF {
 
     private byte[] data;
 
@@ -27,6 +27,10 @@ public class ABNFbin extends AbstractABNF {
         data = utf8(ch);
     }
 
+    /**
+     * ascii ?
+     * @param val 
+     */
     ABNFbin(String val) {
         StringBuilder sb = new StringBuilder(50);
         sb.append(hex(val.charAt(0)));

@@ -18,17 +18,17 @@ public class CharVal7405 extends ABNFBaseParser<ABNF, ABNF> {
 
     @Override
     public ABNF parse(Packet pac) {
-        ABNF.B ret = def.find(pac,"case-insensitive-string","case-sensitive-string","quoted-string");
+        ABNF.C ret = find(pac,ABNF7405.caseInsensitiveString,ABNF7405.caseSensitiveString,ABNF7405.quotedString);
         if (ret == null) {
             return null;
         }
-        List<Packet> in = ret.get("case-insensitive-string");
-        List<Packet> sen = ret.get("case-sensitive-string");
-        Packet qs = (Packet) ret.get("quoted-string").get(0);
+        List<Packet> insen = ret.get(ABNF7405.caseInsensitiveString);
+        List<Packet> sen = ret.get(ABNF7405.caseSensitiveString);
+        Packet qs = (Packet) ret.get(ABNF7405.quotedString).get(0);
         qs.read();
         qs.backRead();
         String val = str(qs);
-        if ( in != null ) {
+        if ( insen != null ) {
             return ABNF.text(val);
         } else if ( sen != null ) {
             return ABNF.bin(val);

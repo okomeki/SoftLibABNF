@@ -12,7 +12,7 @@ import net.siisise.io.PacketA;
  * @see ABNFbin
  * @author okome
  */
-public class ABNFtext extends AbstractABNF {
+public class ABNFtext extends IsABNF {
 
     String text;
     byte[] utf8;
@@ -32,8 +32,8 @@ public class ABNFtext extends AbstractABNF {
         }
     }
 
-    ABNFtext(String val) {
-        this("\"" + val + "\"", val);
+    ABNFtext(String text) {
+        this("\"" + text + "\"", text);
     }
 
     public ABNFtext(String name, String val) {

@@ -8,7 +8,7 @@ import net.siisise.io.PacketA;
  *
  * @author okome
  */
-public class ABNFrange extends AbstractABNF {
+public class ABNFrange extends IsABNF {
 
     private final int min;
     private final int max;

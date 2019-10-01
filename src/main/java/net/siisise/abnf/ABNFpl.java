@@ -1,78 +1,61 @@
 package net.siisise.abnf;
 
+import net.siisise.abnf.parser.ABNFParser;
 import net.siisise.io.Packet;
-import net.siisise.io.PacketA;
 
 /**
  *
- * @author okome
  */
-public class ABNFpl extends AbstractABNF {
+public class ABNFpl extends FindABNF {
 
     protected final ABNF[] list;
 
-    public ABNFpl(ABNF[] list) {
-        this.list = list;
+    public ABNFpl(ABNF... abnfs) {
+        list = abnfs;
         StringBuilder sb = new StringBuilder();
-        for (ABNF a : list) {
-            sb.append(a.getName());
+        for (ABNF abnf : list) {
+            sb.append(abnf.getName());
             sb.append(" ");
         }
         sb.deleteCharAt(sb.length() - 1);
         name = "( " + sb.toString() + " )";
     }
 
+    /**
+     * 
+     * @param reg
+     * @return 
+     */
     @Override
     public ABNFpl copy(ABNFReg reg) {
-        ABNF[] l = new ABNF[this.list.length];
+        ABNF[] cplist = new ABNF[list.length];
 
         for (int i = 0; i < list.length; i++) {
-            l[i] = this.list[i].copy(reg);
+            cplist[i] = list[i].copy(reg);
         }
-        return new ABNFpl(l);
+        return new ABNFpl(cplist);
     }
 
-    @Override
-    public B find(Packet pac, String... names) {
-//        System.out.println(getName() + ":" + strd(pac) + ":pl");
-        B ret = new ABNF.B(new PacketA());
-        String[] subnames;
-        subnames = isName(names) ? new String[0] : names;
-
-        for (ABNF sub : list) {
-            B subret = sub.find(pac, subnames);
-            if (subret == null) {
-                pac.backWrite(ret.ret.toByteArray());
-                return null;
-            }
-            mix(ret, subret);
-        }
-        return sub(ret, names);
-    }
-    /*
     @Override
     public <X> C<X> findx(Packet pac, ABNFParser<? extends X>... parsers) {
 //        System.out.println(getName() + ":" + strd(pac) + ":pl");
-        C ret = new ABNF.C(new PacketA());
-        String[] subnames;
-        for ( ABNFParser<? extends X> p : parsers ) {
-            
-        }
+        C<X> ret = new ABNF.C();
+        ABNFParser[] subparsers;
+        boolean n = isName(parsers);
+        subparsers = n ? new ABNFParser[0] : parsers;
         
-        subnames = isName(names) ? new String[0] : names;
-
         for (ABNF sub : list) {
-            C subret = sub.findx(pac, subnames);
+            C<X> subret = sub.findx(pac, subparsers);
             if (subret == null) {
                 pac.backWrite(ret.ret.toByteArray());
                 return null;
             }
             mix(ret, subret);
         }
-        return sub(ret, parsers);
+        return n ? sub(ret, parsers) : ret;
     }
-     */
- /*    
+
+/*    
     @Override
     public <X> C<X> findx2(Packet pac, ABNFParser<? extends X>... parsers) {
         System.out.println(getName() + ":" + strd(pac) + ":pl");

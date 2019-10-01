@@ -1,13 +1,13 @@
 package net.siisise.abnf;
 
+import net.siisise.abnf.parser.ABNFParser;
 import net.siisise.io.Packet;
-import net.siisise.io.PacketA;
 
 /**
- *
+ * ループの結果は最長だけでなく、各長さで判定したいこともあり
  * @author okome
  */
-public class ABNFx extends AbstractABNF {
+public class ABNFx extends FindABNF {
 
     // a 初期値: 0
     // b 初期値: -1
@@ -48,19 +48,19 @@ public class ABNFx extends AbstractABNF {
     }
 
     @Override
-    public B find(Packet pac, String... names) {
+    public C findx(Packet pac, ABNFParser... names) {
         if (isName(names)) { // ないかも
-            B p = find(pac);
+            C p = findx(pac);
             if (p == null) {
                 return null;
             }
             return sub(p, names);
         }
 
-        B ret = new B(new PacketA());
+        C ret = new C();
         for (int i = 0; b == -1 || i < b; i++) {
 //            System.out.println(abnf+":" + strd(ret.ret)+"%"+strd(pac));
-            B sub = abnf.find(pac, names);
+            C sub = abnf.findx(pac, names);
             if (sub == null) {
                 if (i < a) {
                     byte[] data = ret.ret.toByteArray();
@@ -74,5 +74,4 @@ public class ABNFx extends AbstractABNF {
         }
         return ret;
     }
-
 }
