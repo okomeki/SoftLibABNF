@@ -28,7 +28,7 @@ public class HTTP7230Repetition extends ABNFBaseParser<ABNF, ABNF> {
     public ABNF parse(Packet pac) {
         inst();
 //        System.out.println("rep: " + strd(pac));
-        ABNF.C<Object> ret = def.findx(pac, x(HTTP7230.repList), subs[0]);
+        ABNF.C<Object> ret = def.find(pac, x(HTTP7230.repList), subs[0]);
         if (ret == null) {
             return null;
         }

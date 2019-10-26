@@ -17,7 +17,7 @@ public class ABNFtext extends IsABNF {
     String text;
     byte[] utf8;
 
-    public ABNFtext(int ch) {
+    ABNFtext(int ch) {
         text = Character.toString(ch);
         if (ch < 0x7f && ch >= 0x20 && ch != 0x22) {
             name = "\"" + (char) ch + "\"";
@@ -36,7 +36,7 @@ public class ABNFtext extends IsABNF {
         this("\"" + text + "\"", text);
     }
 
-    public ABNFtext(String name, String val) {
+    ABNFtext(String name, String val) {
         text = val;
         this.name = name;
         try {

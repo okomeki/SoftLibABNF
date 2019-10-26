@@ -35,8 +35,8 @@ public class ABNFReg {
         }
 
         @Override
-        public C findx(Packet pac, ABNFParser... parsers) {
-            C ret = reg.get(name).findx(pac, parsers);
+        public C find(Packet pac, ABNFParser... parsers) {
+            C ret = reg.get(name).find(pac, parsers);
             if ( ret == null ) {
                 return null;
             }

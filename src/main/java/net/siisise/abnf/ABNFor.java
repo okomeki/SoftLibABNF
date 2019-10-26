@@ -7,7 +7,6 @@ import net.siisise.io.Packet;
 
 /**
  *
- * @author okome
  */
 public class ABNFor extends FindABNF {
 
@@ -91,18 +90,15 @@ public class ABNFor extends FindABNF {
     }
 
     @Override
-    public <X> C<X> findx(Packet pac, ABNFParser<? extends X>... parsers) {
-//        System.out.println(getName() + ":" + strd(pac) + ":or" + pac.length());
+    public <X> C<X> find(Packet pac, ABNFParser<? extends X>... parsers) {
         ABNF.C ret = null;
-        byte[] data;
         ABNFParser[] subps = isName(parsers) ? new ABNFParser[0] : parsers;
 
         for (ABNF sub : list) {
-//            System.out.println("x:" + sub.getName() +";"+ strd(d));
 
-            C subret = sub.findx(pac, subps);
+            C subret = sub.find(pac, subps);
             if (subret != null) {
-                data = subret.ret.toByteArray();
+                byte[] data = subret.ret.toByteArray();
                 pac.backWrite(data);
                 if (ret == null || ret.ret.length() < data.length) {
                     subret.ret.backWrite(data);
@@ -116,7 +112,7 @@ public class ABNFor extends FindABNF {
         if (ret == null) {
             return null;
         }
-//        System.out.println("or " + getName() + " ret:" + ret);
+
         byte[] e = new byte[(int) ret.ret.length()];
         pac.read(e);
         return sub(ret, parsers); // parseが走る

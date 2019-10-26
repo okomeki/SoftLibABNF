@@ -37,7 +37,7 @@ public class ABNFpl extends FindABNF {
     }
 
     @Override
-    public <X> C<X> findx(Packet pac, ABNFParser<? extends X>... parsers) {
+    public <X> C<X> find(Packet pac, ABNFParser<? extends X>... parsers) {
 //        System.out.println(getName() + ":" + strd(pac) + ":pl");
         C<X> ret = new ABNF.C();
         ABNFParser[] subparsers;
@@ -45,7 +45,7 @@ public class ABNFpl extends FindABNF {
         subparsers = n ? new ABNFParser[0] : parsers;
         
         for (ABNF sub : list) {
-            C<X> subret = sub.findx(pac, subparsers);
+            C<X> subret = sub.find(pac, subparsers);
             if (subret == null) {
                 pac.backWrite(ret.ret.toByteArray());
                 return null;
@@ -62,7 +62,7 @@ public class ABNFpl extends FindABNF {
         C<X> ret = new ABNF.C(new PacketA());
 
         for (ABNF sub : list) {
-            C subret = sub.findx(pac, parsers);
+            C subret = sub.find(pac, parsers);
             if (subret == null) {
                 pac.backWrite(ret.ret.toByteArray());
                 return null;

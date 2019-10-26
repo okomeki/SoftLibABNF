@@ -12,7 +12,6 @@ import net.siisise.io.Packet;
 
 /**
  *
- * @author okome
  * @param <T> 戻り型
  * @param <M>
  */
@@ -47,7 +46,7 @@ public abstract class ABNFBaseParser<T, M> implements ABNFParser<T> {
      * @param base Parser駆動用
      * @param subns 
      */
-    public ABNFBaseParser(ABNF def, ABNFReg reg, ABNFReg base, String... subns) {
+    protected ABNFBaseParser(ABNF def, ABNFReg reg, ABNFReg base, String... subns) {
         this.def = def;
         this.reg = reg;
         this.base = base;
@@ -146,7 +145,7 @@ public abstract class ABNFBaseParser<T, M> implements ABNFParser<T> {
         for ( int i = 0; i < defs.length; i++ ) {
             ps[i] = x(defs[i]);
         }
-        return def.findx(pac, ps);
+        return def.find(pac, ps);
     }
 
     protected static String str(Packet pac) {

@@ -25,7 +25,7 @@ public class NumVal extends ABNFBaseParser<ABNF, ABNF> {
         NumSub b = new NumSub(ABNF5234.binVal, ABNF5234.BIT, 2, 'b', 'B');
         NumSub d = new NumSub(ABNF5234.decVal, ABNF5234.DIGIT, 10, 'd', 'D');
         NumSub h = new NumSub(ABNF5234.hexVal, ABNF5234.HEXDIG, 16, 'x', 'X');
-        ABNF.C<ABNF> ret = def.findx(pac, b, d, h);
+        ABNF.C<ABNF> ret = def.find(pac, b, d, h);
         if (ret == null) {
             return null;
         }

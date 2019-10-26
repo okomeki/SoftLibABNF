@@ -48,9 +48,9 @@ public class ABNFx extends FindABNF {
     }
 
     @Override
-    public C findx(Packet pac, ABNFParser... names) {
+    public C find(Packet pac, ABNFParser... names) {
         if (isName(names)) { // ないかも
-            C p = findx(pac);
+            C p = find(pac);
             if (p == null) {
                 return null;
             }
@@ -60,7 +60,7 @@ public class ABNFx extends FindABNF {
         C ret = new C();
         for (int i = 0; b == -1 || i < b; i++) {
 //            System.out.println(abnf+":" + strd(ret.ret)+"%"+strd(pac));
-            C sub = abnf.findx(pac, names);
+            C sub = abnf.find(pac, names);
             if (sub == null) {
                 if (i < a) {
                     byte[] data = ret.ret.toByteArray();

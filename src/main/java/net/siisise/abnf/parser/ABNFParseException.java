@@ -1,8 +1,7 @@
 package net.siisise.abnf.parser;
 
 /**
- *
- * @author okome
+ * 
  */
 public class ABNFParseException extends Exception {
 

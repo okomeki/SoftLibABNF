@@ -5,7 +5,6 @@ import net.siisise.io.Packet;
 
 /**
  * ABNFの構文解析装置
- * @author okome
  * @param <T>
  */
 public interface ABNFParser<T> {

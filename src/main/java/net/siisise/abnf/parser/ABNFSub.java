@@ -6,7 +6,6 @@ import net.siisise.abnf.ABNFReg;
 
 /**
  * 要素を抽出するだけ
- * @author okome
  * @param <T>
  */
 public class ABNFSub<T> extends ABNFList<T, T> {

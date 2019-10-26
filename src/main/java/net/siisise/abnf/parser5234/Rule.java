@@ -19,7 +19,7 @@ public class Rule extends ABNFBaseParser<ABNF, ABNF> {
     @Override
     public ABNF parse(Packet pac) {
         inst();
-        ABNF.C<Object> ret = def.findx(pac, x(ABNF5234.rulename), x(ABNF5234.definedAs), subs[0]);
+        ABNF.C<Object> ret = def.find(pac, x(ABNF5234.rulename), x(ABNF5234.definedAs), subs[0]);
         if (ret == null) {
             return null;
         }

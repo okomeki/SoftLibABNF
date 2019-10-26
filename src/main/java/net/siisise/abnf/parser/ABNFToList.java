@@ -6,7 +6,6 @@ import net.siisise.abnf.ABNFReg;
 
 /**
  *
- * @author okome
  * @param <T> 最終形式
  * @param <M>
  */

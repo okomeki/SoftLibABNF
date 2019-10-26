@@ -6,7 +6,6 @@ import net.siisise.io.Packet;
 
 /**
  * みかんせい?
- * @author okome
  */
 public class ABNFPacketParser extends ABNFBaseParser<Packet, ABNF> {
 

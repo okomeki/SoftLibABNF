@@ -17,7 +17,7 @@ public abstract class IsABNF extends AbstractABNF {
      * @return 
      */
     @Override
-    public <X> C<X> findx(Packet pac, ABNFParser<? extends X>... parsers) {
+    public <X> C<X> find(Packet pac, ABNFParser<? extends X>... parsers) {
         Packet r = is(pac);
         if (r == null) {
             return null;

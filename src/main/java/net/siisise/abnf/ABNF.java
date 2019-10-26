@@ -61,7 +61,7 @@ public interface ABNF extends BNF {
      */
     boolean is(String val);
     
-    <X> C<X> findx(Packet pac, ABNFParser<? extends X>... parsers);
+    <X> C<X> find(Packet pac, ABNFParser<? extends X>... parsers);
 
     /**
      * 完全一致の判定

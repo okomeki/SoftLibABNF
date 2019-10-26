@@ -28,7 +28,7 @@ public abstract class ABNFList<T, M> extends ABNFBaseParser<T, M> {
     public T parse(Packet pac) {
         inst();
 
-        ABNF.C<M> sret = def.findx(pac, subs);
+        ABNF.C<M> sret = def.find(pac, subs);
         if (sret == null) {
             return null;
         }
