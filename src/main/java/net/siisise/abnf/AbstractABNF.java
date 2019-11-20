@@ -4,14 +4,12 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import net.siisise.abnf.parser.ABNFBaseParser;
 import net.siisise.abnf.parser.ABNFParser;
 import net.siisise.io.Packet;
 import net.siisise.io.PacketA;
 
 /**
- *
- * @author okome
+ * 簡単なプレ実装
  */
 public abstract class AbstractABNF implements ABNF {
 
@@ -74,6 +72,16 @@ public abstract class AbstractABNF implements ABNF {
         System.arraycopy(val, 0, list, 1, val.length);
         return new ABNFpl(list);
     }
+    
+    public ABNF plm(ABNF... val) {
+        if (val.length == 0) {
+            return this;
+        }
+        ABNF[] list = new ABNF[val.length + 1];
+        list[0] = this;
+        System.arraycopy(val, 0, list, 1, val.length);
+        return new ABNFplm(list);
+    }
 
     @Override
     public ABNFor or(ABNF... val) {
@@ -82,12 +90,6 @@ public abstract class AbstractABNF implements ABNF {
         System.arraycopy(val, 0, list, 1, val.length);
         return new ABNFor(list);
     }
-/*
-    void rollback(Packet src, Packet data) {
-        byte[] d = data.toByteArray();
-        src.backWrite(d);
-    }
-*/
 
     /**
      * 
@@ -178,6 +180,12 @@ public abstract class AbstractABNF implements ABNF {
         }
     }
 
+    /**
+     * 文字列に起こす。
+     * データは元に戻す。
+     * @param pac
+     * @return 
+     */
     public static String strd(Packet pac) {
         byte[] data = pac.toByteArray();
         pac.backWrite(data);

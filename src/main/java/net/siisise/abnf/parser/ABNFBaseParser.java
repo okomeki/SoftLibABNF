@@ -119,6 +119,7 @@ public abstract class ABNFBaseParser<T, M> implements ABNFParser<T> {
      * @param str 解析対象文字列
      * @return 変換されたデータ 不一致の場合はnull
      */
+    @Override
     public T parse(String str) {
         return parse(AbstractABNF.pac(str));
     }

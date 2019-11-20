@@ -4,7 +4,8 @@ import net.siisise.abnf.parser.ABNFParser;
 import net.siisise.io.Packet;
 
 /**
- *
+ * 軽量一致検索
+ * 大抵はこちらで間に合うがだめなものもあり
  */
 public class ABNFpl extends FindABNF {
 
@@ -36,6 +37,13 @@ public class ABNFpl extends FindABNF {
         return new ABNFpl(cplist);
     }
 
+    /**
+     * 
+     * @param <X>
+     * @param pac
+     * @param parsers
+     * @return 
+     */
     @Override
     public <X> C<X> find(Packet pac, ABNFParser<? extends X>... parsers) {
 //        System.out.println(getName() + ":" + strd(pac) + ":pl");
@@ -55,7 +63,7 @@ public class ABNFpl extends FindABNF {
         return n ? sub(ret, parsers) : ret;
     }
 
-/*    
+/*
     @Override
     public <X> C<X> findx2(Packet pac, ABNFParser<? extends X>... parsers) {
         System.out.println(getName() + ":" + strd(pac) + ":pl");

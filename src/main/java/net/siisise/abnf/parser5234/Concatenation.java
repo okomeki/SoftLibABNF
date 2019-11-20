@@ -3,7 +3,7 @@ package net.siisise.abnf.parser5234;
 import java.util.List;
 import net.siisise.abnf.ABNF;
 import net.siisise.abnf.ABNFReg;
-import net.siisise.abnf.ABNFpl;
+import net.siisise.abnf.ABNFplm;
 import net.siisise.abnf.parser.ABNFList;
 
 /**
@@ -25,7 +25,7 @@ public class Concatenation extends ABNFList<ABNF, ABNF> {
         if (pac.size() == 1) {
             return pac.get(0);
         }
-        return new ABNFpl(pac.toArray(new ABNF[pac.size()]));
+        return new ABNFplm(pac.toArray(new ABNF[pac.size()]));
     }
 
 }

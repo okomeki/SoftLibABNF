@@ -5,7 +5,10 @@ import net.siisise.abnf.ABNFReg;
 import net.siisise.abnf.parser5234.ABNF5234;
 
 /**
+ * URI6874でIPv6の拡張が追加されているのでそちらを推奨する。
+ * 
  * https://triple-underscore.github.io/rfc-others/RFC3986-ja.html
+ * @see net.siisise.abnf.rfc.URI6874
  * @author okome
  */
 public class URI3986 {
@@ -56,11 +59,11 @@ public class URI3986 {
     static final ABNF path = REG.rule("path", pathAbempty.or(pathAbsolute, pathNoscheme, pathRootless, pathEmpty));
     static final ABNF query = REG.rule("query", "*( pchar / \"/\" / \"?\" )");
     static final ABNF fragment = REG.rule("fragment", "*( pchar / \"/\" / \"?\" )");
-    static final ABNF URI = REG.rule("URI", "scheme \":\" hier-part [ \"?\" query ] [ \"#\" fragment ]");
+    public static final ABNF URI = REG.rule("URI", "scheme \":\" hier-part [ \"?\" query ] [ \"#\" fragment ]");
 
     static final ABNF relativePart = REG.rule("relative-part", "\"//\" authority path-abempty / path-absolute"
             + " / path-noscheme / path-empty");
-    static final ABNF relativeRef = REG.rule("relative-ref", "relative-part [ \"?\" query ] [ \"#\" fragment ]");
+    public static final ABNF relativeRef = REG.rule("relative-ref", "relative-part [ \"?\" query ] [ \"#\" fragment ]");
     public static final ABNF URIreference = REG.rule("URI-reference", URI.or(relativeRef));
     static final ABNF absoluteURI = REG.rule("absolute-URI", "scheme \":\" hier-part [ \"?\" query ]");
 }

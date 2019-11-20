@@ -15,7 +15,7 @@ public class URI2396 {
 
     static final ABNF lowalpha = REG.rule("lowalpha", ABNF.range('a', 'z'));
     static final ABNF upalpha = REG.rule("upalpha", ABNF.range('A', 'Z'));
-    static final ABNF alpha = REG.rule("alpha", lowalpha.or(upalpha));
+    static final ABNF alpha = REG.rule("alpha", lowalpha.or(upalpha)); // ABNF5234.ALPHA
     static final ABNF digit = REG.rule("digit", ABNF5234.DIGIT);
     static final ABNF alphanum = REG.rule("alphanum", alpha.or(digit));
 
@@ -43,9 +43,10 @@ public class URI2396 {
 //    static final ABNF toplabel = REG.rule("toplabel", "alpha *( *( \"-\" ) alphanum )");
     static final ABNF toplabel = REG.rule("toplabel", alpha.pl( ABNF.bin('-').x().pl(alphanum).x()));
     /** *(alphanum / XXX ) alphanum が無理なので改変 */
-//    static final ABNF domainlabel = REG.rule("domainlabel", "alphanum / alphanum *( alphanum / \"-\" ) alphanum");
-//    static final ABNF domainlabel = REG.rule("domainlabel",   "alphanum *( *( \"-\" ) alphanum )");
-    static final ABNF domainlabel = REG.rule("domainlabel", alphanum.pl(ABNF.bin('-').x().pl(alphanum).x()));
+//    static final ABNF domainlabel = REG.rule("domainlabel", "alphanum / alphanum *( alphanum / \"-\" ) alphanum"); // 元の記述
+//    static final ABNF domainlabel = REG.rule("domainlabel", "alphanum *( alphanum / \"-\" ) alphanum / alphanum"); // 一部改変 plmで可能
+//    static final ABNF domainlabel = REG.rule("domainlabel",   "alphanum *( *( \"-\" ) alphanum )"); // pl用に改変してみた記述
+    static final ABNF domainlabel = REG.rule("domainlabel", alphanum.pl(ABNF.bin('-').x().pl(alphanum).x())); // pl用
     static final ABNF hostname = REG.rule("hostname", "*( domainlabel \".\" ) toplabel [ \".\" ]");
     static final ABNF host = REG.rule("host", hostname.or(IPv4address));
     static final ABNF hostport = REG.rule("hostport", "host [ \":\" port ]");
