@@ -4,9 +4,9 @@ import net.siisise.abnf.ABNF;
 import net.siisise.abnf.ABNFReg;
 
 /**
- * ABNFの定義をJavaで書いてみたりしたもの
- * RFC 7230, RFC 7405 などに拡張があるので取り込む方法も考える
- * ABNFは最長一致判定が苦手なので使い方によっては書き換える必要もある
+ * ABNFの定義をJavaで書いてみたりしたもの.
+ * RFC 7230, RFC 7405 などに拡張がある. (対応済み)
+ * ABNFは最長一致判定が苦手なので使い方によっては書き換える必要もある (ABNFplmで解決)
  *
  * @author okome
  */

@@ -8,7 +8,6 @@ import net.siisise.io.Packet;
 
 /**
  *
- * @author okome
  */
 public class Rulename extends ABNFBaseParser<ABNF, ABNF> {
 

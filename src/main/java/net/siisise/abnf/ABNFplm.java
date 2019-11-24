@@ -6,6 +6,7 @@ import net.siisise.io.PacketA;
 
 /**
  * 完全一致検索、重いかもしれない
+ * example = *( a / b ) a に対応したもの
  *
  */
 public class ABNFplm extends ABNFpl {

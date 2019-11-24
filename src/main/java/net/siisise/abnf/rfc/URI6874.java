@@ -5,7 +5,7 @@ import net.siisise.abnf.ABNFReg;
 
 /**
  * RFC 3986 のIP-literal を微修正
- * @author okome
+ * IPv6 リンクローカルアドレス の ZoneIDに対応したもの
  */
 public class URI6874 {
     public static final ABNFReg REG = new ABNFReg(URI3986.REG);

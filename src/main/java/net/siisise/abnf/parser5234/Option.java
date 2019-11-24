@@ -8,7 +8,6 @@ import net.siisise.abnf.parser.ABNFSub;
 /**
  * OptionのParser
  * 繰り返し0*1に変換する
- * @author okome
  */
 public class Option extends ABNFSub<ABNF> {
 

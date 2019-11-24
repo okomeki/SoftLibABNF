@@ -79,17 +79,21 @@ public class ABNFReg {
     }
 
     /**
-     * 参照リンク優先
+     * 参照リンク優先。
+     * あとの定義でいろいろ変わるときに便利。
      *
      * @param name
      * @return
      */
     public ABNF ref(String name) {
+        return new ABNFRef(name);
+/*
         ABNF bnf = reg.get(name);
         if (bnf == null || !(bnf instanceof ABNFRef)) {
-            bnf = new ABNFRef(name);
+           bnf = new ABNFRef(name);
         }
         return bnf;
+*/
     }
 
     /**
@@ -126,21 +130,29 @@ public class ABNFReg {
     }
 
     /**
-     * 仮
+     * 主要なところにParse結果をオブジェクトに変換する機能を埋め込むと、いろいろ楽
      *
      * @param name
-     * @param cl
+     * @param parser ソースまたは子の要素を渡され対象オブジェクトに組み上げる機能
      * @param abnf
      * @return
      */
-    public ABNF rule(String name, Class<? extends ABNFParser> cl, ABNF abnf) {
+    public ABNF rule(String name, Class<? extends ABNFParser> parser, ABNF abnf) {
         abnf = rule(name, abnf);
-        CL.put(name, cl);
+        CL.put(name, parser);
         return abnf;
     }
 
-    public ABNF rule(String name, Class<? extends ABNFParser> cl, String rule) {
-        return rule(name, cl, rule(name, rule));
+    /**
+     * Parserを埋め込む
+     * 
+     * @param name
+     * @param parser ABNFから対象オブジェクトに変換する機能
+     * @param rule
+     * @return 
+     */
+    public ABNF rule(String name, Class<? extends ABNFParser> parser, String rule) {
+        return rule(name, parser, rule(name, rule));
     }
 
     /**
@@ -157,24 +169,32 @@ public class ABNFReg {
      * Parser構築用
      * 参照空間とABNF Parserが別に存在する場合が多い
      * 裏側(ABNF Parser)を駆動する
-     * @param name
-     * @param src
+     * @param name parser側の名
+     * @param src パースにかけるソース
      * @return 
      */
     public ABNF baseParse(String name, String src) {
         try {
-            Constructor<? extends ABNFParser> cnst = parseReg.CL.get(name).getConstructor(ABNF.class,ABNFReg.class, ABNFReg.class);
-            return (ABNF) cnst.newInstance(parseReg.reg.get(name),this, parseReg).parse(src);
+            Constructor<? extends ABNFParser> constructor = parseReg.CL.get(name).getConstructor(ABNF.class,ABNFReg.class, ABNFReg.class);
+            ABNFParser ap = constructor.newInstance(parseReg.reg.get(name),this, parseReg);
+            return (ABNF) ap.parse(src);
         } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException
                 | IllegalArgumentException | InvocationTargetException ex) {
             throw new java.lang.UnsupportedOperationException(ex);
         }
     }
     
+    /**
+     * 
+     * @param name parser側の名
+     * @param src パースにかけるソース
+     * @return 
+     */
     List<ABNF> listParse(String name, String src) {
         try {
-            Constructor<? extends ABNFParser> cnst = parseReg.CL.get(name).getConstructor(ABNF.class,ABNFReg.class, ABNFReg.class);
-            return (List<ABNF>) cnst.newInstance(parseReg.reg.get(name),this, parseReg).parse(src);
+            Constructor<? extends ABNFParser> constructor = parseReg.CL.get(name).getConstructor(ABNF.class,ABNFReg.class, ABNFReg.class);
+            ABNFParser ap = constructor.newInstance(parseReg.reg.get(name),this, parseReg);
+            return (List<ABNF>) ap.parse(src);
         } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException
                 | IllegalArgumentException | InvocationTargetException ex) {
             throw new java.lang.UnsupportedOperationException(ex);

@@ -5,7 +5,9 @@ import net.siisise.io.Packet;
 
 /**
  * 軽量一致検索
- * 大抵はこちらで間に合うがだめなものもあり
+ * 大抵はこちらで間に合うが繰り返しのあとに同じものがくると解析できないのでABNFplmを使えばいいよ
+ * example = *( a / b ) a
+ * のようなパターンは無理
  */
 public class ABNFpl extends FindABNF {
 
@@ -62,22 +64,4 @@ public class ABNFpl extends FindABNF {
         }
         return n ? sub(ret, parsers) : ret;
     }
-
-/*
-    @Override
-    public <X> C<X> findx2(Packet pac, ABNFParser<? extends X>... parsers) {
-        System.out.println(getName() + ":" + strd(pac) + ":pl");
-        C<X> ret = new ABNF.C(new PacketA());
-
-        for (ABNF sub : list) {
-            C subret = sub.find(pac, parsers);
-            if (subret == null) {
-                pac.backWrite(ret.ret.toByteArray());
-                return null;
-            }
-            mix(ret, subret);
-        }
-        return sub(ret, parsers);
-    }
-     */
 }

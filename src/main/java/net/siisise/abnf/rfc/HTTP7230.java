@@ -8,7 +8,7 @@ import net.siisise.abnf.parser5234.Repetition;
 /**
  * RFC 7230 Hypertext Transfer Protocol (HTTP/1.1): Message Syntax and Routing
  * Section 7の拡張あり
- * 
+ * RFC 6874 取り込んでない?
  * obsなし版も作りたい?
  *
  * @see https://tools.ietf.org/html/rfc7230 Section 7

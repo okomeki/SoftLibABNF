@@ -42,11 +42,7 @@ public class URI3986Test {
         // 1.1.2. Examples
         assertTrue(URI3986.URI.eq("ftp://ftp.is.co.za/rfc/rfc1808.txt"));
         assertTrue(URI3986.URI.eq("http://www.ietf.org/rfc/rfc2396.txt"));
-//        Packet p = new PacketA();
-//        p.write("ldap://[2001:db8::7]/c=GB?objectClass?one".getBytes("utf-8"));
-//        Packet a = URI3986.URI.is(p);
-//        System.out.println("謎:" + AbstractABNF.strd(a));
-        assertTrue(URI3986.URI.eq("ldap://[2001:db8::7]/c=GB?objectClass?one")); //なにか
+        assertTrue(URI3986.URI.eq("ldap://[2001:db8::7]/c=GB?objectClass?one"));
         assertTrue(URI3986.URI.eq("mailto:John.Doe@example.com"));
         assertTrue(URI3986.URI.eq("news:comp.infosystems.www.servers.unix"));
         assertTrue(URI3986.URI.eq("tel:+1-816-555-1212"));

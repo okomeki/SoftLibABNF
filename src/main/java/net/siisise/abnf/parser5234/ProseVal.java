@@ -7,7 +7,6 @@ import net.siisise.io.Packet;
 
 /**
  *
- * @author okome
  */
 public class ProseVal extends ABNFBaseParser<ABNF,ABNF> {
 

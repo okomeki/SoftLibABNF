@@ -7,7 +7,6 @@ import net.siisise.abnf.parser.ABNFToList;
 
 /**
  *
- * @author okome
  */
 public class Rulelist extends ABNFToList<ABNF, ABNF> {
 

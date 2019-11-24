@@ -20,6 +20,11 @@ public class Concatenation extends ABNFList<ABNF, ABNF> {
         super(abnf, reg, base, "repetition");
     }
 
+    /**
+     * 
+     * @param pac 子のABNF要素
+     * @return 繋げた結果のABNF Concatenation
+     */
     @Override
     public ABNF parse(List<ABNF> pac) {
         if (pac.size() == 1) {

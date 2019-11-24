@@ -14,14 +14,14 @@ import net.siisise.abnf.parser5234.ABNF5234;
 public class TelURI3966 {
     public static final ABNFReg REG = new ABNFReg(ABNF5234.BASE);
     // まだ
-    static final ABNF reserved = REG.rule("reserved","\";\" / \"/\" / \"?\" / \":\" / \"@\" / \"&\" / \"=\" / \"+\" / \"$\" / \",\"");
+    static final ABNF reserved = REG.rule("reserved", ABNF.list(";/?:@&=+$,"));
     static final ABNF alphanum = REG.rule("alphanum", ABNF5234.ALPHA.or(ABNF5234.DIGIT));
     static final ABNF visualSeparator = REG.rule("visual-separator","\"-\" / \".\" / \"(\" / \")\"");
     static final ABNF phonedigitHex = REG.rule("phonedigit-hex","HEXDIG / \"*\" / \"#\" / [ visual-separator ]");
     static final ABNF phonedigit = REG.rule("phonedigit","DIGIT / [ visual-separator ]");
     static final ABNF paramUnreserved = REG.rule("param-unreserved","\"[\" / \"]\" / \"/\" / \":\" / \"&\" / \"+\" / \"$\"");
     static final ABNF pctEncoded = REG.rule("pct-encoded","\"%\" HEXDIG HEXDIG");
-    static final ABNF mark = REG.rule("mark","\"-\" / \"_\" / \".\" / \"!\" / \"~\" / \"*\" / \"'\" / \"(\" / \")\"");
+    static final ABNF mark = REG.rule("mark", ABNF.list("-_.!~*'()"));
     static final ABNF unreserved = REG.rule("unreserved",alphanum.or(mark));
     static final ABNF uric = REG.rule("uric",reserved.or(unreserved, pctEncoded));
     static final ABNF paramchar = REG.rule("paramchar",paramUnreserved.or(unreserved,pctEncoded));

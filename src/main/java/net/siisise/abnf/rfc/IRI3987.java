@@ -6,7 +6,6 @@ import net.siisise.abnf.parser5234.ABNF5234;
 
 /**
  *
- * @author okome
  */
 public class IRI3987 {
 

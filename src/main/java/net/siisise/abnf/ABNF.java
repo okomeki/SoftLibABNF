@@ -11,9 +11,10 @@ import net.siisise.io.Packet;
 import net.siisise.io.PacketA;
 
 /**
- * RFC 5234. 元はUS-ASCII 7bitコードを想定しているが、UTF-8として利用されている場合もあるので対応する
+ * RFC 5234.
+ * 元はUS-ASCII 7bitコードを想定しているが、UTF-8として利用されている場合もあるので対応する
  * RegExpのPattern相当?
- *
+ * ABNFのparserは含まない。
  * @author okome
  */
 public interface ABNF extends BNF {
@@ -74,7 +75,13 @@ public interface ABNF extends BNF {
 
     ABNF pl(ABNF... val);
     ABNFor or(ABNF... val);
-    /** a*bXXX */
+    /**
+     * a*bXXX.
+     * 
+     * @param a 指定しない場合は 0
+     * @param b 指定しない場合は -1
+     * @return 
+     */
     ABNF x(int a, int b);
     /** *XXX */
     ABNF x();
