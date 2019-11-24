@@ -12,7 +12,7 @@ import net.siisise.abnf.ABNFReg;
  */
 public class ABNF5234 {
 
-    public static final ABNFReg BASE = new ABNFReg(null, null);
+    public static final ABNFReg BASE = new ABNFReg((ABNFReg)null, null);
 
     // classのようなもの RFC 2234 6.1 Core Rules から変わらず
     public static final ABNF ALPHA = BASE.rule("ALPHA", ABNF.range(0x41, 0x5a).or(ABNF.range(0x61, 0x7a)));

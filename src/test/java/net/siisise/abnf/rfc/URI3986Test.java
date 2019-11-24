@@ -1,5 +1,8 @@
 package net.siisise.abnf.rfc;
 
+import java.io.IOException;
+import net.siisise.abnf.ABNFReg;
+import net.siisise.abnf.parser5234.ABNF5234;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -79,4 +82,17 @@ public class URI3986Test {
         //fail("The test case is a prototype.");
     }
     
+    @Test
+    public void testResource() throws IOException {
+        ABNFReg URI = new ABNFReg(getClass().getResource("URI3986.abnf"),ABNF5234.BASE);
+        assertTrue(URI.ref("URI").eq("ftp://ftp.is.co.za/rfc/rfc1808.txt"));
+        assertTrue(URI.ref("URI").eq("http://www.ietf.org/rfc/rfc2396.txt"));
+        assertTrue(URI.ref("URI").eq("ldap://[2001:db8::7]/c=GB?objectClass?one"));
+        assertTrue(URI.ref("URI").eq("mailto:John.Doe@example.com"));
+        assertTrue(URI.ref("URI").eq("news:comp.infosystems.www.servers.unix"));
+        assertTrue(URI.ref("URI").eq("tel:+1-816-555-1212"));
+        assertTrue(URI.ref("URI").eq("telnet://192.0.2.16:80/"));
+        assertTrue(URI.ref("URI").eq("urn:oasis:names:specification:docbook:dtd:xml:4.1.2"));
+        
+    }
 }

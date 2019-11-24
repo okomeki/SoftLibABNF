@@ -25,7 +25,7 @@ public class HTTP7230 {
     static final ABNF httprepetition = PAR.rule("httprepetition", HTTP7230Repetition.class, repList.pl(PAR.ref("element")));
     static final ABNF repetition = PAR.rule("repetition", HTTP7230RepetitionSelect.class, "orgrepetition / httprepetition");
 
-    static final ABNFReg REG = new ABNFReg(URI3986.REG, PAR);
+    public static final ABNFReg REG = new ABNFReg(URI3986.REG, PAR);
 
     static final ABNF URIreference = URI3986.URIreference;
     static final ABNF absoluteURI = URI3986.absoluteURI;

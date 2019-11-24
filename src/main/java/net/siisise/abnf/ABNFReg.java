@@ -1,13 +1,19 @@
 package net.siisise.abnf;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import net.siisise.abnf.parser.ABNFParser;
 import net.siisise.abnf.parser5234.ABNF5234;
+import net.siisise.io.FileIO;
 import net.siisise.io.Packet;
+import net.siisise.io.PacketA;
 
 /**
  * ABNFの名前担当、Parserの機能もあり
@@ -76,6 +82,11 @@ public class ABNFReg {
 
     public ABNFReg(ABNFReg up) {
         this(up, ABNF5234.REG);
+    }
+    
+    public ABNFReg(URL url, ABNFReg up) throws IOException {
+        this(up);
+        rulelist(url);
     }
 
     /**
@@ -239,5 +250,14 @@ public class ABNFReg {
         });
         return list;
     }
-
+    
+    public List<ABNF> rulelist(URL url) throws IOException {
+        InputStream in = url.openStream();
+        Packet pac = new PacketA();
+        OutputStream out = pac.getOutputStream();
+        FileIO.io(in, out);
+        in.close();
+        String rulelist = new String(pac.toByteArray(),"utf-8");
+        return rulelist(rulelist);
+    }
 }
