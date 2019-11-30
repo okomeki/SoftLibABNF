@@ -10,8 +10,7 @@ import net.siisise.io.Packet;
 import net.siisise.io.PacketA;
 
 /**
- * バイナリ表現
- * @author okome
+ * バイナリ表現。
  */
 public class ABNFbin extends IsABNF {
 
@@ -57,9 +56,10 @@ public class ABNFbin extends IsABNF {
     }
 
     /**
-     * 1文字単位でor分割
+     * 1文字単位でor分割。
+     * どれかの文字に該当するor型ABNFをつくる
      *
-     * @param val
+     * @param val 文字の一括登録
      * @return
      */
     public static ABNF list(String val) {

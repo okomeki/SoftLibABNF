@@ -6,21 +6,26 @@ import net.siisise.abnf.ABNFReg;
 
 /**
  * 要素を抽出するだけ
- * @param <T>
+ * @param <T> 解析後抽出できる型
  */
 public class ABNFSub<T> extends ABNFList<T, T> {
 
     /**
      * 
-     * @param def
+     * @param def 処理対象のABNF構文
      * @param reg 名前空間参照用
      * @param base Parser駆動用
-     * @param subcn 
+     * @param subcn 抽出する内側のABNF要素の名
      */
     protected ABNFSub(ABNF def, ABNFReg reg, ABNFReg base, String subcn) {
         super(def, reg, base, subcn);
     }
 
+    /**
+     * 
+     * @param val 抽出された内側のABNF要素一覧
+     * @return 処理結果。型は任意
+     */
     @Override
     public T parse(List<T> val) {
         return val.get(0);

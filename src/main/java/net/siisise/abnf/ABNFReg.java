@@ -16,12 +16,10 @@ import net.siisise.io.Packet;
 import net.siisise.io.PacketA;
 
 /**
- * ABNFの名前担当、Parserの機能もあり
+ * ABNFの名前担当、Parserの機能もあり。
  * Namespace
  * 
  * rule: 基本は RFC 5234 に準拠するが、一部改変したParserの対応も可能
- *
- * @author okome
  */
 public class ABNFReg {
 
@@ -83,7 +81,19 @@ public class ABNFReg {
     public ABNFReg(ABNFReg up) {
         this(up, ABNF5234.REG);
     }
-    
+
+    public ABNFReg(URL url, ABNFReg up, ABNFReg exParser) throws IOException {
+        this(up, exParser);
+        rulelist(url);
+    }
+
+    /**
+     * ファイルに定義を書いておけばプログラム不要説(パーサは必要)。
+     * ファイルではなくURLで渡すと幅が広がる
+     * @param url ABNF定義ファイルのURL
+     * @param up 前提とする定義など
+     * @throws IOException 
+     */
     public ABNFReg(URL url, ABNFReg up) throws IOException {
         this(up);
         rulelist(url);
@@ -141,9 +151,10 @@ public class ABNFReg {
     }
 
     /**
-     * 主要なところにParse結果をオブジェクトに変換する機能を埋め込むと、いろいろ楽
+     * 主要なところにParse結果をオブジェクトに変換する機能を埋め込むと、いろいろ楽。
+     * パースされたABNFにParserを紐づけて登録する。
      *
-     * @param name
+     * @param name ABNFの名
      * @param parser ソースまたは子の要素を渡され対象オブジェクトに組み上げる機能
      * @param abnf
      * @return
@@ -155,11 +166,11 @@ public class ABNFReg {
     }
 
     /**
-     * Parserを埋め込む
-     * 
-     * @param name
-     * @param parser ABNFから対象オブジェクトに変換する機能
-     * @param rule
+     * ABNFの解析ついでに対応するParserを埋め込む。
+     * 該当する場合はparserによって対象オブジェクトに変換する機能をつけたABNFを登録する
+     * @param name ABNFの名
+     * @param parser ABNFから対象オブジェクトに変換する解析装置
+     * @param rule ABNF構文
      * @return 
      */
     public ABNF rule(String name, Class<? extends ABNFParser> parser, String rule) {
@@ -181,7 +192,7 @@ public class ABNFReg {
      * 参照空間とABNF Parserが別に存在する場合が多い
      * 裏側(ABNF Parser)を駆動する
      * @param name parser側の名
-     * @param src パースにかけるソース
+     * @param src パースに対象ソース
      * @return 
      */
     public ABNF baseParse(String name, String src) {
@@ -196,9 +207,9 @@ public class ABNFReg {
     }
     
     /**
-     * 
+     * parseの戻り値が一覧のようなもの。
      * @param name parser側の名
-     * @param src パースにかけるソース
+     * @param src パース対象ソース
      * @return 
      */
     List<ABNF> listParse(String name, String src) {
@@ -216,9 +227,9 @@ public class ABNFReg {
      * ユーザ側のParser(JSONなど)を駆動する
      * BASEのみで参照先がないなど
      * @param <T>
-     * @param name
-     * @param src
-     * @return 
+     * @param name 解析装置付き構文の名。駆動コマンドのようなもの
+     * @param src パース対象ソース
+     * @return 解析後の実体
      */
     public <T> T parse(String name, String src) {
         try {
@@ -232,17 +243,26 @@ public class ABNFReg {
     }
 
     /**
+     * ABNFをパースする。
+     * 名前とelementsを個別に渡せると何かと楽かもしれないと思うので作った。
      * ToDo: ABNF5234 へ
      *
-     * @param name
-     * @param elements
-     * @return
+     * @param name ABNF構文の名
+     * @param elements ABNF式
+     * @return 解析されたABNF
      */
     public ABNF rule(String name, String elements) {
         ABNF abnf = baseParse("elements", elements);
         return rule(name, abnf);
     }
 
+    /**
+     * 一括読み込みと登録。
+     * パースされ、regに登録します。
+     * RFC 5234の場合、文字コードUTF-8、改行コード CR LF のみ有効です。
+     * @param rulelist abnf一覧
+     * @return ABNF化された一覧
+     */
     public List<ABNF> rulelist(String rulelist) {
         List<ABNF> list = listParse("rulelist", rulelist);
         list.forEach((abnf) -> {
@@ -251,6 +271,15 @@ public class ABNFReg {
         return list;
     }
     
+    /**
+     * テキストからのabnf一覧一括読み込み。
+     * ファイルだと狭いのでURLとした。
+     * regに登録します。
+     * RFC 5234の場合、文字コードUTF-8、改行コード CR LF のみ有効です。
+     * @param url abnf一覧のテキストが存在するURL
+     * @return 解析されたABNF一覧
+     * @throws IOException 
+     */
     public List<ABNF> rulelist(URL url) throws IOException {
         InputStream in = url.openStream();
         Packet pac = new PacketA();

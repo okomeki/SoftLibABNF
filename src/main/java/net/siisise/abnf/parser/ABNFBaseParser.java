@@ -41,7 +41,7 @@ public abstract class ABNFBaseParser<T, M> implements ABNFParser<T> {
 
     /**
      * 
-     * @param def
+     * @param def 処理対象のABNF構文
      * @param reg 名前空間参照用
      * @param base Parser駆動用
      * @param subns 

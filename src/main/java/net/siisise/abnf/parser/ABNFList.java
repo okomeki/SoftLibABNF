@@ -7,7 +7,6 @@ import net.siisise.io.Packet;
 
 /**
  *
- * @author okome
  * @param <T> 最終形式
  * @param <M> 中間形式
  */
@@ -15,7 +14,7 @@ public abstract class ABNFList<T, M> extends ABNFBaseParser<T, M> {
 
     /**
      * 
-     * @param def
+     * @param def 処理対象のABNF構文
      * @param reg 名前空間参照用
      * @param base Parser駆動用
      * @param subcn 

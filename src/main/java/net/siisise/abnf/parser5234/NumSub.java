@@ -7,8 +7,9 @@ import net.siisise.io.Packet;
 import net.siisise.io.PacketA;
 
 /**
- * 内部で使用する数値用Parser
- * @author okome
+ * 内部で使用する数値用Parser。
+ * 数値の抽出でだいたい共通の部分。
+ * 
  */
 public class NumSub extends ABNFBaseParser<ABNF,ABNF> {
     static ABNF hf = ABNF.bin('-');

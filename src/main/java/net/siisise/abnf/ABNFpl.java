@@ -41,9 +41,9 @@ public class ABNFpl extends FindABNF {
 
     /**
      * 
-     * @param <X>
-     * @param pac
-     * @param parsers
+     * @param <X> 返却予定の型
+     * @param pac 解析対象
+     * @param parsers サブ解析装置
      * @return 
      */
     @Override

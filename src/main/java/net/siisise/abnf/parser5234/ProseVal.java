@@ -20,7 +20,7 @@ public class ProseVal extends ABNFBaseParser<ABNF,ABNF> {
         if ( p == null ) {
             return null;
         }
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet." + strd(pac)); //To change body of generated methods, choose Tools | Templates.
     }
     
 }
