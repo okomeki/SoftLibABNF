@@ -157,7 +157,7 @@ public class ABNFReg {
      * @param name ABNFの名
      * @param parser ソースまたは子の要素を渡され対象オブジェクトに組み上げる機能
      * @param abnf
-     * @return
+     * @return 名前つき
      */
     public ABNF rule(String name, Class<? extends ABNFParser> parser, ABNF abnf) {
         abnf = rule(name, abnf);

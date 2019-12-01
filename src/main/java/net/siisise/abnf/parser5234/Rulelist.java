@@ -15,7 +15,7 @@ public class Rulelist extends ABNFToList<ABNF, ABNF> {
     }
 
     @Override
-    public List<ABNF> parse(List<ABNF> val) {
+    protected List<ABNF> parse(List<ABNF> val) {
         return val;
     }
 

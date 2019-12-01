@@ -8,9 +8,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.siisise.io.Packet;
 import net.siisise.io.PacketA;
+import net.siisise.lang.CodePoint;
 
 /**
  * バイナリ表現。
+ * 一文字
  */
 public class ABNFbin extends IsABNF {
 
@@ -23,7 +25,7 @@ public class ABNFbin extends IsABNF {
             name = hex(ch);
         }
 
-        data = utf8(ch);
+        data = CodePoint.utf8(ch);
     }
 
     /**
@@ -67,7 +69,7 @@ public class ABNFbin extends IsABNF {
 
         List<ABNF> list = new ArrayList<>();
         while (src.length() > 0) {
-            list.add(new ABNFbin(utf8(src)));
+            list.add(new ABNFbin(CodePoint.utf8(src)));
         }
         if (list.size() == 1) {
             return list.get(0);

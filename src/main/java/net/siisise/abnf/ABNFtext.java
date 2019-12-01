@@ -33,12 +33,8 @@ public class ABNFtext extends IsABNF {
     }
 
     ABNFtext(String text) {
-        this("\"" + text + "\"", text);
-    }
-
-    ABNFtext(String name, String val) {
-        text = val;
-        this.name = name;
+        this.text = text;
+        name = "\"" + text + "\"";
         try {
             utf8 = text.getBytes("utf-8");
         } catch (UnsupportedEncodingException ex) {
@@ -67,7 +63,6 @@ public class ABNFtext extends IsABNF {
      */
     public static ABNF list(String chlist) {
         return new ABNFor(chlist);
-
     }
 
     @Override

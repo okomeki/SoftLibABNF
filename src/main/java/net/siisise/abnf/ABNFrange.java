@@ -2,11 +2,11 @@ package net.siisise.abnf;
 
 import net.siisise.io.Packet;
 import net.siisise.io.PacketA;
+import net.siisise.lang.CodePoint;
 
 /**
  * 文字
  *
- * @author okome
  */
 public class ABNFrange extends IsABNF {
 
@@ -29,11 +29,11 @@ public class ABNFrange extends IsABNF {
         if (pac.length() == 0) {
             return null;
         }
-        int ch = utf8(pac);
+        int ch = CodePoint.utf8(pac);
         if (ch < 0) {
             throw new UnsupportedOperationException();
         }
-        byte[] bin8 = utf8(ch);
+        byte[] bin8 = CodePoint.utf8(ch);
         if (ch >= min && ch <= max) {
             return new PacketA(bin8);
         }

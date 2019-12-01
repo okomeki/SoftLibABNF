@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import net.siisise.abnf.parser.ABNFParser;
 import net.siisise.io.Packet;
+import net.siisise.lang.CodePoint;
 
 /**
  *
@@ -31,7 +32,7 @@ public class ABNFor extends FindABNF {
         Packet src = pac(chlist);
         List<ABNF> abnfs = new ArrayList<>();
         while (src.length() > 0) {
-            abnfs.add(new ABNFtext(utf8(src)));
+            abnfs.add(new ABNFtext(CodePoint.utf8(src)));
         }
         list = abnfs.toArray(new ABNF[abnfs.size()]);
         name = toName(list);
@@ -41,7 +42,7 @@ public class ABNFor extends FindABNF {
         Packet p = pac(list);
         List<ABNF> fs = new ArrayList<>();
         while (p.length() > 0) {
-            fs.add(new ABNFtext(utf8(p)));
+            fs.add(new ABNFtext(CodePoint.utf8(p)));
         }
         this.list = fs.toArray(new ABNF[0]);
         this.name = name;

@@ -26,7 +26,7 @@ public class Concatenation extends ABNFList<ABNF, ABNF> {
      * @return 繋げた結果のABNF Concatenation
      */
     @Override
-    public ABNF parse(List<ABNF> pac) {
+    protected ABNF parse(List<ABNF> pac) {
         if (pac.size() == 1) {
             return pac.get(0);
         }

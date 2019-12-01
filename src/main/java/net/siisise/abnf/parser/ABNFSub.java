@@ -27,7 +27,7 @@ public class ABNFSub<T> extends ABNFList<T, T> {
      * @return 処理結果。型は任意
      */
     @Override
-    public T parse(List<T> val) {
+    protected T parse(List<T> val) {
         return val.get(0);
     }
 

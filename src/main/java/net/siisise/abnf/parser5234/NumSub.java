@@ -1,10 +1,10 @@
 package net.siisise.abnf.parser5234;
 
 import net.siisise.abnf.ABNF;
-import net.siisise.abnf.ABNFbin;
 import net.siisise.abnf.parser.ABNFBaseParser;
 import net.siisise.io.Packet;
 import net.siisise.io.PacketA;
+import net.siisise.lang.CodePoint;
 
 /**
  * 内部で使用する数値用Parser。
@@ -45,9 +45,9 @@ public class NumSub extends ABNFBaseParser<ABNF,ABNF> {
         r = dot.is(pac);
         if ( r != null ) {
             Packet data = new PacketA();
-            data.write(ABNFbin.utf8(val));
+            data.write(CodePoint.utf8(val));
             do {
-                data.write(ABNFbin.utf8(num(pac)));
+                data.write(CodePoint.utf8(num(pac)));
                 r = dot.is(pac);
             } while ( r != null );
             return ABNF.bin(str(data));

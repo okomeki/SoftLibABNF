@@ -4,7 +4,7 @@ import net.siisise.abnf.parser.ABNFParser;
 import net.siisise.io.Packet;
 
 /**
- * 軽量一致検索
+ * 軽量一致検索。
  * 大抵はこちらで間に合うが繰り返しのあとに同じものがくると解析できないのでABNFplmを使えばいいよ
  * example = *( a / b ) a
  * のようなパターンは無理

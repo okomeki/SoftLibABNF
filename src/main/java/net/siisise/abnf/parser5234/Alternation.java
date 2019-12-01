@@ -18,7 +18,7 @@ public class Alternation extends ABNFList<ABNF, ABNF> {
     }
 
     @Override
-    public ABNF parse(List<ABNF> list) {
+    protected ABNF parse(List<ABNF> list) {
         if (list.size() == 1) {
             return list.get(0);
         }

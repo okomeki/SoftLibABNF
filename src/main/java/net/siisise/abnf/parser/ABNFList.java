@@ -1,5 +1,6 @@
 package net.siisise.abnf.parser;
 
+import java.util.ArrayList;
 import java.util.List;
 import net.siisise.abnf.ABNF;
 import net.siisise.abnf.ABNFReg;
@@ -32,14 +33,16 @@ public abstract class ABNFList<T, M> extends ABNFBaseParser<T, M> {
             return null;
         }
         List<M> mlist = sret.get(subs[0].getBNF());
-        // r nullあり
+        if ( mlist == null ) {
+            mlist = new ArrayList();
+        }
         return parse(mlist);
     }
 
     /**
      *
-     * @param val sub要素の配列 nullの場合あり
+     * @param val sub要素の配列 nullなしでお試し中
      * @return
      */
-    public abstract T parse(List<M> val);
+    protected abstract T parse(List<M> val);
 }
