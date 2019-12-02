@@ -16,6 +16,6 @@ public class IMF6854 {
     public static ABNF sender = REG.rule("sender", "\"Sender:\" (mailbox / address) CRLF");
     public static ABNF replyTo = REG.rule("reply-to", "\"Reply-To:\" address-list CRLF");
 
-    static ABNF resentFrom = REG.rule("resent-from", "\"Resent-From:\" (mailbox-list / address-list) CRLF");
-    static ABNF resentSender = REG.rule("resent-sender", "\"Resent-Sender:\" (mailbox / address) CRLF");
+    public static ABNF resentFrom = REG.rule("resent-from", "\"Resent-From:\" (mailbox-list / address-list) CRLF");
+    public static ABNF resentSender = REG.rule("resent-sender", "\"Resent-Sender:\" (mailbox / address) CRLF");
 }

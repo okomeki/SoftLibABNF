@@ -6,7 +6,6 @@ import net.siisise.abnf.parser5234.ABNF5234;
 
 /**
  *
- * @author okome
  */
 public class IPv62373 {
     static final ABNFReg REG = new ABNFReg(ABNF5234.BASE);

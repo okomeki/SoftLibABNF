@@ -28,7 +28,7 @@ public class IMF5322 {
     static ABNF CFWS = REG.rule("CFWS", "(1*([FWS] comment) [FWS]) / FWS");
     // 3.2.3. Atom
     static ABNF atext = REG.rule("atext", ABNF5234.ALPHA.or(ABNF5234.DIGIT, ABNF.list("!#$%&'*+-/=?^_`{|}~")));
-    static ABNF atom = REG.rule("atom", "[CFWS] 1*atext [CFWS]");
+    static ABNF atom = REG.rule("atom", CFWS.c().pl(atext.ix(),CFWS.c()));
     static ABNF dotAtomText = REG.rule("dot-atom-text", "1*atext *(\".\" 1*atext)");
     static ABNF dotAtom = REG.rule("dot-atom", "[CFWS] dot-atom-text [CFWS]");
     static ABNF specials = REG.rule("specials", ABNF.list("()<>[]:;@\\,.").or(ABNF5234.DQUOTE));

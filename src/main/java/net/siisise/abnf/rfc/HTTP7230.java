@@ -28,7 +28,7 @@ public class HTTP7230 {
     public static final ABNFReg REG = new ABNFReg(URI3986.REG, PAR);
 
     static final ABNF URIreference = URI3986.URIreference;
-    static final ABNF absoluteURI = URI3986.absoluteURI;
+    static final ABNF absoluteURI = REG.rule("absolute-URI",URI3986.absoluteURI);
     static final ABNF relativePart = URI3986.relativePart;
     static final ABNF scheme = URI3986.scheme;
     static final ABNF authority = URI3986.authority;

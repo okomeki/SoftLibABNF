@@ -56,7 +56,6 @@ public class HTTP7230Repetition extends ABNFBaseParser<ABNF, ABNF> {
             }
             int n = Integer.parseInt(l);
             int m = Integer.parseInt(r);
-            ABNF ex;
             if ( n == 0 && m == -1 ) {
                 return element.pl( HTTP7230.OWS.pl(ABNF.bin(","), HTTP7230.OWS,element).x() ).c();
             } else if ( n == 1 && m == -1 ) {

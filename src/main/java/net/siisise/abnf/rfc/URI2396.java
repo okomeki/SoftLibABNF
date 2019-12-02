@@ -7,7 +7,6 @@ import net.siisise.abnf.parser5234.ABNF5234;
 /**
  * toplabel , domainlabel は完全一致判定が必要か
  *
- * @author okome
  */
 public class URI2396 {
 
