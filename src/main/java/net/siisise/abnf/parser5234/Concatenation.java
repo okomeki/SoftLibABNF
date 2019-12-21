@@ -11,8 +11,6 @@ import net.siisise.abnf.parser.ABNFList;
  * 類似した要素の解析で、あなろぐなRFCのABNFの想定と一致しない場合もある。
  * 要素が1つの場合はABNFplを省略している。
  * RFC 5432
- * 
- * @author okome
  */
 public class Concatenation extends ABNFList<ABNF, ABNF> {
 

@@ -10,7 +10,6 @@ import net.siisise.io.Packet;
 
 /**
  *
- * @author okome
  */
 public class CharVal extends ABNFBaseParser<ABNF, ABNF> {
 

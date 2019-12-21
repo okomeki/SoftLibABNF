@@ -5,8 +5,7 @@ import net.siisise.abnf.ABNFReg;
 import net.siisise.io.Packet;
 
 /**
- * 一致するものを選択する (分岐)
- * @author okome
+ * 一致するものを選択する (分岐).
  * @param <T>
  */
 public class ABNFSelect<T> extends ABNFBaseParser<T, T> {
@@ -27,6 +26,11 @@ public class ABNFSelect<T> extends ABNFBaseParser<T, T> {
         return other(pac);
     }
 
+    /**
+     * 拡張する猶予.
+     * @param pac
+     * @return 
+     */
     protected T other(Packet pac) {
         return null;
     }
