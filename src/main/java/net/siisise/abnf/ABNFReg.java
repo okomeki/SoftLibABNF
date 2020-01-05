@@ -142,7 +142,7 @@ public class ABNFReg {
         if (ABNF5234.rulename != null && !ABNF5234.rulename.eq(name)) {
             System.err.println("ABNF:" + name + " ABNFの名称には利用できません");
         }
-        System.out.println("rule: " + name + ":" + abnf.toString());
+//        System.out.println("rule: " + name + ":" + abnf.toString());
         if (!name.equals(abnf.getName())) {
             abnf = abnf.name(name);
         }
@@ -236,6 +236,26 @@ public class ABNFReg {
 //            System.out.println(name);
             Constructor<? extends ABNFParser> c = CL.get(name).getConstructor(ABNF.class, ABNFReg.class,ABNFReg.class);
             return (T) c.newInstance(reg.get(name),this,this).parse(src);
+        } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException
+                | IllegalArgumentException | InvocationTargetException ex) {
+            throw new java.lang.UnsupportedOperationException(ex);
+        }
+    }
+
+    /**
+     * ユーザ側のParser(JSONなど)を駆動する
+     * BASEのみで参照先がないなど
+     * @param <T>
+     * @param name 解析装置付き構文の名。駆動コマンドのようなもの
+     * @param src パース対象ソース
+     * @return 解析後の実体
+     */
+    public <T> T parse(String name, byte[] src) {
+        try {
+            Constructor<? extends ABNFParser> c = CL.get(name).getConstructor(ABNF.class, ABNFReg.class,ABNFReg.class);
+            Packet pac = new PacketA();
+            pac.write(src);
+            return (T) c.newInstance(reg.get(name),this,this).parse(pac);
         } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException
                 | IllegalArgumentException | InvocationTargetException ex) {
             throw new java.lang.UnsupportedOperationException(ex);
