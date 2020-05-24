@@ -1,7 +1,7 @@
 package net.siisise.abnf;
 
 import net.siisise.abnf.parser.ABNFParser;
-import net.siisise.io.Packet;
+import net.siisise.io.FrontPacket;
 
 /**
  * 軽量一致検索。
@@ -47,7 +47,7 @@ public class ABNFpl extends FindABNF {
      * @return 
      */
     @Override
-    public <X> C<X> find(Packet pac, ABNFParser<? extends X>... parsers) {
+    public <X> C<X> find(FrontPacket pac, ABNFParser<? extends X>... parsers) {
 //        System.out.println(getName() + ":" + strd(pac) + ":pl");
         C<X> ret = new ABNF.C();
         ABNFParser[] subparsers;

@@ -1,11 +1,9 @@
 package net.siisise.abnf;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import net.siisise.io.FrontPacket;
 import net.siisise.io.Packet;
 import net.siisise.io.PacketA;
 import net.siisise.lang.CodePoint;
@@ -40,21 +38,12 @@ public class ABNFbin extends IsABNF {
             sb.append(hex(val.charAt(i)).substring(2));
         }
         name = sb.toString();
-        try {
-            data = val.getBytes("utf-8");
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(ABNFbin.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        data = val.getBytes(UTF8);
     }
 
     @Override
     public ABNFbin copy(ABNFReg reg) {
-        try {
-            return new ABNFbin(new String(data, "utf-8"));
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(ABNFbin.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        throw new java.lang.UnsupportedOperationException();
+        return new ABNFbin(new String(data, UTF8));
     }
 
     /**
@@ -78,7 +67,7 @@ public class ABNFbin extends IsABNF {
     }
 
     @Override
-    public Packet is(Packet pac) {
+    public Packet is(FrontPacket pac) {
         if (pac.length() < data.length) {
             return null;
         }

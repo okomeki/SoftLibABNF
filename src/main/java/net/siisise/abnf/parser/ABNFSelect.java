@@ -2,7 +2,7 @@ package net.siisise.abnf.parser;
 
 import net.siisise.abnf.ABNF;
 import net.siisise.abnf.ABNFReg;
-import net.siisise.io.Packet;
+import net.siisise.io.FrontPacket;
 
 /**
  * 一致するものを選択する (分岐).
@@ -15,7 +15,7 @@ public class ABNFSelect<T> extends ABNFBaseParser<T, T> {
     }
 
     @Override
-    public T parse(Packet pac) {
+    public T parse(FrontPacket pac) {
         inst();
         for (ABNFParser<? extends T> p : subs) {
             T r = p.parse(pac);
@@ -31,7 +31,7 @@ public class ABNFSelect<T> extends ABNFBaseParser<T, T> {
      * @param pac
      * @return 
      */
-    protected T other(Packet pac) {
+    protected T other(FrontPacket pac) {
         return null;
     }
 

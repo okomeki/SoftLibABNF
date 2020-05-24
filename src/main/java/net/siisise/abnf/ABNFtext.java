@@ -1,8 +1,6 @@
 package net.siisise.abnf;
 
-import java.io.UnsupportedEncodingException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import net.siisise.io.FrontPacket;
 import net.siisise.io.Packet;
 import net.siisise.io.PacketA;
 
@@ -10,7 +8,6 @@ import net.siisise.io.PacketA;
  * casesensitiveではない方
  *
  * @see ABNFbin
- * @author okome
  */
 public class ABNFtext extends IsABNF {
 
@@ -24,23 +21,13 @@ public class ABNFtext extends IsABNF {
         } else {
             name = hex(ch);
         }
-        try {
-            utf8 = text.getBytes("utf-8");
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(ABNFtext.class.getName()).log(Level.SEVERE, null, ex);
-            throw new java.lang.UnsupportedOperationException();
-        }
+        utf8 = text.getBytes(UTF8);
     }
 
     ABNFtext(String text) {
         this.text = text;
         name = "\"" + text + "\"";
-        try {
-            utf8 = text.getBytes("utf-8");
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(ABNFtext.class.getName()).log(Level.SEVERE, null, ex);
-            throw new java.lang.UnsupportedOperationException();
-        }
+        utf8 = text.getBytes(UTF8);
     }
 
     /**
@@ -66,23 +53,18 @@ public class ABNFtext extends IsABNF {
     }
 
     @Override
-    public Packet is(Packet pac) {
+    public Packet is(FrontPacket pac) {
         if (pac.length() < utf8.length) {
             return null;
         }
         byte[] d = new byte[utf8.length];
         pac.read(d);
         String u;
-        try {
-            u = new String(d, "utf-8");
-            if (u.equalsIgnoreCase(text)) {
-                return new PacketA(d);
-            }
-            pac.backWrite(d);
-            return null;
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(ABNFtext.class.getName()).log(Level.SEVERE, null, ex);
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        u = new String(d, UTF8);
+        if (u.equalsIgnoreCase(text)) {
+            return new PacketA(d);
         }
+        pac.backWrite(d);
+        return null;
     }
 }

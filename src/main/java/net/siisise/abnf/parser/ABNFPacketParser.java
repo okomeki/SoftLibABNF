@@ -2,19 +2,19 @@ package net.siisise.abnf.parser;
 
 import net.siisise.abnf.ABNF;
 import net.siisise.abnf.ABNFReg;
-import net.siisise.io.Packet;
+import net.siisise.io.FrontPacket;
 
 /**
  * みかんせい?
  */
-public class ABNFPacketParser extends ABNFBaseParser<Packet, ABNF> {
+public class ABNFPacketParser extends ABNFBaseParser<FrontPacket, ABNF> {
 
     public ABNFPacketParser(ABNF def, ABNFReg reg) {
         super(def, reg);
     }
 
     @Override
-    public Packet parse(Packet pac) {
+    public FrontPacket parse(FrontPacket pac) {
         return pac;
     }
 

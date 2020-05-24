@@ -4,6 +4,7 @@ import java.util.List;
 import net.siisise.abnf.ABNF;
 import net.siisise.abnf.ABNFReg;
 import net.siisise.abnf.parser.ABNFBaseParser;
+import net.siisise.io.FrontPacket;
 import net.siisise.io.Packet;
 
 /**
@@ -22,7 +23,7 @@ public class Repetition extends ABNFBaseParser<ABNF, ABNF> {
     }
 
     @Override
-    public ABNF parse(Packet pac) {
+    public ABNF parse(FrontPacket pac) {
         inst();
 //        System.out.println("rep: " + strd(pac));
         ABNF repeat = ABNF5234.repeat; // base.href("repeat");

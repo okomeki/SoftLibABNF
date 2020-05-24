@@ -1,5 +1,6 @@
 package net.siisise.abnf;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 import net.siisise.abnf.parser.ABNFParser;
 import net.siisise.bnf.BNF;
+import net.siisise.io.FrontPacket;
 import net.siisise.io.Packet;
 import net.siisise.io.PacketA;
 
@@ -17,6 +19,8 @@ import net.siisise.io.PacketA;
  * ABNFのparserは含まない。
  */
 public interface ABNF extends BNF {
+
+    static Charset UTF8 = Charset.forName("utf-8");
 
     /**
      * 名前または構文っぽいものの取得。
@@ -77,7 +81,7 @@ public interface ABNF extends BNF {
      * @param pac
      * @return 一致した範囲
      */
-    Packet is(Packet pac);
+    Packet is(FrontPacket pac);
 
     /**
      * 先頭一致でパースする。
@@ -94,7 +98,7 @@ public interface ABNF extends BNF {
      * @param parsers おまけで検索するサブ要素
      * @return 検索結果
      */
-    <X> C<X> find(Packet pac, ABNFParser<? extends X>... parsers);
+    <X> C<X> find(FrontPacket pac, ABNFParser<? extends X>... parsers);
 
     /**
      * 完全一致の判定

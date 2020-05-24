@@ -1,7 +1,7 @@
 package net.siisise.abnf.parser;
 
 import net.siisise.abnf.ABNF;
-import net.siisise.io.Packet;
+import net.siisise.io.FrontPacket;
 
 /**
  * ABNFの構文解析装置
@@ -18,6 +18,6 @@ public interface ABNFParser<T> {
      * @param pac
      * @return 一致しない場合はnull、一致した場合は一致部分
      */
-    T parse(Packet pac);
+    T parse(FrontPacket pac);
     T parse(String src);
 }

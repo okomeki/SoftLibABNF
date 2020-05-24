@@ -4,7 +4,7 @@ import java.util.List;
 import net.siisise.abnf.ABNF;
 import net.siisise.abnf.ABNFReg;
 import net.siisise.abnf.parser.ABNFBaseParser;
-import net.siisise.io.Packet;
+import net.siisise.io.FrontPacket;
 
 /**
  * 数値系まとめてParser
@@ -24,7 +24,7 @@ public class NumVal extends ABNFBaseParser<ABNF, ABNF> {
     static NumSub h = new NumSub(ABNF5234.hexVal, ABNF5234.HEXDIG, 16, 'x', 'X');
 
     @Override
-    public ABNF parse(Packet pac) {
+    public ABNF parse(FrontPacket pac) {
         ABNF.C<ABNF> ret = def.find(pac, b, d, h);
         if (ret == null) {
             return null;

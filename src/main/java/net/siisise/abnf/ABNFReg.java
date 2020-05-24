@@ -2,7 +2,6 @@ package net.siisise.abnf;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
@@ -11,7 +10,8 @@ import java.util.List;
 import java.util.Map;
 import net.siisise.abnf.parser.ABNFParser;
 import net.siisise.abnf.parser5234.ABNF5234;
-import net.siisise.io.FileIO;
+import net.siisise.io.FrontPacket;
+import net.siisise.io.FrontPacketF;
 import net.siisise.io.Packet;
 import net.siisise.io.PacketA;
 
@@ -39,7 +39,7 @@ public class ABNFReg {
         }
 
         @Override
-        public C find(Packet pac, ABNFParser... parsers) {
+        public C find(FrontPacket pac, ABNFParser... parsers) {
             C ret = reg.get(name).find(pac, parsers);
             if ( ret == null ) {
                 return null;
@@ -221,7 +221,24 @@ public class ABNFReg {
                 | IllegalArgumentException | InvocationTargetException ex) {
             throw new java.lang.UnsupportedOperationException(ex);
         }
-    } 
+    }
+
+    /**
+     * parseの戻り値が一覧のようなもの。
+     * @param name parser側の名
+     * @param src パース対象ソース
+     * @return 
+     */
+    List<ABNF> listParse(String name, FrontPacket src) {
+        try {
+            Constructor<? extends ABNFParser> constructor = parseReg.CL.get(name).getConstructor(ABNF.class,ABNFReg.class, ABNFReg.class);
+            ABNFParser ap = constructor.newInstance(parseReg.reg.get(name),this, parseReg);
+            return (List<ABNF>) ap.parse(src);
+        } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException
+                | IllegalArgumentException | InvocationTargetException ex) {
+            throw new java.lang.UnsupportedOperationException(ex);
+        }
+    }
 
     /**
      * ユーザ側のParser(JSONなど)を駆動する
@@ -290,6 +307,14 @@ public class ABNFReg {
         });
         return list;
     }
+
+    public List<ABNF> rulelist(FrontPacket rulelist) {
+        List<ABNF> list = listParse("rulelist", rulelist);
+        list.forEach((abnf) -> {
+            reg.put(abnf.getName(), abnf);
+        });
+        return list;
+    }
     
     /**
      * テキストからのabnf一覧一括読み込み。
@@ -302,11 +327,8 @@ public class ABNFReg {
      */
     public List<ABNF> rulelist(URL url) throws IOException {
         InputStream in = url.openStream();
-        Packet pac = new PacketA();
-        OutputStream out = pac.getOutputStream();
-        FileIO.io(in, out);
+        List<ABNF> rl = rulelist(new FrontPacketF(in));
         in.close();
-        String rulelist = new String(pac.toByteArray(),"utf-8");
-        return rulelist(rulelist);
+        return rl;
     }
 }

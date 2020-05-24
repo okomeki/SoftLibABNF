@@ -1,6 +1,5 @@
 package net.siisise.abnf.parser;
 
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
@@ -8,7 +7,7 @@ import java.util.logging.Logger;
 import net.siisise.abnf.ABNF;
 import net.siisise.abnf.ABNFReg;
 import net.siisise.abnf.AbstractABNF;
-import net.siisise.io.Packet;
+import net.siisise.io.FrontPacket;
 
 /**
  *
@@ -111,8 +110,8 @@ public abstract class ABNFBaseParser<T, M> implements ABNFParser<T> {
      * @param pac 解析対象データ
      * @return 変換されたデータ 不一致の場合はnull
      */
-    @Override
-    public abstract T parse(Packet pac);
+//    @Override
+//    public abstract T parse(FrontPacket pac);
 
     /**
      * 入り口
@@ -141,30 +140,21 @@ public abstract class ABNFBaseParser<T, M> implements ABNFParser<T> {
      * @param defs
      * @return 
      */
-    protected ABNF.C find(Packet pac, ABNF... defs) {
+    protected ABNF.C find(FrontPacket pac, ABNF... defs) {
         ABNFParser[] ps = new ABNFParser[defs.length];
         for ( int i = 0; i < defs.length; i++ ) {
             ps[i] = x(defs[i]);
         }
         return def.find(pac, ps);
     }
-
-    protected static String str(Packet pac) {
-        try {
-            return new String(pac.toByteArray(), "utf-8");
-        } catch (UnsupportedEncodingException ex) {
-            throw new java.lang.UnsupportedOperationException();
-        }
+    
+    protected static String str(FrontPacket pac) {
+        return new String(pac.toByteArray(), ABNF.UTF8);
     }
 
-    protected static String strd(Packet pac) {
+    protected static String strd(FrontPacket pac) {
         byte[] b = pac.toByteArray();
         pac.backWrite(b);
-        try {
-            return new String(b, "utf-8");
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(ABNFBaseParser.class.getName()).log(Level.SEVERE, null, ex);
-            throw new java.lang.UnsupportedOperationException();
-        }
+        return new String(b, ABNF.UTF8);
     }
 }

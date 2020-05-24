@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import net.siisise.abnf.ABNF;
 import net.siisise.abnf.ABNFReg;
-import net.siisise.io.Packet;
+import net.siisise.io.FrontPacket;
 
 /**
  *
@@ -25,7 +25,7 @@ public abstract class ABNFList<T, M> extends ABNFBaseParser<T, M> {
     }
 
     @Override
-    public T parse(Packet pac) {
+    public T parse(FrontPacket pac) {
         inst();
 
         ABNF.C<M> sret = def.find(pac, subs);

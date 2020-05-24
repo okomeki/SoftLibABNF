@@ -3,6 +3,7 @@ package net.siisise.abnf.parser5234;
 import net.siisise.abnf.ABNF;
 import net.siisise.abnf.ABNFReg;
 import net.siisise.abnf.parser.ABNFBaseParser;
+import net.siisise.io.FrontPacket;
 import net.siisise.io.Packet;
 
 /**
@@ -15,7 +16,7 @@ public class ProseVal extends ABNFBaseParser<ABNF,ABNF> {
     }
 
     @Override
-    public ABNF parse(Packet pac) {
+    public ABNF parse(FrontPacket pac) {
         Packet p = def.is(pac);
         if ( p == null ) {
             return null;

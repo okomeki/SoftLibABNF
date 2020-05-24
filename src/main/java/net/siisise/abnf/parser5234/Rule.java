@@ -4,7 +4,7 @@ import net.siisise.abnf.ABNF;
 import net.siisise.abnf.ABNFReg;
 import net.siisise.abnf.ABNFor;
 import net.siisise.abnf.parser.ABNFBaseParser;
-import net.siisise.io.Packet;
+import net.siisise.io.FrontPacket;
 
 /**
  *
@@ -16,14 +16,14 @@ public class Rule extends ABNFBaseParser<ABNF, ABNF> {
     }
 
     @Override
-    public ABNF parse(Packet pac) {
+    public ABNF parse(FrontPacket pac) {
         inst();
         ABNF.C<Object> ret = def.find(pac, x(ABNF5234.rulename), x(ABNF5234.definedAs), subs[0]);
         if (ret == null) {
             return null;
         }
-        String name = str((Packet) ret.get(ABNF5234.rulename).get(0));
-        String defined = str((Packet) ret.get(ABNF5234.definedAs).get(0));
+        String name = str((FrontPacket) ret.get(ABNF5234.rulename).get(0));
+        String defined = str((FrontPacket) ret.get(ABNF5234.definedAs).get(0));
         ABNF f = (ABNF) ret.get(subs[0].getBNF()).get(0);
 
         if (defined.equals("=/")) {

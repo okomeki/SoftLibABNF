@@ -1,5 +1,6 @@
 package net.siisise.abnf;
 
+import net.siisise.io.FrontPacket;
 import net.siisise.io.Packet;
 import net.siisise.io.PacketA;
 import net.siisise.lang.CodePoint;
@@ -25,7 +26,7 @@ public class ABNFrange extends IsABNF {
     }
 
     @Override
-    public Packet is(Packet pac) {
+    public Packet is(FrontPacket pac) {
         if (pac.length() == 0) {
             return null;
         }

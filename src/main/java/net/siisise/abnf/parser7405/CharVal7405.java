@@ -4,6 +4,7 @@ import java.util.List;
 import net.siisise.abnf.ABNF;
 import net.siisise.abnf.ABNFReg;
 import net.siisise.abnf.parser.ABNFBaseParser;
+import net.siisise.io.FrontPacket;
 import net.siisise.io.Packet;
 
 /**
@@ -17,7 +18,7 @@ public class CharVal7405 extends ABNFBaseParser<ABNF, ABNF> {
     }
 
     @Override
-    public ABNF parse(Packet pac) {
+    public ABNF parse(FrontPacket pac) {
         ABNF.C ret = find(pac,ABNF7405.caseInsensitiveString,ABNF7405.caseSensitiveString,ABNF7405.quotedString);
         if (ret == null) {
             return null;

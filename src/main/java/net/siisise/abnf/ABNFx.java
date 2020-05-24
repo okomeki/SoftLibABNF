@@ -1,7 +1,7 @@
 package net.siisise.abnf;
 
 import net.siisise.abnf.parser.ABNFParser;
-import net.siisise.io.Packet;
+import net.siisise.io.FrontPacket;
 
 /**
  * ループの結果は最長だけでなく、各長さで判定したいこともあり
@@ -48,7 +48,7 @@ public class ABNFx extends FindABNF {
     }
 
     @Override
-    public C find(Packet pac, ABNFParser... names) {
+    public C find(FrontPacket pac, ABNFParser... names) {
         if (isName(names)) { // ないかも
             C p = find(pac);
             if (p == null) {

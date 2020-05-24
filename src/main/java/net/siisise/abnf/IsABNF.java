@@ -1,6 +1,7 @@
 package net.siisise.abnf;
 
 import net.siisise.abnf.parser.ABNFParser;
+import net.siisise.io.FrontPacket;
 import net.siisise.io.Packet;
 
 /**
@@ -17,7 +18,7 @@ public abstract class IsABNF extends AbstractABNF {
      * @return 
      */
     @Override
-    public <X> C<X> find(Packet pac, ABNFParser<? extends X>... parsers) {
+    public <X> C<X> find(FrontPacket pac, ABNFParser<? extends X>... parsers) {
         Packet r = is(pac);
         if (r == null) {
             return null;

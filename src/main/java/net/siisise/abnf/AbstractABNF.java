@@ -1,10 +1,8 @@
 package net.siisise.abnf;
 
-import java.io.UnsupportedEncodingException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.siisise.abnf.parser.ABNFParser;
+import net.siisise.io.FrontPacket;
 import net.siisise.io.Packet;
 import net.siisise.io.PacketA;
 
@@ -12,7 +10,7 @@ import net.siisise.io.PacketA;
  * 簡単なプレ実装
  */
 public abstract class AbstractABNF implements ABNF {
-
+    
     /**
      * 名前、またはABNFに近いもの (まだ抜けもある)
      */
@@ -164,20 +162,12 @@ public abstract class AbstractABNF implements ABNF {
 
     public static Packet pac(String str) {
         Packet p = new PacketA();
-        try {
-            p.write(str.getBytes("utf-8"));
-        } catch (UnsupportedEncodingException ex) { // ない
-            Logger.getLogger(AbstractABNF.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        p.write(str.getBytes(UTF8));
         return p;
     }
 
-    public static String str(Packet pac) {
-        try {
-            return new String(pac.toByteArray(), "utf-8");
-        } catch (UnsupportedEncodingException ex) {
-            throw new java.lang.UnsupportedOperationException();
-        }
+    public static String str(FrontPacket pac) {
+        return new String(pac.toByteArray(), UTF8);
     }
 
     /**
@@ -186,7 +176,7 @@ public abstract class AbstractABNF implements ABNF {
      * @param pac
      * @return 
      */
-    public static String strd(Packet pac) {
+    public static String strd(FrontPacket pac) {
         byte[] data = pac.toByteArray();
         pac.backWrite(data);
         Packet n = new PacketA(data);
