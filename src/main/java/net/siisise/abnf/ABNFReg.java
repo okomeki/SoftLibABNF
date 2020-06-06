@@ -289,8 +289,11 @@ public class ABNFReg {
      * @return 解析されたABNF
      */
     public ABNF rule(String name, String elements) {
-        ABNF abnf = baseParse("elements", elements);
-        return rule(name, abnf);
+        return rule(name, elements(elements));
+    }
+    
+    public ABNF elements(String elements) {
+        return baseParse("elements", elements);
     }
 
     /**
@@ -310,6 +313,9 @@ public class ABNFReg {
 
     public List<ABNF> rulelist(FrontPacket rulelist) {
         List<ABNF> list = listParse("rulelist", rulelist);
+        if ( list == null ) {
+            return null;
+        }
         list.forEach((abnf) -> {
             reg.put(abnf.getName(), abnf);
         });

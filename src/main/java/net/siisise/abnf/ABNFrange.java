@@ -32,7 +32,7 @@ public class ABNFrange extends IsABNF {
         }
         int ch = CodePoint.utf8(pac);
         if (ch < 0) {
-            throw new UnsupportedOperationException();
+            return null;
         }
         byte[] bin8 = CodePoint.utf8(ch);
         if (ch >= min && ch <= max) {
