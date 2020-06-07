@@ -126,11 +126,21 @@ public interface ABNF extends BNF {
     /**
      * Concatenation に翻訳されるABNF。
      * 難しい繰り返しにも対応する最長一致。
+     * バイト列単位で厳密に比較する.
      * 
      * @param vals 接続したいABNF構文の列挙
      * @return 繋がったABNF構文
      */
     ABNF plm(ABNF... vals);
+    /**
+     * Concatenation に翻訳されるABNF。
+     * 難しい繰り返しにも対応する最長一致。
+     * utf-8の単位で厳密に比較する. plmよりは速い?
+     * 
+     * @param vals 接続したいABNF構文の列挙
+     * @return 繋がったABNF構文
+     */
+    ABNF plu(ABNF... vals);
     /**
      * Alternation に翻訳される ABNF / 的な構文の生成装置。
      * 最大一致で検索されるので誤読もある。

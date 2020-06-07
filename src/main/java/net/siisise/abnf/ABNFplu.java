@@ -1,19 +1,17 @@
 package net.siisise.abnf;
 
+import static net.siisise.abnf.AbstractABNF.mix;
 import net.siisise.abnf.parser.ABNFParser;
 import net.siisise.io.FrontPacket;
 import net.siisise.io.Packet;
 import net.siisise.io.PacketA;
 
 /**
- * 完全一致検索。
- * 重いかもしれない
- * example = *( a / b ) a に対応したもの
  *
  */
-public class ABNFplm extends ABNFpl {
-
-    public ABNFplm(ABNF[] list) {
+public class ABNFplu extends ABNFplm {
+    
+    public ABNFplu(ABNF[] list) {
         super(list);
     }
 
@@ -24,18 +22,7 @@ public class ABNFplm extends ABNFpl {
         for (int i = 0; i < list.length; i++) {
             l[i] = this.list[i].copy(reg);
         }
-        return new ABNFplm(l);
-    }
-
-    @Override
-    public <X> C<X> find(FrontPacket pac, ABNFParser<? extends X>... names) {
-        C<X> ret = new ABNF.C<>();
-        ABNFParser[] subparsers;
-        boolean n = isName(names);
-        subparsers = n ? new ABNFParser[0] : names;
-
-        ret = longfind(pac, list, subparsers);
-        return n ? sub(ret, names) : ret;
+        return new ABNFplu(l);
     }
 
     /**
@@ -47,6 +34,7 @@ public class ABNFplm extends ABNFpl {
      * @param subparsers
      * @return
      */
+    @Override
     protected <X> C<X> longfind(FrontPacket pac, ABNF[] list, ABNFParser[] subparsers) {
         if (list.length == 0) {
             return new C();
@@ -78,7 +66,11 @@ public class ABNFplm extends ABNFpl {
             // scのみ成立 破棄
             byte[] sdata = firstret.ret.toByteArray();
             pac.backWrite(sdata);
+            // ToDo: utf-8で1文字戻る版にしてみた
             flen--;
+            while ( flen >= 0 && (sdata[flen] & 0xc0) == 0x80 ) {
+                flen--;
+            }
 
         } while (flen >= 0);
         return null;

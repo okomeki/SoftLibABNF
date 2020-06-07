@@ -70,7 +70,8 @@ public abstract class AbstractABNF implements ABNF {
         System.arraycopy(val, 0, list, 1, val.length);
         return new ABNFpl(list);
     }
-    
+
+    @Override
     public ABNF plm(ABNF... val) {
         if (val.length == 0) {
             return this;
@@ -79,6 +80,17 @@ public abstract class AbstractABNF implements ABNF {
         list[0] = this;
         System.arraycopy(val, 0, list, 1, val.length);
         return new ABNFplm(list);
+    }
+
+    @Override
+    public ABNF plu(ABNF... val) {
+        if (val.length == 0) {
+            return this;
+        }
+        ABNF[] list = new ABNF[val.length + 1];
+        list[0] = this;
+        System.arraycopy(val, 0, list, 1, val.length);
+        return new ABNFplu(list);
     }
 
     @Override
