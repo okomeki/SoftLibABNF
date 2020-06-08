@@ -14,7 +14,7 @@ public class ABNFrange extends IsABNF {
     private final int min;
     private final int max;
 
-    ABNFrange(int min, int max) {
+    public ABNFrange(int min, int max) {
         this.min = min;
         this.max = max;
         name = hex(min) + "-" + hex(max).substring(2);

@@ -94,7 +94,7 @@ public abstract class AbstractABNF implements ABNF {
     }
 
     @Override
-    public ABNFor or(ABNF... val) {
+    public ABNF or(ABNF... val) {
         ABNF[] list = new ABNF[val.length + 1];
         list[0] = this;
         System.arraycopy(val, 0, list, 1, val.length);

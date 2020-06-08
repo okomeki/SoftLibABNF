@@ -10,11 +10,11 @@ import net.siisise.lang.CodePoint;
 
 /**
  * バイナリ表現。
- * 一文字
+ * 一文字に限らずかもしれない
  */
 public class ABNFbin extends IsABNF {
 
-    private byte[] data;
+    final byte[] data;
 
     ABNFbin(int ch) { // " a-z A-Z, 0x80以降 を%表記、それ以外を文字表記
         if (ch >= 0x20 && ((ch != 0x22 && ch < 0x41) || (ch > 0x5a && ch < 0x61) || (ch > 0x7a && ch < 0x7f))) {
@@ -79,5 +79,15 @@ public class ABNFbin extends IsABNF {
         pac.backWrite(d);
         return null;
     }
-
+    
+    /**
+     * 1文字の場合のみ
+     * @return 1文字以外 -1
+     */
+    public int ch() {
+        PacketA pac = new PacketA();
+        pac.write(data);
+        int ch = CodePoint.utf8(pac);
+        return pac.size() == 0 ? ch : -1;
+    }
 }

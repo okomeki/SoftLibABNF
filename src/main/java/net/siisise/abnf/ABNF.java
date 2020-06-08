@@ -62,11 +62,25 @@ public interface ABNF extends BNF {
     static ABNF list(String chlist) {
         return new ABNFor(chlist);
     }
+    
+    /**
+     * どれかの文字に一致するかな
+     * @param binlist
+     * @return 
+     */
+    static ABNF binlist(String binlist) {
+        return new ABNFmap(binlist);
+    }
 
     static ABNFbin bin(int ch) {
         return new ABNFbin(ch);
     }
 
+    /**
+     * 文字列/文字との比較
+     * @param str utf-8で一致文字列
+     * @return 
+     */
     static ABNFbin bin(String str) {
         return new ABNFbin(str);
     }
@@ -92,8 +106,8 @@ public interface ABNF extends BNF {
     boolean is(String val);
     
     /**
-     * 
-     * @param <X>
+     * サブ要素含んで抽出するパーサな機能.
+     * @param <X> 返し型
      * @param pac 元データ
      * @param parsers おまけで検索するサブ要素
      * @return 検索結果
@@ -147,7 +161,7 @@ public interface ABNF extends BNF {
      * @param val 接続したいABNF構文の列挙
      * @return Alternationに結合されたABNF構文
      */
-    ABNFor or(ABNF... val);
+    ABNF or(ABNF... val);
     /**
      * a*bXXX.
      * 

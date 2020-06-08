@@ -25,7 +25,7 @@ public class ABNFor extends FindABNF {
 
     /**
      * text として
-     *
+     * ABNFmap 推奨
      * @param chlist
      */
     public ABNFor(String chlist) {
