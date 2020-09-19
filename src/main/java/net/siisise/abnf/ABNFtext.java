@@ -14,10 +14,15 @@ public class ABNFtext extends IsABNF {
     String text;
     byte[] utf8;
 
+    /**
+     * 
+     * @param ch 
+     */
     ABNFtext(int ch) {
-        text = Character.toString(ch);
+        char[] chars = Character.toChars(ch);
+        text = String.valueOf(chars);
         if (ch < 0x7f && ch >= 0x20 && ch != 0x22) {
-            name = "\"" + (char) ch + "\"";
+            name = "\"" + text + "\"";
         } else {
             name = hex(ch);
         }
