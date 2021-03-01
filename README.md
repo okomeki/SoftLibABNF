@@ -1,14 +1,15 @@
-てきとーな ABNF ライブラリ
+# てきとーな ABNF ライブラリ
 
 Twitter @okomeki
 
-概要
+## 概要
 
 ABNFによるABNFのためのABNF
 とりあえず作ってみたので公開する
 RFC 5234 ABNF、RFC 7405の拡張を実装したもの
 
-何ができるのか?
+### 何ができるのか?
+
 メールアドレスの判定がしたい
 URLの解析がしたい
 IPv6アドレスの(以下同文)
@@ -23,12 +24,12 @@ JSONとかABNFとか使いたい
 機能3 名前参照対応
 機能4 オブジェクト/Collection/配列マッピング
 
-class Test {
-    // 名前空間
-    static final ABNFReg REG = new ABNFReg();
+    class Test {
+        // 名前空間
+        static final ABNFReg REG = new ABNFReg();
 
-    static final ABNF 	
-}
+        static final ABNF 	
+    }
 
 
 net.siisise.abnf.ABNFReg をstaticで定義して名前の入れ物にできる
