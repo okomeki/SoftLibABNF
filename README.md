@@ -19,10 +19,11 @@ JSONとかABNFとか使いたい
 とRFCやABNFでお困りのいろいろを解決します
 
 
-機能1 ABNF Parser
-機能2 ABNF 比較とか
-機能3 名前参照対応
-機能4 オブジェクト/Collection/配列マッピング
+- 機能1 ABNF Parser
+- 機能2 ABNF 比較とか
+- 機能3 名前参照対応
+- 機能4 オブジェクト/Collection/配列マッピング
+
 
     class Test {
         // 名前空間
