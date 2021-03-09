@@ -100,7 +100,9 @@ REG.rule() または #name(String)を通さないと名前はつかない。
     <a>*<b>element
     
     element.x(a,b)
-    省略する場合、a = 0, b = -1 と少々複雑
+    element.ix() // a=1,bの省略 1*element
+    element.x() // a,bの省略 *element
+    値で省略する場合、a = 0, b = -1 と少々複雑
 
 ### 特定回数反復 nRule
 
