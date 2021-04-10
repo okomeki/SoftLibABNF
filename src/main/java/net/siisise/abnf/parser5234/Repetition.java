@@ -27,7 +27,7 @@ public class Repetition extends ABNFBaseParser<ABNF, ABNF> {
         inst();
 //        System.out.println("rep: " + strd(pac));
         ABNF repeat = ABNF5234.repeat; // base.href("repeat");
-        ABNF.C<Object> ret = def.find(pac, x(repeat), subs[0]);
+        ABNF.C<Object> ret = def.find(pac, pacp(repeat), subs[0]);
         if (ret == null) {
             return null;
         }

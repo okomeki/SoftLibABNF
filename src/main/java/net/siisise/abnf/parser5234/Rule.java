@@ -18,12 +18,12 @@ public class Rule extends ABNFBaseParser<ABNF, ABNF> {
     @Override
     public ABNF parse(FrontPacket pac) {
         inst();
-        ABNF.C<Object> ret = def.find(pac, x(ABNF5234.rulename), x(ABNF5234.definedAs), subs[0]);
+        ABNF.C<Object> ret = def.find(pac, strp(ABNF5234.rulename), strp(ABNF5234.definedAs), subs[0]);
         if (ret == null) {
             return null;
         }
-        String name = str((FrontPacket) ret.get(ABNF5234.rulename).get(0));
-        String defined = str((FrontPacket) ret.get(ABNF5234.definedAs).get(0));
+        String name = (String)ret.get(ABNF5234.rulename).get(0);
+        String defined = (String)ret.get(ABNF5234.definedAs).get(0);
         ABNF f = (ABNF) ret.get(subs[0].getBNF()).get(0);
 
         if (defined.equals("=/")) {

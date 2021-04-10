@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import net.siisise.abnf.parser.ABNFParser;
 import net.siisise.abnf.parser5234.ABNF5234;
+import net.siisise.bnf.parser.BNFParser;
 import net.siisise.io.FrontPacket;
 import net.siisise.io.FrontPacketF;
 import net.siisise.io.Packet;
@@ -18,7 +19,7 @@ import net.siisise.io.PacketA;
 /**
  * ABNFの名前担当、Parserの機能もあり。
  * Namespace
- * 
+ *
  * rule: 基本は RFC 5234 に準拠するが、一部改変したParserの対応も可能
  */
 public class ABNFReg {
@@ -39,9 +40,9 @@ public class ABNFReg {
         }
 
         @Override
-        public C find(FrontPacket pac, ABNFParser... parsers) {
+        public C find(FrontPacket pac, BNFParser... parsers) {
             C ret = reg.get(name).find(pac, parsers);
-            if ( ret == null ) {
+            if (ret == null) {
                 return null;
             }
             return sub(ret, parsers);
@@ -62,11 +63,12 @@ public class ABNFReg {
      * いろいろ未定
      * up の定義を複製する
      * HTTP7230では拡張の実験をしている
+     *
      * @param up
      * @param exParser Parserの種類 ABNF5234.REG,RFC 7405, RFC 7230など微妙に違うとき。利用しないときのみ省略したい
      */
     public ABNFReg(ABNFReg up, ABNFReg exParser) {
-        if ( up != null ) {
+        if (up != null) {
             //reg = new HashMap<>(up.reg); // 複製しておくのが簡単
             up.CL.keySet().forEach((key) -> {
                 CL.put(key, up.CL.get(key));
@@ -90,9 +92,10 @@ public class ABNFReg {
     /**
      * ファイルに定義を書いておけばプログラム不要説(パーサは必要)。
      * ファイルではなくURLで渡すと幅が広がる
+     *
      * @param url ABNF定義ファイルのURL
      * @param up 前提とする定義など
-     * @throws IOException 
+     * @throws IOException
      */
     public ABNFReg(URL url, ABNFReg up) throws IOException {
         this(up);
@@ -108,13 +111,13 @@ public class ABNFReg {
      */
     public ABNF ref(String name) {
         return new ABNFRef(name);
-/*
+        /*
         ABNF bnf = reg.get(name);
         if (bnf == null || !(bnf instanceof ABNFRef)) {
            bnf = new ABNFRef(name);
         }
         return bnf;
-*/
+         */
     }
 
     /**
@@ -168,17 +171,18 @@ public class ABNFReg {
     /**
      * ABNFの解析ついでに対応するParserを埋め込む。
      * 該当する場合はparserによって対象オブジェクトに変換する機能をつけたABNFを登録する
+     *
      * @param name ABNFの名
      * @param parser ABNFから対象オブジェクトに変換する解析装置
      * @param rule ABNF構文
-     * @return 
+     * @return
      */
     public ABNF rule(String name, Class<? extends ABNFParser> parser, String rule) {
         return rule(name, parser, rule(name, rule));
     }
 
     /**
-     * 
+     *
      * @param rule name = value 改行を省略可能に改変している
      * @return
      */
@@ -191,31 +195,33 @@ public class ABNFReg {
      * Parser構築用
      * 参照空間とABNF Parserが別に存在する場合が多い
      * 裏側(ABNF Parser)を駆動する
+     *
      * @param name parser側の名
      * @param src パースに対象ソース
-     * @return 
+     * @return
      */
     public ABNF baseParse(String name, String src) {
         try {
-            Constructor<? extends ABNFParser> constructor = parseReg.CL.get(name).getConstructor(ABNF.class,ABNFReg.class, ABNFReg.class);
-            ABNFParser ap = constructor.newInstance(parseReg.reg.get(name),this, parseReg);
+            Constructor<? extends ABNFParser> constructor = parseReg.CL.get(name).getConstructor(ABNF.class, ABNFReg.class, ABNFReg.class);
+            ABNFParser ap = constructor.newInstance(parseReg.reg.get(name), this, parseReg);
             return (ABNF) ap.parse(src);
         } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException
                 | IllegalArgumentException | InvocationTargetException ex) {
             throw new java.lang.UnsupportedOperationException(ex);
         }
     }
-    
+
     /**
      * parseの戻り値が一覧のようなもの。
+     *
      * @param name parser側の名
      * @param src パース対象ソース
-     * @return 
+     * @return
      */
     List<ABNF> listParse(String name, String src) {
         try {
-            Constructor<? extends ABNFParser> constructor = parseReg.CL.get(name).getConstructor(ABNF.class,ABNFReg.class, ABNFReg.class);
-            ABNFParser ap = constructor.newInstance(parseReg.reg.get(name),this, parseReg);
+            Constructor<? extends ABNFParser> constructor = parseReg.CL.get(name).getConstructor(ABNF.class, ABNFReg.class, ABNFReg.class);
+            ABNFParser ap = constructor.newInstance(parseReg.reg.get(name), this, parseReg);
             return (List<ABNF>) ap.parse(src);
         } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException
                 | IllegalArgumentException | InvocationTargetException ex) {
@@ -225,14 +231,15 @@ public class ABNFReg {
 
     /**
      * parseの戻り値が一覧のようなもの。
+     *
      * @param name parser側の名
      * @param src パース対象ソース
-     * @return 
+     * @return
      */
     List<ABNF> listParse(String name, FrontPacket src) {
         try {
-            Constructor<? extends ABNFParser> constructor = parseReg.CL.get(name).getConstructor(ABNF.class,ABNFReg.class, ABNFReg.class);
-            ABNFParser ap = constructor.newInstance(parseReg.reg.get(name),this, parseReg);
+            Constructor<? extends ABNFParser> constructor = parseReg.CL.get(name).getConstructor(ABNF.class, ABNFReg.class, ABNFReg.class);
+            ABNFParser ap = constructor.newInstance(parseReg.reg.get(name), this, parseReg);
             return (List<ABNF>) ap.parse(src);
         } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException
                 | IllegalArgumentException | InvocationTargetException ex) {
@@ -243,36 +250,36 @@ public class ABNFReg {
     /**
      * ユーザ側のParser(JSONなど)を駆動する
      * BASEのみで参照先がないなど
+     *
      * @param <T>
      * @param name 解析装置付き構文の名。駆動コマンドのようなもの
      * @param src パース対象ソース
      * @return 解析後の実体
      */
     public <T> T parse(String name, String src) {
-        try {
-//            System.out.println(name);
-            Constructor<? extends ABNFParser> c = CL.get(name).getConstructor(ABNF.class, ABNFReg.class,ABNFReg.class);
-            return (T) c.newInstance(reg.get(name),this,this).parse(src);
-        } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException
-                | IllegalArgumentException | InvocationTargetException ex) {
-            throw new java.lang.UnsupportedOperationException(ex);
-        }
+        Packet pac = AbstractABNF.pac(src);
+        return parse(name, pac);
+    }
+
+    public <T> T parse(String name, byte[] src) {
+        Packet pac = new PacketA();
+        pac.write(src);
+        return parse(name, pac);
     }
 
     /**
      * ユーザ側のParser(JSONなど)を駆動する
      * BASEのみで参照先がないなど
+     *
      * @param <T>
      * @param name 解析装置付き構文の名。駆動コマンドのようなもの
-     * @param src パース対象ソース
+     * @param pac パース対象ソース
      * @return 解析後の実体
      */
-    public <T> T parse(String name, byte[] src) {
+    public <T> T parse(String name, Packet pac) {
         try {
-            Constructor<? extends ABNFParser> c = CL.get(name).getConstructor(ABNF.class, ABNFReg.class,ABNFReg.class);
-            Packet pac = new PacketA();
-            pac.write(src);
-            return (T) c.newInstance(reg.get(name),this,this).parse(pac);
+            Constructor<? extends ABNFParser> c = CL.get(name).getConstructor(ABNF.class, ABNFReg.class, ABNFReg.class);
+            return (T) c.newInstance(reg.get(name), this, this).parse(pac);
         } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException
                 | IllegalArgumentException | InvocationTargetException ex) {
             throw new java.lang.UnsupportedOperationException(ex);
@@ -291,7 +298,7 @@ public class ABNFReg {
     public ABNF rule(String name, String elements) {
         return rule(name, elements(elements));
     }
-    
+
     public ABNF elements(String elements) {
         return baseParse("elements", elements);
     }
@@ -300,6 +307,7 @@ public class ABNFReg {
      * 一括読み込みと登録。
      * パースされ、regに登録します。
      * RFC 5234の場合、文字コードUTF-8、改行コード CR LF のみ有効です。
+     *
      * @param rulelist abnf一覧
      * @return ABNF化された一覧
      */
@@ -313,7 +321,7 @@ public class ABNFReg {
 
     public List<ABNF> rulelist(FrontPacket rulelist) {
         List<ABNF> list = listParse("rulelist", rulelist);
-        if ( list == null ) {
+        if (list == null) {
             return null;
         }
         list.forEach((abnf) -> {
@@ -321,15 +329,16 @@ public class ABNFReg {
         });
         return list;
     }
-    
+
     /**
      * テキストからのabnf一覧一括読み込み。
      * ファイルだと狭いのでURLとした。
      * regに登録します。
      * RFC 5234の場合、文字コードUTF-8、改行コード CR LF のみ有効です。
+     *
      * @param url abnf一覧のテキストが存在するURL
      * @return 解析されたABNF一覧
-     * @throws IOException 
+     * @throws IOException
      */
     public List<ABNF> rulelist(URL url) throws IOException {
         InputStream in = url.openStream();

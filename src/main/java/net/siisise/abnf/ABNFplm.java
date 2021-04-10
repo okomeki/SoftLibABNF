@@ -1,6 +1,6 @@
 package net.siisise.abnf;
 
-import net.siisise.abnf.parser.ABNFParser;
+import net.siisise.bnf.parser.BNFParser;
 import net.siisise.io.FrontPacket;
 import net.siisise.io.Packet;
 import net.siisise.io.PacketA;
@@ -28,11 +28,11 @@ public class ABNFplm extends ABNFpl {
     }
 
     @Override
-    public <X> C<X> find(FrontPacket pac, ABNFParser<? extends X>... names) {
-        C<X> ret = new ABNF.C<>();
-        ABNFParser[] subparsers;
+    public <X> C<X> find(FrontPacket pac, BNFParser<? extends X>... names) {
+        C<X> ret = new C<>();
+        BNFParser[] subparsers;
         boolean n = isName(names);
-        subparsers = n ? new ABNFParser[0] : names;
+        subparsers = n ? new BNFParser[0] : names;
 
         ret = longfind(pac, list, subparsers);
         return n ? sub(ret, names) : ret;
@@ -47,7 +47,7 @@ public class ABNFplm extends ABNFpl {
      * @param subparsers
      * @return
      */
-    protected <X> C<X> longfind(FrontPacket pac, ABNF[] list, ABNFParser[] subparsers) {
+    protected <X> C<X> longfind(FrontPacket pac, ABNF[] list, BNFParser[] subparsers) {
         if (list.length == 0) {
             return new C();
         }

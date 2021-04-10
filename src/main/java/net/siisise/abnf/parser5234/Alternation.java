@@ -6,7 +6,6 @@ import net.siisise.abnf.ABNFReg;
 import net.siisise.abnf.ABNFbin;
 import net.siisise.abnf.ABNFmap;
 import net.siisise.abnf.ABNFor;
-import net.siisise.abnf.ABNFrange;
 import net.siisise.abnf.parser.ABNFList;
 
 /**
@@ -28,6 +27,7 @@ public class Alternation extends ABNFList<ABNF, ABNF> {
         return new ABNFor(list.toArray(new ABNF[list.size()]));
     }
 
+/*
     private void shortBin(List<ABNF> list) {
         for ( int i = 0; i < list.size() - 1; i++ ) {
             ABNF bnf1 = list.get(i);
@@ -57,7 +57,8 @@ public class Alternation extends ABNFList<ABNF, ABNF> {
             }
         }
     }
-    
+*/
+
     private void shortMap(List<ABNF> list) {
         for ( int i = 0; i < list.size() - 1; i++ ) {
             ABNF bnf1 = list.get(i);

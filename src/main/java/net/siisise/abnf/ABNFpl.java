@@ -1,6 +1,6 @@
 package net.siisise.abnf;
 
-import net.siisise.abnf.parser.ABNFParser;
+import net.siisise.bnf.parser.BNFParser;
 import net.siisise.io.FrontPacket;
 
 /**
@@ -47,12 +47,12 @@ public class ABNFpl extends FindABNF {
      * @return 
      */
     @Override
-    public <X> C<X> find(FrontPacket pac, ABNFParser<? extends X>... parsers) {
+    public <X> C<X> find(FrontPacket pac, BNFParser<? extends X>... parsers) {
 //        System.out.println(getName() + ":" + strd(pac) + ":pl");
-        C<X> ret = new ABNF.C();
-        ABNFParser[] subparsers;
+        C<X> ret = new C();
+        BNFParser[] subparsers;
         boolean n = isName(parsers);
-        subparsers = n ? new ABNFParser[0] : parsers;
+        subparsers = n ? new BNFParser[0] : parsers;
         
         for (ABNF sub : list) {
             C<X> subret = sub.find(pac, subparsers);

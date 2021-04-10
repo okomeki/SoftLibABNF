@@ -1,7 +1,7 @@
 package net.siisise.abnf;
 
 import static net.siisise.abnf.AbstractABNF.mix;
-import net.siisise.abnf.parser.ABNFParser;
+import net.siisise.bnf.parser.BNFParser;
 import net.siisise.io.FrontPacket;
 import net.siisise.io.Packet;
 import net.siisise.io.PacketA;
@@ -35,7 +35,7 @@ public class ABNFplu extends ABNFplm {
      * @return
      */
     @Override
-    protected <X> C<X> longfind(FrontPacket pac, ABNF[] list, ABNFParser[] subparsers) {
+    protected <X> C<X> longfind(FrontPacket pac, ABNF[] list, BNFParser[] subparsers) {
         if (list.length == 0) {
             return new C();
         }

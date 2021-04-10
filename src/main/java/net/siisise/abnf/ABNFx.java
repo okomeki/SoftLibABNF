@@ -1,6 +1,7 @@
 package net.siisise.abnf;
 
 import net.siisise.abnf.parser.ABNFParser;
+import net.siisise.bnf.parser.BNFParser;
 import net.siisise.io.FrontPacket;
 
 /**
@@ -48,7 +49,7 @@ public class ABNFx extends FindABNF {
     }
 
     @Override
-    public C find(FrontPacket pac, ABNFParser... names) {
+    public C find(FrontPacket pac, BNFParser... names) {
         if (isName(names)) { // ないかも
             C p = find(pac);
             if (p == null) {

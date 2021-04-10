@@ -5,6 +5,8 @@ import net.siisise.abnf.ABNFReg;
 import net.siisise.io.FrontPacket;
 
 /**
+ * Packetに分割するだけ。
+ * ABNFで指定の対象クラスには変換しない。
  * みかんせい?
  */
 public class ABNFPacketParser extends ABNFBaseParser<FrontPacket, ABNF> {

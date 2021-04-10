@@ -10,9 +10,9 @@ import net.siisise.abnf.AbstractABNF;
 import net.siisise.io.FrontPacket;
 
 /**
- *
+ * 
  * @param <T> 戻り型
- * @param <M>
+ * @param <M> 中間形式
  */
 public abstract class ABNFBaseParser<T, M> implements ABNFParser<T> {
 
@@ -37,7 +37,7 @@ public abstract class ABNFBaseParser<T, M> implements ABNFParser<T> {
         this.def = def;
         this.reg = reg;
     }
-
+    
     /**
      * 
      * @param def 処理対象のABNF構文
@@ -48,6 +48,10 @@ public abstract class ABNFBaseParser<T, M> implements ABNFParser<T> {
     protected ABNFBaseParser(ABNF def, ABNFReg reg, ABNFReg base, String... subns) {
         this.def = def;
         this.reg = reg;
+        setSub(base, subns);
+    }
+
+    private void setSub(ABNFReg base, String... subns) {
         this.base = base;
         subc = new Class[subns.length];
         subName = new String[subns.length];
@@ -104,16 +108,6 @@ public abstract class ABNFBaseParser<T, M> implements ABNFParser<T> {
     }
 
     /**
-     * pacを解析、完了した部分を先頭から削除する
-     * 先頭一致で解析するのでpacにデータが残る場合もある
-     * 失敗した(一致しなかった)場合、pacは元の状態、戻り値はnullとなる
-     * @param pac 解析対象データ
-     * @return 変換されたデータ 不一致の場合はnull
-     */
-//    @Override
-//    public abstract T parse(FrontPacket pac);
-
-    /**
      * 入り口
      * @param str 解析対象文字列
      * @return 変換されたデータ 不一致の場合はnull
@@ -129,13 +123,17 @@ public abstract class ABNFBaseParser<T, M> implements ABNFParser<T> {
      * @param bnf
      * @return 
      */
-    protected ABNFPacketParser x(ABNF bnf) {
+    protected ABNFPacketParser pacp(ABNF bnf) {
         return new ABNFPacketParser(bnf, reg);
+    }
+
+    protected ABNFStringParser strp(ABNF bnf) {
+        return new ABNFStringParser(bnf, reg);
     }
     
     /**
-     * x() を省略してABNFで指定したいだけの版
-     * def側へ移したいがregが依存している
+     * pacp() を省略してABNFで指定したいだけの版
+ def側へ移したいがregが依存している
      * @param pac
      * @param defs
      * @return 
@@ -143,7 +141,7 @@ public abstract class ABNFBaseParser<T, M> implements ABNFParser<T> {
     protected ABNF.C find(FrontPacket pac, ABNF... defs) {
         ABNFParser[] ps = new ABNFParser[defs.length];
         for ( int i = 0; i < defs.length; i++ ) {
-            ps[i] = x(defs[i]);
+            ps[i] = pacp(defs[i]);
         }
         return def.find(pac, ps);
     }
