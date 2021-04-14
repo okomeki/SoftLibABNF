@@ -6,6 +6,7 @@ import net.siisise.abnf.ABNFReg;
 
 /**
  *
+ * @deprecated ABNFListにまとめる
  * @param <T> 最終形式
  * @param <M>
  */
@@ -13,12 +14,12 @@ public abstract class ABNFToList<T, M> extends ABNFList<List<T>, M> {
 
     /**
      * 差し替え可能にしたかった
-     * @param def
+     * @param rule
      * @param reg
      * @param base
      * @param subcn 
      */
-    protected ABNFToList(ABNF def, ABNFReg reg, ABNFReg base, String subcn) {
-        super(def, reg, base, subcn);
+    protected ABNFToList(ABNF rule, ABNFReg reg, ABNFReg base, String subcn) {
+        super(rule, reg, base, subcn);
     }
 }

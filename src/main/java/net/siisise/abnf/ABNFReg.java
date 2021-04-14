@@ -26,7 +26,12 @@ public class ABNFReg {
 
     Map<String, ABNF> reg = new HashMap<>();
 
-    ABNFReg parseReg;
+    /**
+     * rule, elements, rulelistが解釈できるABNFのparser
+     * rulenameも?
+     */
+    private final ABNFReg parseReg;
+    private final ABNF rn;
 
     public Map<String, Class<? extends ABNFParser>> CL = new HashMap<>();
 
@@ -35,8 +40,8 @@ public class ABNFReg {
      */
     public class ABNFRef extends FindABNF {
 
-        ABNFRef(String name) {
-            this.name = name;
+        ABNFRef(String rulename) {
+            this.name = rulename;
         }
 
         @Override
@@ -57,6 +62,8 @@ public class ABNFReg {
 
     public ABNFReg() {
         parseReg = ABNF5234.REG;
+        rn = ABNF5234.rulename;
+        
     }
 
     /**
@@ -78,6 +85,7 @@ public class ABNFReg {
             });
         }
         parseReg = exParser;
+        rn = ( exParser == null ) ? null : exParser.reg.get("rulename");
     }
 
     public ABNFReg(ABNFReg up) {
@@ -104,32 +112,26 @@ public class ABNFReg {
 
     /**
      * 参照リンク優先。
-     * あとの定義でいろいろ変わるときに便利。
+     * 間接参照のため、あとの定義でいろいろ変わるときに便利。
      *
-     * @param name
-     * @return
+     * @param rulename
+     * @return rulenameへの参照
      */
-    public ABNF ref(String name) {
-        return new ABNFRef(name);
-        /*
-        ABNF bnf = reg.get(name);
-        if (bnf == null || !(bnf instanceof ABNFRef)) {
-           bnf = new ABNFRef(name);
-        }
-        return bnf;
-         */
+    public ABNF ref(String rulename) {
+        return new ABNFRef(rulename);
     }
 
     /**
      * 直リンク優先 差し替えが困難
+     * rulenameに該当するものがない場合は参照を返す。
      *
-     * @param name
-     * @return
+     * @param rulename
+     * @return REGに登録されているrulenameの値
      */
-    public ABNF href(String name) {
-        ABNF bnf = reg.get(name);
+    public ABNF href(String rulename) {
+        ABNF bnf = reg.get(rulename);
         if (bnf == null) {
-            bnf = new ABNFRef(name);
+            bnf = new ABNFRef(rulename);
         }
         return bnf;
     }
@@ -137,48 +139,49 @@ public class ABNFReg {
     /**
      * ref の参照先を変えないよう書き換えたい
      *
-     * @param name
-     * @param abnf
-     * @return
+     * @param rulename
+     * @param elements
+     * @return rule
      */
-    public ABNF rule(String name, ABNF abnf) {
-        if (ABNF5234.rulename != null && !ABNF5234.rulename.eq(name)) {
-            System.err.println("ABNF:" + name + " ABNFの名称には利用できません");
+    public ABNF rule(String rulename, ABNF elements) {
+        // ABNF5234の初期化時はnullなので無視できるようにする
+        if ( rn != null && !rn.eq(rulename)) {
+            System.err.println("ABNF:" + rulename + " ABNFの名称には利用できません");
         }
-//        System.out.println("rule: " + name + ":" + abnf.toString());
-        if (!name.equals(abnf.getName())) {
-            abnf = abnf.name(name);
+
+        if (!rulename.equals(elements.getName())) {
+            elements = elements.name(rulename);
         }
-        reg.put(name, abnf);
-        return abnf;
+        reg.put(rulename, elements);
+        return elements;
     }
 
     /**
      * 主要なところにParse結果をオブジェクトに変換する機能を埋め込むと、いろいろ楽。
      * パースされたABNFにParserを紐づけて登録する。
      *
-     * @param name ABNFの名
+     * @param rulename ABNFの名
      * @param parser ソースまたは子の要素を渡され対象オブジェクトに組み上げる機能
-     * @param abnf
-     * @return 名前つき
+     * @param elements
+     * @return 名前つき rule
      */
-    public ABNF rule(String name, Class<? extends ABNFParser> parser, ABNF abnf) {
-        abnf = rule(name, abnf);
-        CL.put(name, parser);
-        return abnf;
+    public ABNF rule(String rulename, Class<? extends ABNFParser> parser, ABNF elements) {
+        elements = rule(rulename, elements);
+        CL.put(rulename, parser);
+        return elements;
     }
 
     /**
      * ABNFの解析ついでに対応するParserを埋め込む。
      * 該当する場合はparserによって対象オブジェクトに変換する機能をつけたABNFを登録する
      *
-     * @param name ABNFの名
+     * @param rulename ABNFの名
      * @param parser ABNFから対象オブジェクトに変換する解析装置
-     * @param rule ABNF構文
+     * @param elements ABNF構文
      * @return
      */
-    public ABNF rule(String name, Class<? extends ABNFParser> parser, String rule) {
-        return rule(name, parser, rule(name, rule));
+    public ABNF rule(String rulename, Class<? extends ABNFParser> parser, String elements) {
+        return rule(rulename, parser, elements(elements));
     }
 
     /**
@@ -192,111 +195,16 @@ public class ABNFReg {
     }
 
     /**
-     * Parser構築用
-     * 参照空間とABNF Parserが別に存在する場合が多い
-     * 裏側(ABNF Parser)を駆動する
-     *
-     * @param name parser側の名
-     * @param src パースに対象ソース
-     * @return
-     */
-    public ABNF baseParse(String name, String src) {
-        try {
-            Constructor<? extends ABNFParser> constructor = parseReg.CL.get(name).getConstructor(ABNF.class, ABNFReg.class, ABNFReg.class);
-            ABNFParser ap = constructor.newInstance(parseReg.reg.get(name), this, parseReg);
-            return (ABNF) ap.parse(src);
-        } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException
-                | IllegalArgumentException | InvocationTargetException ex) {
-            throw new java.lang.UnsupportedOperationException(ex);
-        }
-    }
-
-    /**
-     * parseの戻り値が一覧のようなもの。
-     *
-     * @param name parser側の名
-     * @param src パース対象ソース
-     * @return
-     */
-    List<ABNF> listParse(String name, String src) {
-        try {
-            Constructor<? extends ABNFParser> constructor = parseReg.CL.get(name).getConstructor(ABNF.class, ABNFReg.class, ABNFReg.class);
-            ABNFParser ap = constructor.newInstance(parseReg.reg.get(name), this, parseReg);
-            return (List<ABNF>) ap.parse(src);
-        } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException
-                | IllegalArgumentException | InvocationTargetException ex) {
-            throw new java.lang.UnsupportedOperationException(ex);
-        }
-    }
-
-    /**
-     * parseの戻り値が一覧のようなもの。
-     *
-     * @param name parser側の名
-     * @param src パース対象ソース
-     * @return
-     */
-    List<ABNF> listParse(String name, FrontPacket src) {
-        try {
-            Constructor<? extends ABNFParser> constructor = parseReg.CL.get(name).getConstructor(ABNF.class, ABNFReg.class, ABNFReg.class);
-            ABNFParser ap = constructor.newInstance(parseReg.reg.get(name), this, parseReg);
-            return (List<ABNF>) ap.parse(src);
-        } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException
-                | IllegalArgumentException | InvocationTargetException ex) {
-            throw new java.lang.UnsupportedOperationException(ex);
-        }
-    }
-
-    /**
-     * ユーザ側のParser(JSONなど)を駆動する
-     * BASEのみで参照先がないなど
-     *
-     * @param <T>
-     * @param name 解析装置付き構文の名。駆動コマンドのようなもの
-     * @param src パース対象ソース
-     * @return 解析後の実体
-     */
-    public <T> T parse(String name, String src) {
-        Packet pac = AbstractABNF.pac(src);
-        return parse(name, pac);
-    }
-
-    public <T> T parse(String name, byte[] src) {
-        Packet pac = new PacketA();
-        pac.write(src);
-        return parse(name, pac);
-    }
-
-    /**
-     * ユーザ側のParser(JSONなど)を駆動する
-     * BASEのみで参照先がないなど
-     *
-     * @param <T>
-     * @param name 解析装置付き構文の名。駆動コマンドのようなもの
-     * @param pac パース対象ソース
-     * @return 解析後の実体
-     */
-    public <T> T parse(String name, Packet pac) {
-        try {
-            Constructor<? extends ABNFParser> c = CL.get(name).getConstructor(ABNF.class, ABNFReg.class, ABNFReg.class);
-            return (T) c.newInstance(reg.get(name), this, this).parse(pac);
-        } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException
-                | IllegalArgumentException | InvocationTargetException ex) {
-            throw new java.lang.UnsupportedOperationException(ex);
-        }
-    }
-
-    /**
      * ABNFをパースする。
      * 名前とelementsを個別に渡せると何かと楽かもしれないと思うので作った。
      * ToDo: ABNF5234 へ
      *
-     * @param name ABNF構文の名
+     * @param rulename ABNF構文の名
      * @param elements ABNF式
      * @return 解析されたABNF
      */
-    public ABNF rule(String name, String elements) {
-        return rule(name, elements(elements));
+    public ABNF rule(String rulename, String elements) {
+        return rule(rulename, elements(elements));
     }
 
     public ABNF elements(String elements) {
@@ -312,7 +220,7 @@ public class ABNFReg {
      * @return ABNF化された一覧
      */
     public List<ABNF> rulelist(String rulelist) {
-        List<ABNF> list = listParse("rulelist", rulelist);
+        List<ABNF> list = listParse("rulelist").parse(rulelist);
         list.forEach((abnf) -> {
             reg.put(abnf.getName(), abnf);
         });
@@ -320,7 +228,7 @@ public class ABNFReg {
     }
 
     public List<ABNF> rulelist(FrontPacket rulelist) {
-        List<ABNF> list = listParse("rulelist", rulelist);
+        List<ABNF> list = listParse("rulelist").parse(rulelist);
         if (list == null) {
             return null;
         }
@@ -346,4 +254,71 @@ public class ABNFReg {
         in.close();
         return rl;
     }
+
+    /**
+     * ユーザ側のParser(JSONなど)を駆動する
+     * BASEのみで参照先がないなど
+     *
+     * @param <T>
+     * @param rulename 解析装置付き構文の名。駆動コマンドのようなもの
+     * @param src パース対象ソース
+     * @return 解析後の実体
+     */
+    public <T> T parse(String rulename, String src) {
+        return (T) parser(rulename, this).parse(src);
+    }
+
+    public <T> T parse(String rulename, byte[] src) {
+        Packet pac = new PacketA();
+        pac.write(src);
+        return (T) parser(rulename, this).parse(pac);
+    }
+
+    /**
+     * ユーザ側のParser(JSONなど)を駆動する
+     * BASEのみで参照先がないなど
+     *
+     * @param <T>
+     * @param rulename 解析装置付き構文の名。駆動コマンドのようなもの
+     * @param pac パース対象ソース
+     * @return 解析後の実体
+     */
+    public <T> T parse(String rulename, FrontPacket pac) {
+        return (T)parser(rulename, this).parse(pac);
+    }
+    
+    private <T> ABNFParser<T> parser(String rulename, ABNFReg sreg) {
+        try {
+            Constructor<? extends ABNFParser> cnst = (Constructor<? extends ABNFParser<T>>) CL.get(rulename).getConstructor(ABNF.class, ABNFReg.class, ABNFReg.class);
+            return cnst.newInstance(reg.get(rulename), sreg, this);
+        } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException
+                | IllegalArgumentException | InvocationTargetException ex) {
+            throw new java.lang.UnsupportedOperationException(ex);
+        }
+    }
+
+    /**
+     * Parser構築用
+     * 参照空間とABNF Parserが別に存在する場合が多い
+     * 裏側(ABNF Parser)を駆動する
+     *
+     * @param rulename parser側の名
+     * @param src パースに対象ソース
+     * @return
+     */
+    private ABNF baseParse(String rulename, String src) {
+        return (ABNF) parseReg.parser(rulename, this).parse(src);
+    }
+
+    /**
+     * parseの戻り値が一覧のようなもの。
+     *
+     * @param rulename parser側の名
+     * @param src パース対象ソース
+     * @return
+     */
+    private ABNFParser<List<ABNF>> listParse(String rulename) {
+        return parseReg.parser(rulename, this);
+    }
+
 }

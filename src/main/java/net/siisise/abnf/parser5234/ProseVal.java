@@ -17,7 +17,7 @@ public class ProseVal extends ABNFBaseParser<ABNF,ABNF> {
 
     @Override
     public ABNF parse(FrontPacket pac) {
-        Packet p = def.is(pac);
+        Packet p = rule.is(pac);
         if ( p == null ) {
             return null;
         }

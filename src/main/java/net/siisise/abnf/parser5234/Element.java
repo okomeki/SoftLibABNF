@@ -12,11 +12,11 @@ public class Element extends ABNFSelect<ABNF> {
 
     /**
      * より抽象化したもの
-     * @param def
+     * @param rule
      * @param reg
      * @param base 
      */
-    public Element(ABNF def, ABNFReg reg, ABNFReg base) {
-        super(def, reg, base, "rulename", "group", "option", "char-val", "num-val", "prose-val");
+    public Element(ABNF rule, ABNFReg reg, ABNFReg base) {
+        super(rule, reg, base, "rulename", "group", "option", "char-val", "num-val", "prose-val");
     }
 }

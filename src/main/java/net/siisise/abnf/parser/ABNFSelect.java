@@ -10,8 +10,8 @@ import net.siisise.io.FrontPacket;
  */
 public class ABNFSelect<T> extends ABNFBaseParser<T, T> {
 
-    protected ABNFSelect(ABNF def, ABNFReg reg, ABNFReg base, String...  subcs) {
-        super(def, reg, base, subcs);
+    protected ABNFSelect(ABNF rule, ABNFReg reg, ABNFReg base, String...  subcs) {
+        super(rule, reg, base, subcs);
     }
 
     @Override

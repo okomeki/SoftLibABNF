@@ -12,13 +12,13 @@ public class ABNFSub<T> extends ABNFList<T, T> {
 
     /**
      * 
-     * @param def 処理対象のABNF構文
+     * @param rule 処理対象のABNF構文
      * @param reg 名前空間参照用
      * @param base Parser駆動用
      * @param subcn 抽出する内側のABNF要素の名
      */
-    protected ABNFSub(ABNF def, ABNFReg reg, ABNFReg base, String subcn) {
-        super(def, reg, base, subcn);
+    protected ABNFSub(ABNF rule, ABNFReg reg, ABNFReg base, String subcn) {
+        super(rule, reg, base, subcn);
     }
 
     /**

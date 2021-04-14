@@ -11,10 +11,15 @@ import net.siisise.io.FrontPacket;
  */
 public class ABNFPacketParser extends ABNFBaseParser<FrontPacket, ABNF> {
 
-    public ABNFPacketParser(ABNF def, ABNFReg reg) {
-        super(def, reg);
+    public ABNFPacketParser(ABNF rule, ABNFReg reg) {
+        super(rule, reg);
     }
 
+    /**
+     * find で使うだけなので判定していない
+     * @param pac
+     * @return 
+     */
     @Override
     public FrontPacket parse(FrontPacket pac) {
         return pac;

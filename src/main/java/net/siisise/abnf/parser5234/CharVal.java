@@ -15,13 +15,13 @@ public class CharVal extends ABNFBaseParser<ABNF, ABNF> {
         super(ABNF5234.charVal);
     }
 
-    public CharVal(ABNF abnf, ABNFReg reg, ABNFReg base) {
-        super(abnf);
+    public CharVal(ABNF rule, ABNFReg reg, ABNFReg base) {
+        super(rule);
     }
 
     @Override
     public ABNF parse(FrontPacket pac) {
-        Packet p = def.is(pac);
+        Packet p = rule.is(pac);
         if (p == null) {
             return null;
         }

@@ -25,7 +25,7 @@ public class NumVal extends ABNFBaseParser<ABNF, ABNF> {
 
     @Override
     public ABNF parse(FrontPacket pac) {
-        ABNF.C<ABNF> ret = def.find(pac, b, d, h);
+        ABNF.C<ABNF> ret = rule.find(pac, b, d, h);
         if (ret == null) {
             return null;
         }

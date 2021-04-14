@@ -11,7 +11,7 @@ import net.siisise.abnf.parser.ABNFSub;
  */
 public class Elements extends ABNFSub<ABNF> {
     
-    public Elements(ABNF abnf, ABNFReg reg, ABNFReg base) {
-        super(abnf, reg, base, "alternation");
+    public Elements(ABNF rule, ABNFReg reg, ABNFReg base) {
+        super(rule, reg, base, "alternation");
     }
 }

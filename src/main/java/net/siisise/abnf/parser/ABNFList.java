@@ -15,20 +15,20 @@ public abstract class ABNFList<T, M> extends ABNFBaseParser<T, M> {
 
     /**
      * 
-     * @param def 処理対象のABNF構文
+     * @param rule 処理対象のABNF構文
      * @param reg 名前空間参照用
      * @param base Parser駆動用
      * @param subcn 含まれる要素
      */
-    protected ABNFList(ABNF def, ABNFReg reg, ABNFReg base, String... subcn) {
-        super(def, reg, base, subcn);
+    protected ABNFList(ABNF rule, ABNFReg reg, ABNFReg base, String... subcn) {
+        super(rule, reg, base, subcn);
     }
 
     @Override
     public T parse(FrontPacket pac) {
         inst();
 
-        ABNF.C<M> sret = def.find(pac, subs);
+        ABNF.C<M> sret = rule.find(pac, subs);
         if (sret == null) {
             return null;
         }

@@ -11,8 +11,8 @@ import net.siisise.abnf.parser.ABNFSub;
  */
 public class Option extends ABNFSub<ABNF> {
 
-    public Option(ABNF abnf, ABNFReg reg, ABNFReg base) {
-        super(abnf, reg, base, "alternation");
+    public Option(ABNF rule, ABNFReg reg, ABNFReg base) {
+        super(rule, reg, base, "alternation");
     }
 
     @Override

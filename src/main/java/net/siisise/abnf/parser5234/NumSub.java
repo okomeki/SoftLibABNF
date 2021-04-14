@@ -20,8 +20,8 @@ public class NumSub extends ABNFBaseParser<ABNF,ABNF> {
     int dig;
     char a,b;
 
-    NumSub(ABNF def, ABNF fm, int dig, char a, char b) {
-        super(def);
+    NumSub(ABNF rule, ABNF fm, int dig, char a, char b) {
+        super(rule);
         form = fm;
         this.dig = dig;
         this.a = a;

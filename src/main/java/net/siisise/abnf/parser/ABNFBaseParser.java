@@ -10,13 +10,15 @@ import net.siisise.abnf.AbstractABNF;
 import net.siisise.io.FrontPacket;
 
 /**
+ * ABNF パース後の変換処理。
+ * ABNFに一致したときに処理が走るので基本的に例外返しがない。
  * 
  * @param <T> 戻り型
  * @param <M> 中間形式
  */
 public abstract class ABNFBaseParser<T, M> implements ABNFParser<T> {
 
-    protected ABNF def;
+    protected ABNF rule;
     /** 名前空間参照用 */
     protected ABNFReg reg;
     /** サブパーサ展開用 */
@@ -27,26 +29,26 @@ public abstract class ABNFBaseParser<T, M> implements ABNFParser<T> {
 
     /**
      * regが不要な文字系のところ
-     * @param def 
+     * @param rule 
      */
-    protected ABNFBaseParser(ABNF def) {
-        this.def = def;
+    protected ABNFBaseParser(ABNF rule) {
+        this.rule = rule;
     }
 
-    protected ABNFBaseParser(ABNF def, ABNFReg reg) {
-        this.def = def;
+    protected ABNFBaseParser(ABNF rule, ABNFReg reg) {
+        this.rule = rule;
         this.reg = reg;
     }
     
     /**
      * 
-     * @param def 処理対象のABNF構文
+     * @param rule 処理対象のABNF構文
      * @param reg 名前空間参照用
      * @param base Parser駆動用
      * @param subns 
      */
-    protected ABNFBaseParser(ABNF def, ABNFReg reg, ABNFReg base, String... subns) {
-        this.def = def;
+    protected ABNFBaseParser(ABNF rule, ABNFReg reg, ABNFReg base, String... subns) {
+        this.rule = rule;
         this.reg = reg;
         setSub(base, subns);
     }
@@ -62,9 +64,6 @@ public abstract class ABNFBaseParser<T, M> implements ABNFParser<T> {
         }
     }
 
-//    protected ABNFBaseParser(ABNF def) {
-//        this.def = def;
-//    }
     protected void inst() {
         if (subs == null && subc != null) {
             try {
@@ -104,7 +103,7 @@ public abstract class ABNFBaseParser<T, M> implements ABNFParser<T> {
 
     @Override
     public ABNF getBNF() {
-        return def;
+        return rule;
     }
 
     /**
@@ -120,6 +119,7 @@ public abstract class ABNFBaseParser<T, M> implements ABNFParser<T> {
     /**
      * たぶん名前空間を使わない簡易パーサの生成
      * かなにかに改名する?
+     * findは比較してない
      * @param bnf
      * @return 
      */
@@ -127,6 +127,11 @@ public abstract class ABNFBaseParser<T, M> implements ABNFParser<T> {
         return new ABNFPacketParser(bnf, reg);
     }
 
+    /**
+     * findがざるな簡易版
+     * @param bnf
+     * @return 
+     */
     protected ABNFStringParser strp(ABNF bnf) {
         return new ABNFStringParser(bnf, reg);
     }
@@ -143,7 +148,7 @@ public abstract class ABNFBaseParser<T, M> implements ABNFParser<T> {
         for ( int i = 0; i < defs.length; i++ ) {
             ps[i] = pacp(defs[i]);
         }
-        return def.find(pac, ps);
+        return rule.find(pac, ps);
     }
     
     protected static String str(FrontPacket pac) {

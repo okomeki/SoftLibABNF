@@ -14,8 +14,8 @@ import net.siisise.abnf.parser.ABNFList;
  */
 public class Concatenation extends ABNFList<ABNF, ABNF> {
 
-    public Concatenation(ABNF abnf, ABNFReg reg, ABNFReg base) {
-        super(abnf, reg, base, "repetition");
+    public Concatenation(ABNF rule, ABNFReg reg, ABNFReg base) {
+        super(rule, reg, base, "repetition");
     }
 
     /**

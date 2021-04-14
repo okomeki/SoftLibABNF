@@ -11,13 +11,13 @@ import net.siisise.io.FrontPacket;
  */
 public class Rulename extends ABNFBaseParser<ABNF, ABNF> {
 
-    public Rulename(ABNF def, ABNFReg reg, ABNFReg base) {
-        super(def, reg, base);
+    public Rulename(ABNF rule, ABNFReg reg, ABNFReg base) {
+        super(rule, reg, base);
     }
 
     @Override
     public ABNF parse(FrontPacket pac) {
-        FrontPacket p = def.is(pac);
+        FrontPacket p = rule.is(pac);
         if (p == null) {
             return null;
         }
