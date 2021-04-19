@@ -15,8 +15,8 @@ public class NumVal extends ABNFBaseParser<ABNF, ABNF> {
         super(ABNF5234.numVal);
     }
 
-    public NumVal(ABNF abnf, ABNFReg reg, ABNFReg base) {
-        super(abnf);
+    public NumVal(ABNF rule, ABNFReg reg, ABNFReg base) {
+        super(rule);
     }
 
     static NumSub b = new NumSub(ABNF5234.binVal, ABNF5234.BIT, 2, 'b', 'B');

@@ -1,7 +1,6 @@
 package net.siisise.abnf.parser;
 
 import net.siisise.abnf.ABNF;
-import net.siisise.abnf.ABNFReg;
 import net.siisise.io.FrontPacket;
 
 /**
@@ -11,8 +10,8 @@ import net.siisise.io.FrontPacket;
  */
 public class ABNFPacketParser extends ABNFBaseParser<FrontPacket, ABNF> {
 
-    public ABNFPacketParser(ABNF rule, ABNFReg reg) {
-        super(rule, reg);
+    public ABNFPacketParser(ABNF rule) {
+        super(rule);
     }
 
     /**

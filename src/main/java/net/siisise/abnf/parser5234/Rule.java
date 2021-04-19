@@ -9,22 +9,22 @@ import net.siisise.io.FrontPacket;
 /**
  *
  */
-public class Rule extends ABNFBaseParser<ABNF, ABNF> {
+public class Rule extends ABNFBaseParser<ABNF, Object> {
 
     public Rule(ABNF rule, ABNFReg reg, ABNFReg base) {
-        super(rule, reg, base, "elements");
+        super(rule, reg, base, "rulename", "elements");
     }
 
     @Override
     public ABNF parse(FrontPacket pac) {
         inst();
-        ABNF.C<Object> ret = rule.find(pac, strp(ABNF5234.rulename), strp(ABNF5234.definedAs), subs[0]);
+        ABNF.C<Object> ret = rule.find(pac, subs[0], strp(ABNF5234.definedAs), subs[1]);
         if (ret == null) {
             return null;
         }
-        String name = (String)ret.get(ABNF5234.rulename).get(0);
-        String defined = (String)ret.get(ABNF5234.definedAs).get(0);
-        ABNF elements = (ABNF) ret.get(subs[0].getBNF()).get(0);
+        String name = ((ABNF) ret.get(subs[0].getBNF()).get(0)).getName();
+        String defined = (String) ret.get(ABNF5234.definedAs).get(0);
+        ABNF elements = (ABNF) ret.get(subs[1].getBNF()).get(0);
 
         if (defined.equals("=/")) {
             ABNF val = reg.href(name);

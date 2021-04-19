@@ -5,7 +5,6 @@ import net.siisise.abnf.ABNF;
 import net.siisise.abnf.ABNFReg;
 import net.siisise.abnf.parser.ABNFBaseParser;
 import net.siisise.io.FrontPacket;
-import net.siisise.io.Packet;
 
 /**
  * リピートはorに展開せよ?
@@ -25,24 +24,22 @@ public class Repetition extends ABNFBaseParser<ABNF, ABNF> {
     @Override
     public ABNF parse(FrontPacket pac) {
         inst();
-//        System.out.println("rep: " + strd(pac));
+
         ABNF repeat = ABNF5234.repeat; // base.href("repeat");
-        ABNF.C<Object> ret = rule.find(pac, pacp(repeat), subs[0]);
+        ABNF.C<Object> ret = rule.find(pac, strp(repeat), subs[0]);
         if (ret == null) {
             return null;
         }
         List<Object> rep = ret.get(repeat);
         ABNF ele = (ABNF) ret.get(subs[0].getBNF()).get(0);
-//        System.out.println("ee;:" + strd(element));
-        //ABNF ele = subs[0].parse(element);
+
         if (rep != null) {
-            return repeat((Packet) rep.get(0), ele);
+            return repeat((String) rep.get(0), ele);
         }
         return ele;
     }
 
-    ABNF repeat(Packet repeat, ABNF element) {
-        String rep = str(repeat);
+    ABNF repeat(String rep, ABNF element) {
         if (rep.contains("*")) {
             int off = rep.indexOf("*");
             String l = rep.substring(0, off);

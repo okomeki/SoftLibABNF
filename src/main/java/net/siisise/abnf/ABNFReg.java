@@ -24,16 +24,17 @@ import net.siisise.io.PacketA;
  */
 public class ABNFReg {
 
-    Map<String, ABNF> reg = new HashMap<>();
+    /**
+     * 構築したrulelist
+     */
+    private Map<String, ABNF> reg = new HashMap<>();
+    public Map<String, Class<? extends ABNFParser>> CL = new HashMap<>();
 
     /**
-     * rule, elements, rulelistが解釈できるABNFのparser
-     * rulenameも?
+     * ABNFのrulelist
      */
-    private final ABNFReg parseReg;
+    private final ABNFReg bnfReg;
     private final ABNF rn;
-
-    public Map<String, Class<? extends ABNFParser>> CL = new HashMap<>();
 
     /**
      * 名前の参照を先に済ませる
@@ -61,7 +62,7 @@ public class ABNFReg {
     }
 
     public ABNFReg() {
-        parseReg = ABNF5234.REG;
+        bnfReg = ABNF5234.REG;
         rn = ABNF5234.rulename;
         
     }
@@ -72,9 +73,9 @@ public class ABNFReg {
      * HTTP7230では拡張の実験をしている
      *
      * @param up
-     * @param exParser Parserの種類 ABNF5234.REG,RFC 7405, RFC 7230など微妙に違うとき。利用しないときのみ省略したい
+     * @param bnfParser ruleをparseするParserの種類 ABNF5234.REG,RFC 7405, RFC 7230など微妙に違うとき。利用しないときのみ省略したい
      */
-    public ABNFReg(ABNFReg up, ABNFReg exParser) {
+    public ABNFReg(ABNFReg up, ABNFReg bnfParser) {
         if (up != null) {
             //reg = new HashMap<>(up.reg); // 複製しておくのが簡単
             up.CL.keySet().forEach((key) -> {
@@ -84,8 +85,8 @@ public class ABNFReg {
                 reg.put(key, up.reg.get(key).copy(this));
             });
         }
-        parseReg = exParser;
-        rn = ( exParser == null ) ? null : exParser.reg.get("rulename");
+        bnfReg = bnfParser;
+        rn = ( bnfParser == null ) ? null : bnfParser.reg.get("rulename");
     }
 
     public ABNFReg(ABNFReg up) {
@@ -190,7 +191,7 @@ public class ABNFReg {
      * @return
      */
     public ABNF rule(String rule) {
-        ABNF abnf = baseParse("rule", rule + "\r\n");
+        ABNF abnf = bnfParse("rule", rule + "\r\n");
         return rule(abnf.getName(), abnf);
     }
 
@@ -208,7 +209,7 @@ public class ABNFReg {
     }
 
     public ABNF elements(String elements) {
-        return baseParse("elements", elements);
+        return bnfParse("elements", elements);
     }
 
     /**
@@ -220,7 +221,7 @@ public class ABNFReg {
      * @return ABNF化された一覧
      */
     public List<ABNF> rulelist(String rulelist) {
-        List<ABNF> list = listParse("rulelist").parse(rulelist);
+        List<ABNF> list = bnfParse("rulelist", rulelist);
         list.forEach((abnf) -> {
             reg.put(abnf.getName(), abnf);
         });
@@ -228,7 +229,7 @@ public class ABNFReg {
     }
 
     public List<ABNF> rulelist(FrontPacket rulelist) {
-        List<ABNF> list = listParse("rulelist").parse(rulelist);
+        List<ABNF> list = bnfParse("rulelist", rulelist);
         if (list == null) {
             return null;
         }
@@ -306,8 +307,8 @@ public class ABNFReg {
      * @param src パースに対象ソース
      * @return
      */
-    private ABNF baseParse(String rulename, String src) {
-        return (ABNF) parseReg.parser(rulename, this).parse(src);
+    private <T> T bnfParse(String rulename, String src) {
+        return (T) bnfReg.parser(rulename, this).parse(src);
     }
 
     /**
@@ -317,8 +318,8 @@ public class ABNFReg {
      * @param src パース対象ソース
      * @return
      */
-    private ABNFParser<List<ABNF>> listParse(String rulename) {
-        return parseReg.parser(rulename, this);
+    private <T> T bnfParse(String rulename, FrontPacket pac) {
+        return (T) bnfReg.parser(rulename, this).parse(pac);
     }
 
 }

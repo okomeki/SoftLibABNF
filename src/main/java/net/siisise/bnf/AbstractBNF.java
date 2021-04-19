@@ -1,6 +1,7 @@
 package net.siisise.bnf;
 
 import net.siisise.bnf.parser.BNFParser;
+import net.siisise.io.FrontPacket;
 import net.siisise.io.Packet;
 import net.siisise.io.PacketA;
 
@@ -38,6 +39,37 @@ public abstract class AbstractBNF implements BNF {
     @Override
     public boolean is(String val) {
         return is(pac(val)) != null;
+    }
+    
+    class BNFPacketParser implements BNFParser {
+        BNF rule;
+        BNFPacketParser(BNF rule) {
+            this.rule = rule;
+        }
+
+        @Override
+        public BNF getBNF() {
+            return rule;
+        }
+
+        @Override
+        public Object parse(FrontPacket pac) {
+            return pac;
+        }
+
+        @Override
+        public Object parse(String src) {
+            return pac(src);
+        }
+    }
+    
+    @Override
+    public C<FrontPacket> findPacket(FrontPacket pac, BNF... rules) {
+        BNFParser[] ps = new BNFParser[rules.length];
+        for ( int i = 0; i < rules.length; i++ ) {
+            ps[i] = new BNFPacketParser(rules[i]);
+        }
+        return find(pac, ps);
     }
 
     public static Packet pac(String str) {

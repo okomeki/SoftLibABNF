@@ -19,7 +19,7 @@ public class CharVal7405 extends ABNFBaseParser<ABNF, ABNF> {
 
     @Override
     public ABNF parse(FrontPacket pac) {
-        ABNF.C ret = find(pac,ABNF7405.caseInsensitiveString,ABNF7405.caseSensitiveString,ABNF7405.quotedString);
+        ABNF.C ret = rule.findPacket(pac,ABNF7405.caseInsensitiveString,ABNF7405.caseSensitiveString,ABNF7405.quotedString);
         if (ret == null) {
             return null;
         }

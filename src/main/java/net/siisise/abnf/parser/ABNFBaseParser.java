@@ -24,7 +24,7 @@ public abstract class ABNFBaseParser<T, M> implements ABNFParser<T> {
     /** サブパーサ展開用 */
     protected ABNFReg base;
     protected ABNFParser<? extends M>[] subs;
-    protected Class<? extends ABNFParser<? extends M>>[] subc;
+    private Class<? extends ABNFParser<? extends M>>[] subpClass;
     protected String[] subName;
 
     /**
@@ -35,6 +35,11 @@ public abstract class ABNFBaseParser<T, M> implements ABNFParser<T> {
         this.rule = rule;
     }
 
+    /**
+     * 判定には使わない文字列やPacketがほしいあれ
+     * @param rule
+     * @param reg 
+     */
     protected ABNFBaseParser(ABNF rule, ABNFReg reg) {
         this.rule = rule;
         this.reg = reg;
@@ -55,27 +60,27 @@ public abstract class ABNFBaseParser<T, M> implements ABNFParser<T> {
 
     private void setSub(ABNFReg base, String... subns) {
         this.base = base;
-        subc = new Class[subns.length];
+        subpClass = new Class[subns.length];
         subName = new String[subns.length];
         
         for ( int i = 0; i < subns.length; i++ ) {
             subName[i] = subns[i];
-            subc[i] = (Class<? extends ABNFParser<? extends M>>) base.CL.get(subns[i]);
+            subpClass[i] = (Class<? extends ABNFParser<? extends M>>) base.CL.get(subName[i]);
         }
     }
 
     protected void inst() {
-        if (subs == null && subc != null) {
+        if (subs == null && subpClass != null) {
             try {
-                subs = new ABNFParser[subc.length];
-                for (int i = 0; i < subc.length; i++) {
+                subs = new ABNFParser[subpClass.length];
+                for (int i = 0; i < subpClass.length; i++) {
                     if ( base != null ) {
 //                        System.out.println(subName[i]);
-                        subc[i] = (Class<? extends ABNFParser<? extends M>>)base.CL.get(subName[i]);
-                        Constructor<? extends ABNFParser<? extends M>> cnst = subc[i].getConstructor(ABNF.class,ABNFReg.class,ABNFReg.class);
+                        subpClass[i] = (Class<? extends ABNFParser<? extends M>>)base.CL.get(subName[i]);
+                        Constructor<? extends ABNFParser<? extends M>> cnst = subpClass[i].getConstructor(ABNF.class,ABNFReg.class,ABNFReg.class);
                         subs[i] = cnst.newInstance(base.href(subName[i]),reg,base);
                     } else {
-                        subs[i] = subc[i].getConstructor(ABNFReg.class).newInstance(reg);
+                        subs[i] = subpClass[i].getConstructor(ABNFReg.class).newInstance(reg);
                     }
                 }
             } catch (InstantiationException ex) {
@@ -124,7 +129,7 @@ public abstract class ABNFBaseParser<T, M> implements ABNFParser<T> {
      * @return 
      */
     protected ABNFPacketParser pacp(ABNF bnf) {
-        return new ABNFPacketParser(bnf, reg);
+        return new ABNFPacketParser(bnf);
     }
 
     /**
@@ -133,12 +138,11 @@ public abstract class ABNFBaseParser<T, M> implements ABNFParser<T> {
      * @return 
      */
     protected ABNFStringParser strp(ABNF bnf) {
-        return new ABNFStringParser(bnf, reg);
+        return new ABNFStringParser(bnf);
     }
     
     /**
      * pacp() を省略してABNFで指定したいだけの版
- def側へ移したいがregが依存している
      * @param pac
      * @param defs
      * @return 

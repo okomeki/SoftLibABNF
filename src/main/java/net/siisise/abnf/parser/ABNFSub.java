@@ -11,7 +11,7 @@ import net.siisise.abnf.ABNFReg;
 public class ABNFSub<T> extends ABNFList<T, T> {
 
     /**
-     * 
+     * subcn の内容がほしいだけ.
      * @param rule 処理対象のABNF構文
      * @param reg 名前空間参照用
      * @param base Parser駆動用

@@ -1,7 +1,9 @@
 package net.siisise.abnf;
 
 import java.util.List;
+import net.siisise.abnf.parser.ABNFPacketParser;
 import net.siisise.abnf.parser.ABNFParser;
+import net.siisise.bnf.BNF;
 import net.siisise.bnf.parser.BNFParser;
 import net.siisise.io.FrontPacket;
 import net.siisise.io.Packet;
@@ -68,6 +70,15 @@ public abstract class AbstractABNF implements ABNF {
     @Override
     public boolean eq(String val) {
         return eq(pac(val));
+    }
+    
+    @Override
+    public C<FrontPacket> findPacket(FrontPacket pac, BNF... names) {
+        BNFParser[] ps = new BNFParser[names.length];
+        for (int i = 0; i < names.length; i++ ) {
+            ps[i] = new ABNFPacketParser((ABNF)names[i]);
+        }
+        return find(pac, ps);
     }
 
     @Override
