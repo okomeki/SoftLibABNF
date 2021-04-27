@@ -11,10 +11,6 @@ import net.siisise.io.Packet;
  */
 public class CharVal extends ABNFBaseParser<ABNF, ABNF> {
 
-    public CharVal(ABNFReg reg) {
-        super(ABNF5234.charVal);
-    }
-
     public CharVal(ABNF rule, ABNFReg reg, ABNFReg base) {
         super(rule);
     }

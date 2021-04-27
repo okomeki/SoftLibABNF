@@ -6,10 +6,7 @@ import net.siisise.abnf.parser.ABNFBaseParser;
 import net.siisise.io.FrontPacket;
 import net.siisise.io.Packet;
 
-/**
- *
- */
-public class ProseVal extends ABNFBaseParser<ABNF,ABNF> {
+public class ProseVal extends ABNFBaseParser<ABNF, ABNF> {
 
     public ProseVal(ABNF abnf, ABNFReg reg, ABNFReg base) {
         super(abnf);

@@ -7,8 +7,8 @@ import net.siisise.io.Packet;
  * ABNFにはないがマイナス演算
  */
 public class ABNFmn extends IsABNF {
-    ABNF a;
-    ABNF b;
+    private ABNF a;
+    private ABNF b;
     
     ABNFmn(ABNF a, ABNF b) {
         this.a = a;

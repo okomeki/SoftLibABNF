@@ -2,7 +2,6 @@ package net.siisise.abnf;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.siisise.abnf.parser.ABNFParser;
 import net.siisise.bnf.parser.BNFParser;
 import net.siisise.io.FrontPacket;
 import net.siisise.lang.CodePoint;
@@ -94,7 +93,7 @@ public class ABNFor extends FindABNF {
     @Override
     public <X> C<X> find(FrontPacket pac, BNFParser<? extends X>... parsers) {
         ABNF.C ret = null;
-        BNFParser[] subps = isName(parsers) ? new ABNFParser[0] : parsers;
+        BNFParser[] subps = isName(parsers) ? new BNFParser[0] : parsers;
 
         for (ABNF sub : list) {
 

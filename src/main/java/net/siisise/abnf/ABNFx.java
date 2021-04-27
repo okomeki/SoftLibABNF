@@ -1,6 +1,5 @@
 package net.siisise.abnf;
 
-import net.siisise.abnf.parser.ABNFParser;
 import net.siisise.bnf.parser.BNFParser;
 import net.siisise.io.FrontPacket;
 
@@ -12,8 +11,8 @@ public class ABNFx extends FindABNF {
 
     // a 初期値: 0
     // b 初期値: -1
-    int a, b;
-    ABNF abnf;
+    private final int a, b;
+    private final ABNF abnf;
 
     ABNFx(int a, int b, AbstractABNF abnf) {
         this.a = a;

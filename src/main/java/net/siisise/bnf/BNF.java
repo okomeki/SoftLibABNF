@@ -60,8 +60,8 @@ public interface BNF {
         /**
          * メインの戻り値
          */
-        public Packet ret;
-        public Map<String, List<X>> subs = new HashMap<>();
+        public final Packet ret;
+        public final Map<String, List<X>> subs = new HashMap<>();
 
         public C() {
             ret = new PacketA();

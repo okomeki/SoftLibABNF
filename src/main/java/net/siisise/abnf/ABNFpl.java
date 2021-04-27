@@ -48,8 +48,7 @@ public class ABNFpl extends FindABNF {
      */
     @Override
     public <X> C<X> find(FrontPacket pac, BNFParser<? extends X>... parsers) {
-//        System.out.println(getName() + ":" + strd(pac) + ":pl");
-        C<X> ret = new C();
+        C<X> ret = new C<>();
         BNFParser[] subparsers;
         boolean n = isName(parsers);
         subparsers = n ? new BNFParser[0] : parsers;

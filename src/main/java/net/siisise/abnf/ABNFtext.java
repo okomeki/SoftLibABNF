@@ -11,8 +11,8 @@ import net.siisise.io.PacketA;
  */
 public class ABNFtext extends IsABNF {
 
-    String text;
-    byte[] utf8;
+    private final String text;
+    private final byte[] utf8;
 
     /**
      * 

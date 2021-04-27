@@ -11,10 +11,6 @@ import net.siisise.io.FrontPacket;
  */
 public class NumVal extends ABNFBaseParser<ABNF, ABNF> {
 
-    public NumVal(ABNFReg reg) {
-        super(ABNF5234.numVal);
-    }
-
     public NumVal(ABNF rule, ABNFReg reg, ABNFReg base) {
         super(rule);
     }

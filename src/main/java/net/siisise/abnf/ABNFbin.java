@@ -14,7 +14,7 @@ import net.siisise.lang.CodePoint;
  */
 public class ABNFbin extends IsABNF {
 
-    final byte[] data;
+    private final byte[] data;
 
     ABNFbin(int ch) { // " a-z A-Z, 0x80以降 を%表記、それ以外を文字表記
         if (ch >= 0x20 && ((ch != 0x22 && ch < 0x41) || (ch > 0x5a && ch < 0x61) || (ch > 0x7a && ch < 0x7f))) {

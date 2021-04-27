@@ -18,11 +18,14 @@ import net.siisise.io.FrontPacket;
  */
 public abstract class ABNFBaseParser<T, M> implements ABNFParser<T> {
 
-    protected ABNF rule;
-    /** 名前空間参照用 */
-    protected ABNFReg reg;
-    /** サブパーサ展開用 */
-    protected ABNFReg base;
+    protected final ABNF rule;
+    /**
+     * ユーザ側名前空間参照用
+     * ABNFでは使うがJSONでは未使用など
+     */
+    protected final Object reg;
+    /** ABNF Parser側 名前空間 */
+    protected final ABNFReg base;
     protected ABNFParser<? extends M>[] subs;
     private Class<? extends ABNFParser<? extends M>>[] subpClass;
     protected String[] subName;
@@ -33,40 +36,31 @@ public abstract class ABNFBaseParser<T, M> implements ABNFParser<T> {
      */
     protected ABNFBaseParser(ABNF rule) {
         this.rule = rule;
+        reg = null;
+        base = null;
     }
 
     /**
-     * 判定には使わない文字列やPacketがほしいあれ
-     * @param rule
-     * @param reg 
-     */
-    protected ABNFBaseParser(ABNF rule, ABNFReg reg) {
-        this.rule = rule;
-        this.reg = reg;
-    }
-    
-    /**
-     * 
-     * @param rule 処理対象のABNF構文
-     * @param reg 名前空間参照用
-     * @param base Parser駆動用
+     *  
+     * @param rule 処理対象のABNF rule
+     * @param reg ユーザ名前空間参照用 ABNF定義時などにつかう
+     * @param base Parser駆動用 ABNFParserのABNFReg
      * @param subns 
      */
-    protected ABNFBaseParser(ABNF rule, ABNFReg reg, ABNFReg base, String... subns) {
+    protected ABNFBaseParser(ABNF rule, Object reg, ABNFReg base, String... subns) {
         this.rule = rule;
         this.reg = reg;
-        setSub(base, subns);
+        this.base = base;
+        setSub(subns);
     }
 
-    private void setSub(ABNFReg base, String... subns) {
-        this.base = base;
+    private void setSub(String... subns) {
         subpClass = new Class[subns.length];
-        subName = new String[subns.length];
+        subName = subns;
         
-        for ( int i = 0; i < subns.length; i++ ) {
-            subName[i] = subns[i];
-            subpClass[i] = (Class<? extends ABNFParser<? extends M>>) base.CL.get(subName[i]);
-        }
+//        for ( int i = 0; i < subns.length; i++ ) {
+//            subpClass[i] = (Class<? extends ABNFParser<? extends M>>) base.CL.get(subName[i]);
+//        }
     }
 
     protected void inst() {
@@ -77,32 +71,29 @@ public abstract class ABNFBaseParser<T, M> implements ABNFParser<T> {
                     if ( base != null ) {
 //                        System.out.println(subName[i]);
                         subpClass[i] = (Class<? extends ABNFParser<? extends M>>)base.CL.get(subName[i]);
-                        Constructor<? extends ABNFParser<? extends M>> cnst = subpClass[i].getConstructor(ABNF.class,ABNFReg.class,ABNFReg.class);
-                        subs[i] = cnst.newInstance(base.href(subName[i]),reg,base);
+                        if ( subpClass[i] == null ) {
+                            subs[i] = (ABNFParser)new ABNFPacketParser(base.href(subName[i]));
+                        } else {
+                            Constructor<? extends ABNFParser<? extends M>> cnst;
+                            if ( reg == null ) {
+                                cnst = subpClass[i].getConstructor(ABNF.class, ABNFReg.class);
+                                subs[i] = cnst.newInstance(base.href(subName[i]),base);
+                            } else {
+                                cnst = subpClass[i].getConstructor(ABNF.class, reg.getClass(), ABNFReg.class);
+                                subs[i] = cnst.newInstance(base.href(subName[i]),reg,base);
+                            }
+                        }
                     } else {
                         subs[i] = subpClass[i].getConstructor(ABNFReg.class).newInstance(reg);
                     }
                 }
-            } catch (InstantiationException ex) {
+            } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+                    | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
                 Logger.getLogger(ABNFBaseParser.class.getName()).log(Level.SEVERE, null, ex);
-                throw new java.lang.UnsupportedOperationException();
-            } catch (IllegalAccessException ex) {
-                Logger.getLogger(ABNFBaseParser.class.getName()).log(Level.SEVERE, null, ex);
-                throw new java.lang.UnsupportedOperationException();
-            } catch (IllegalArgumentException ex) {
-                Logger.getLogger(ABNFBaseParser.class.getName()).log(Level.SEVERE, null, ex);
-                throw new java.lang.UnsupportedOperationException();
-            } catch (InvocationTargetException ex) {
-                Logger.getLogger(ABNFBaseParser.class.getName()).log(Level.SEVERE, null, ex);
-                throw new java.lang.UnsupportedOperationException();
-            } catch (NoSuchMethodException ex) {
-                Logger.getLogger(ABNFBaseParser.class.getName()).log(Level.SEVERE, null, ex);
-//                System.out.println("");
-                throw new java.lang.UnsupportedOperationException();
-            } catch (SecurityException ex) {
-                Logger.getLogger(ABNFBaseParser.class.getName()).log(Level.SEVERE, null, ex);
-                throw new java.lang.UnsupportedOperationException();
+                throw new java.lang.UnsupportedOperationException(ex);
             }
+//                System.out.println("");
+            
         }
     }
 
@@ -121,40 +112,6 @@ public abstract class ABNFBaseParser<T, M> implements ABNFParser<T> {
         return parse(AbstractABNF.pac(str));
     }
 
-    /**
-     * たぶん名前空間を使わない簡易パーサの生成
-     * かなにかに改名する?
-     * findは比較してない
-     * @param bnf
-     * @return 
-     */
-    protected ABNFPacketParser pacp(ABNF bnf) {
-        return new ABNFPacketParser(bnf);
-    }
-
-    /**
-     * findがざるな簡易版
-     * @param bnf
-     * @return 
-     */
-    protected ABNFStringParser strp(ABNF bnf) {
-        return new ABNFStringParser(bnf);
-    }
-    
-    /**
-     * pacp() を省略してABNFで指定したいだけの版
-     * @param pac
-     * @param defs
-     * @return 
-     */
-    protected ABNF.C find(FrontPacket pac, ABNF... defs) {
-        ABNFParser[] ps = new ABNFParser[defs.length];
-        for ( int i = 0; i < defs.length; i++ ) {
-            ps[i] = pacp(defs[i]);
-        }
-        return rule.find(pac, ps);
-    }
-    
     protected static String str(FrontPacket pac) {
         return new String(pac.toByteArray(), ABNF.UTF8);
     }

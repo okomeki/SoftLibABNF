@@ -32,15 +32,6 @@ public abstract class AbstractABNF implements ABNF {
         return new ABNFor(name, this); // ?
     }
 
-    protected boolean isName(ABNFParser<?>[] parsers) {
-        for (BNFParser p : parsers) {
-            if (name.equals(p.getBNF().getName())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     protected boolean isName(BNFParser<?>[] parsers) {
         for (BNFParser p : parsers) {
             if (name.equals(p.getBNF().getName())) {

@@ -10,6 +10,10 @@ import net.siisise.abnf.ABNFReg;
  */
 public class ABNFSub<T> extends ABNFList<T, T> {
 
+    protected ABNFSub(ABNF rule, ABNFReg base, String subcn) {
+        super(rule, base, subcn);
+    }
+
     /**
      * subcn の内容がほしいだけ.
      * @param rule 処理対象のABNF構文
@@ -17,7 +21,7 @@ public class ABNFSub<T> extends ABNFList<T, T> {
      * @param base Parser駆動用
      * @param subcn 抽出する内側のABNF要素の名
      */
-    protected ABNFSub(ABNF rule, ABNFReg reg, ABNFReg base, String subcn) {
+    protected ABNFSub(ABNF rule, Object reg, ABNFReg base, String subcn) {
         super(rule, reg, base, subcn);
     }
 
@@ -27,7 +31,7 @@ public class ABNFSub<T> extends ABNFList<T, T> {
      * @return 処理結果。型は任意
      */
     @Override
-    protected T parse(List<T> val) {
+    protected T build(List<T> val) {
         return val.get(0);
     }
 

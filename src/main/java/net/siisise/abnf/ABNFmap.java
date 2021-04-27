@@ -13,7 +13,7 @@ import net.siisise.lang.CodePoint;
  */
 public class ABNFmap extends IsABNF {
 
-    List<Integer> map = new ArrayList<>();
+    private final List<Integer> map = new ArrayList<>();
     
     public ABNFmap() {
         name = "略";

@@ -16,8 +16,8 @@ public class Option extends ABNFSub<ABNF> {
     }
 
     @Override
-    protected ABNF parse(List<ABNF> pac) {
+    protected ABNF build(List<ABNF> pac) {
         return pac.get(0).c();
     }
-    
+
 }

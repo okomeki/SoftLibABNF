@@ -3,38 +3,33 @@ package net.siisise.abnf.parser7405;
 import java.util.List;
 import net.siisise.abnf.ABNF;
 import net.siisise.abnf.ABNFReg;
-import net.siisise.abnf.parser.ABNFBaseParser;
-import net.siisise.io.FrontPacket;
-import net.siisise.io.Packet;
+import net.siisise.abnf.parser.ABNFBuildParser;
+import net.siisise.bnf.BNF;
 
-/**
- *
- * @author okome
- */
-public class CharVal7405 extends ABNFBaseParser<ABNF, ABNF> {
+public class CharVal7405 extends ABNFBuildParser<ABNF, Object> {
 
-    public CharVal7405(ABNFReg reg) {
-        super(ABNF7405.charVal);
+    public CharVal7405(ABNF rule, ABNFReg reg, ABNFReg base) {
+        super(rule, reg, base, "case-insensitive-string", "case-sensitive-string", "quoted-string");
     }
 
     @Override
-    public ABNF parse(FrontPacket pac) {
-        ABNF.C ret = rule.findPacket(pac,ABNF7405.caseInsensitiveString,ABNF7405.caseSensitiveString,ABNF7405.quotedString);
-        if (ret == null) {
-            return null;
+    public ABNF build(ABNF.C<Object> ret) {
+        List<Object> insen = ret.get("case-insensitive-string");
+        List<Object> sen = ret.get("case-sensitive-string");
+        ABNF bnf;
+        if (sen != null) {
+            bnf = base.href("case-sensitive-string");
+        } else {
+            bnf = base.href("case-insensitive-string");
         }
-        List<Packet> insen = ret.get(ABNF7405.caseInsensitiveString);
-        List<Packet> sen = ret.get(ABNF7405.caseSensitiveString);
-        Packet qs = (Packet) ret.get(ABNF7405.quotedString).get(0);
-        qs.read();
-        qs.backRead();
-        String val = str(qs);
-        if ( insen != null ) {
-            return ABNF.text(val);
-        } else if ( sen != null ) {
+        BNF.C<?> qs = bnf.find(ret.ret, subs[2]);
+        String val = (String) qs.get("quoted-string").get(0);
+        if (sen != null) {
             return ABNF.bin(val);
+        } else if (insen != null) {
+            return ABNF.text(val);
         }
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
 }

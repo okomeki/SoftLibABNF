@@ -1,12 +1,11 @@
 package net.siisise.abnf.parser;
 
 import net.siisise.abnf.ABNF;
-import net.siisise.io.FrontPacket;
 
 /**
  * 
  */
-public class ABNFStringParser extends ABNFBaseParser<String,ABNF> {
+public class ABNFStringParser extends ABNFBuildParser<String,ABNF> {
 
     public ABNFStringParser(ABNF rule) {
         super(rule);
@@ -18,8 +17,8 @@ public class ABNFStringParser extends ABNFBaseParser<String,ABNF> {
      * @return 
      */
     @Override
-    public String parse(FrontPacket pac) {
-        return str(pac);
+    protected String build(ABNF.C<ABNF> pac) {
+        return str(pac.ret);
     }
     
 }

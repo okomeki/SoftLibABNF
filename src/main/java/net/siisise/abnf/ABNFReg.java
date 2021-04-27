@@ -21,14 +21,15 @@ import net.siisise.io.PacketA;
  * Namespace
  *
  * rule: 基本は RFC 5234 に準拠するが、一部改変したParserの対応も可能
+ * @param <N> 名前空間かな
  */
-public class ABNFReg {
+public class ABNFReg<N> {
 
     /**
      * 構築したrulelist
      */
-    private Map<String, ABNF> reg = new HashMap<>();
-    public Map<String, Class<? extends ABNFParser>> CL = new HashMap<>();
+    private final Map<String, ABNF> reg = new HashMap<>();
+    public final Map<String, Class<? extends ABNFParser>> CL = new HashMap<>();
 
     /**
      * ABNFのrulelist
@@ -75,7 +76,7 @@ public class ABNFReg {
      * @param up
      * @param bnfParser ruleをparseするParserの種類 ABNF5234.REG,RFC 7405, RFC 7230など微妙に違うとき。利用しないときのみ省略したい
      */
-    public ABNFReg(ABNFReg up, ABNFReg bnfParser) {
+    public ABNFReg(ABNFReg<N> up, ABNFReg<?> bnfParser) {
         if (up != null) {
             //reg = new HashMap<>(up.reg); // 複製しておくのが簡単
             up.CL.keySet().forEach((key) -> {
@@ -89,11 +90,11 @@ public class ABNFReg {
         rn = ( bnfParser == null ) ? null : bnfParser.reg.get("rulename");
     }
 
-    public ABNFReg(ABNFReg up) {
+    public ABNFReg(ABNFReg<N> up) {
         this(up, ABNF5234.REG);
     }
 
-    public ABNFReg(URL url, ABNFReg up, ABNFReg exParser) throws IOException {
+    public ABNFReg(URL url, ABNFReg<N> up, ABNFReg exParser) throws IOException {
         this(up, exParser);
         rulelist(url);
     }
@@ -106,7 +107,7 @@ public class ABNFReg {
      * @param up 前提とする定義など
      * @throws IOException
      */
-    public ABNFReg(URL url, ABNFReg up) throws IOException {
+    public ABNFReg(URL url, ABNFReg<N> up) throws IOException {
         this(up);
         rulelist(url);
     }
@@ -266,13 +267,13 @@ public class ABNFReg {
      * @return 解析後の実体
      */
     public <T> T parse(String rulename, String src) {
-        return (T) parser(rulename, this).parse(src);
+        return (T) parser(rulename, null).parse(src);
     }
 
     public <T> T parse(String rulename, byte[] src) {
         Packet pac = new PacketA();
         pac.write(src);
-        return (T) parser(rulename, this).parse(pac);
+        return (T) parser(rulename, null).parse(pac);
     }
 
     /**
@@ -285,13 +286,26 @@ public class ABNFReg {
      * @return 解析後の実体
      */
     public <T> T parse(String rulename, FrontPacket pac) {
-        return (T)parser(rulename, this).parse(pac);
+        return (T)parser(rulename, null).parse(pac);
     }
     
-    private <T> ABNFParser<T> parser(String rulename, ABNFReg sreg) {
+    /**
+     * 
+     * @param <T>
+     * @param rulename
+     * @param namespace ユーザ空間 ABNF以外ではまだ使ってない 型は変えるかもしれない
+     * @return 
+     */
+    private <T> ABNFParser<T> parser(String rulename, N namespace) {
         try {
-            Constructor<? extends ABNFParser> cnst = (Constructor<? extends ABNFParser<T>>) CL.get(rulename).getConstructor(ABNF.class, ABNFReg.class, ABNFReg.class);
-            return cnst.newInstance(reg.get(rulename), sreg, this);
+            Constructor<? extends ABNFParser> cnst;
+            if ( namespace != null ) {
+                cnst = (Constructor<? extends ABNFParser<T>>) CL.get(rulename).getConstructor(ABNF.class, namespace.getClass(), ABNFReg.class);
+                return cnst.newInstance(reg.get(rulename), namespace, this);
+            } else {
+                cnst = (Constructor<? extends ABNFParser<T>>) CL.get(rulename).getConstructor(ABNF.class, ABNFReg.class);
+                return cnst.newInstance(reg.get(rulename), this);
+            }
         } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException
                 | IllegalArgumentException | InvocationTargetException ex) {
             throw new java.lang.UnsupportedOperationException(ex);
