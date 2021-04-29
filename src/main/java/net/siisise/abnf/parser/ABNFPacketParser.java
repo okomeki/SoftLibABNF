@@ -2,6 +2,7 @@ package net.siisise.abnf.parser;
 
 import net.siisise.abnf.ABNF;
 import net.siisise.io.FrontPacket;
+import net.siisise.io.Packet;
 
 /**
  * Packetに分割するだけ。
@@ -21,7 +22,11 @@ public class ABNFPacketParser extends ABNFBaseParser<FrontPacket, ABNF> {
      */
     @Override
     public FrontPacket parse(FrontPacket pac) {
-        return pac;
+        Packet r = rule.is(pac);
+        if ( r == null ) {
+            return null;
+        }
+        return r;
     }
 
 }

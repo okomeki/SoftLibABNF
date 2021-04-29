@@ -11,7 +11,7 @@ import net.siisise.io.FrontPacket;
 public class Rulename extends ABNFBaseParser<ABNF, Object> {
 
     public Rulename(ABNF rule, ABNFReg reg, ABNFReg base) {
-        super(rule, reg, base);
+        super(rule, reg);
     }
 
     @Override

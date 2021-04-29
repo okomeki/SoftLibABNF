@@ -12,26 +12,26 @@ import net.siisise.abnf.ABNFReg;
  */
 public abstract class ABNFList<T, M> extends ABNFBuildParser<T, M> {
 
-    protected ABNFList(ABNF rule, ABNFReg base, String... subcn) {
-        super(rule, base, subcn);
+    protected ABNFList(ABNF rule, ABNFReg base, String... subrulenames) {
+        super(rule, base, subrulenames);
     }
 
     /**
      * 
      * @param rule 処理対象のABNF構文
      * @param reg 名前空間参照用
-     * @param base Parser駆動用
-     * @param subcn 含まれる要素
+     * @param base subrulenameのParser駆動用
+     * @param subrulenames 含まれる要素
      */
-    protected ABNFList(ABNF rule, Object reg, ABNFReg base, String... subcn) {
-        super(rule, reg, base, subcn);
+    protected ABNFList(ABNF rule, Object reg, ABNFReg base, String... subrulenames) {
+        super(rule, reg, base, subrulenames);
     }
 
     @Override
     protected T build(ABNF.C<M> sret) {
         List<M> mlist = new ArrayList<>();
-        for ( ABNFParser<? extends M> sub : subs ) {
-            List<M> s = sret.get(sub.getBNF());
+        for ( String sub : subName ) {
+            List<M> s = sret.get(sub);
             if ( s != null ) {
                 mlist.addAll(s);
             }

@@ -38,9 +38,9 @@ public class ABNF5234 {
     public static final ABNFReg REG = new ABNFReg(BASE, null);
 
     public static final ABNF charVal = REG.rule("char-val", CharVal.class, DQUOTE.pl(ABNF.range(0x20, 0x21).or(ABNF.range(0x23, 0x7e)).x(), DQUOTE));
-    public static final ABNF binVal = REG.rule("bin-val", ABNF.text('b').pl(BIT.ix(), ABNF.bin('.').pl(BIT.ix()).ix().or(ABNF.bin('-').pl(BIT.ix())).c()));
-    public static final ABNF decVal = REG.rule("dec-val", ABNF.text('d').pl(DIGIT.ix(), ABNF.bin('.').pl(DIGIT.ix()).ix().or(ABNF.bin('-').pl(DIGIT.ix())).c()));
-    public static final ABNF hexVal = REG.rule("hex-val", ABNF.text('x').pl(HEXDIG.ix(), ABNF.bin('.').pl(HEXDIG.ix()).ix().or(ABNF.bin('-').pl(HEXDIG.ix())).c()));
+    public static final ABNF binVal = REG.rule("bin-val", NumVal.BinVal.class, ABNF.text('b').pl(BIT.ix(), ABNF.bin('.').pl(BIT.ix()).ix().or(ABNF.bin('-').pl(BIT.ix())).c()));
+    public static final ABNF decVal = REG.rule("dec-val", NumVal.DecVal.class, ABNF.text('d').pl(DIGIT.ix(), ABNF.bin('.').pl(DIGIT.ix()).ix().or(ABNF.bin('-').pl(DIGIT.ix())).c()));
+    public static final ABNF hexVal = REG.rule("hex-val", NumVal.HexVal.class, ABNF.text('x').pl(HEXDIG.ix(), ABNF.bin('.').pl(HEXDIG.ix()).ix().or(ABNF.bin('-').pl(HEXDIG.ix())).c()));
     public static final ABNF proseVal = REG.rule("prose-val", ProseVal.class, ABNF.text('<').pl(ABNF.range(0x20, 0x3d).or(ABNF.range(0x3f, 0x7e)).x(), ABNF.bin('>')));
     public static final ABNF numVal = REG.rule("num-val", NumVal.class, ABNF.text('%').pl(binVal.or(decVal, hexVal)));
     public static final ABNF rulename = REG.rule("rulename", Rulename.class, ALPHA.pl(ALPHA.or(DIGIT, ABNF.bin('-')).x()));
@@ -55,10 +55,10 @@ public class ABNF5234 {
     static final ABNF cWsp = REG.rule("c-wsp", WSP.or(cNl.pl(WSP)));
     public static final ABNF concatenation = REG.rule("concatenation", Concatenation.class, repetition.pl(cWsp.ix().pl(repetition).x()));
     public static final ABNF alternation = REG.rule("alternation", Alternation.class, concatenation.pl(cWsp.x().pl(ABNF.text('/'), cWsp.x(), concatenation).x()));
-    public static final ABNF group = REG.rule("group", Group.class, ABNF.bin('(').pl(cWsp.x(), alternation, cWsp.x(), ABNF.bin(')')));
+    public static final ABNF group = REG.rule("group", SubAlternation.class, ABNF.bin('(').pl(cWsp.x(), alternation, cWsp.x(), ABNF.bin(')')));
     public static final ABNF option = REG.rule("option", Option.class, ABNF.bin('[').pl(cWsp.x(), alternation, cWsp.x(), ABNF.bin(']')));
     public static final ABNF element = REG.rule("element", Element.class, rulename.or(group, option, charVal, numVal, proseVal));
-    public static final ABNF elements = REG.rule("elements", Elements.class, alternation.pl(cWsp.x()));
+    public static final ABNF elements = REG.rule("elements", SubAlternation.class, alternation.pl(cWsp.x()));
     public static final ABNF definedAs = REG.rule("defined-as", cWsp.x().pl(ABNF.bin('=').or(ABNF.bin("=/")), cWsp.x()));
     public static final ABNF rule = REG.rule("rule", Rule.class, rulename.pl(definedAs, elements, cNl));
     public static final ABNF rulelist = REG.rule("rulelist", Rulelist.class, rule.or(cWsp.x().pl(cNl)).ix());
@@ -72,9 +72,9 @@ public class ABNF5234 {
         ABNFReg reg = new ABNFReg(BASE, null);
 
         reg.rule("char-val", CharVal.class, ABNF5234.charVal);
-        reg.rule("bin-val", ABNF5234.binVal);
-        reg.rule("dec-val", ABNF5234.decVal);
-        reg.rule("hex-val", ABNF5234.hexVal);
+        reg.rule("bin-val", NumVal.BinVal.class, ABNF5234.binVal);
+        reg.rule("dec-val", NumVal.DecVal.class, ABNF5234.decVal);
+        reg.rule("hex-val", NumVal.HexVal.class, ABNF5234.hexVal);
         reg.rule("prose-val", ProseVal.class, ABNF5234.proseVal);
         reg.rule("num-val", NumVal.class, ABNF.text('%').pl(reg.ref("bin-val").or(reg.ref("dec-val"), reg.ref("hex-val"))));
         reg.rule("rulename", Rulename.class, ABNF5234.rulename);
@@ -86,9 +86,9 @@ public class ABNF5234 {
         reg.rule("c-wsp", WSP.or(cNl.pl(WSP)));
         reg.rule("concatenation", Concatenation.class, reg.ref("repetition").pl(cWsp.ix().pl(reg.ref("repetition")).x()));
         reg.rule("alternation", Alternation.class, reg.ref("concatenation").pl(cWsp.x().pl(ABNF.text('/'), cWsp.x(), reg.ref("concatenation")).x()));
-        reg.rule("group", Group.class, ABNF.bin('(').pl(cWsp.x(), reg.ref("alternation"), cWsp.x(), ABNF.bin(')')));
+        reg.rule("group", SubAlternation.class, ABNF.bin('(').pl(cWsp.x(), reg.ref("alternation"), cWsp.x(), ABNF.bin(')')));
         reg.rule("option", Option.class, ABNF.bin('[').pl(cWsp.x(), reg.ref("alternation"), cWsp.x(), ABNF.bin(']')));
-        reg.rule("elements", Elements.class, reg.ref("alternation").pl(cWsp.x()));
+        reg.rule("elements", SubAlternation.class, reg.ref("alternation").pl(cWsp.x()));
         reg.rule("defined-as", ABNF5234.definedAs);
         reg.rule("rule", Rule.class, reg.ref("rulename").pl(definedAs, reg.ref("elements"), cNl));
         reg.rule("rulelist", Rulelist.class, reg.ref("rule").or(cWsp.x().pl(cNl)).ix());

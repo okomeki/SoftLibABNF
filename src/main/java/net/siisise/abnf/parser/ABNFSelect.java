@@ -7,22 +7,23 @@ import net.siisise.io.FrontPacket;
 
 /**
  * 一致するものを選択する (分岐).
+ * 含まれている要素(名前)なので全体一致ではなくていい
  * @param <T>
  */
 public class ABNFSelect<T> extends ABNFBuildParser<T, T> {
 
-    protected ABNFSelect(ABNF rule, ABNFReg base, String...  subcs) {
-        super(rule, base, subcs);
+    protected ABNFSelect(ABNF rule, ABNFReg base, String...  casenames) {
+        super(rule, base, casenames);
     }
 
-    protected ABNFSelect(ABNF rule, Object reg, ABNFReg base, String...  subcs) {
-        super(rule, reg, base, subcs);
+    protected ABNFSelect(ABNF rule, Object reg, ABNFReg base, String...  casenames) {
+        super(rule, reg, base, casenames);
     }
 
     @Override
     protected T build(ABNF.C<T> pac) {
-        for (ABNFParser<? extends T> p : subs) {
-            List<T> r = pac.get(p.getBNF());
+        for (String sub : subName) {
+            List<T> r = pac.get(sub);
             if (r != null) {
                 return r.get(0);
             }

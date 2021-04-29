@@ -27,6 +27,10 @@ public class Alternation extends ABNFList<ABNF, ABNF> {
         return new ABNFor(list.toArray(new ABNF[list.size()]));
     }
 
+    /**
+     * まとめて速くなればいいなくらいの処理.
+     * @param list 
+     */
     private void shortMap(List<ABNF> list) {
         for ( int i = 0; i < list.size() - 1; i++ ) {
             ABNF bnf1 = list.get(i);

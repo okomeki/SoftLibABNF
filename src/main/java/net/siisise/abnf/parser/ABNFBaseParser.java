@@ -1,11 +1,6 @@
 package net.siisise.abnf.parser;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.siisise.abnf.ABNF;
-import net.siisise.abnf.ABNFReg;
 import net.siisise.abnf.AbstractABNF;
 import net.siisise.io.FrontPacket;
 
@@ -24,11 +19,6 @@ public abstract class ABNFBaseParser<T, M> implements ABNFParser<T> {
      * ABNFでは使うがJSONでは未使用など
      */
     protected final Object reg;
-    /** ABNF Parser側 名前空間 */
-    protected final ABNFReg base;
-    protected ABNFParser<? extends M>[] subs;
-    private Class<? extends ABNFParser<? extends M>>[] subpClass;
-    protected String[] subName;
 
     /**
      * regが不要な文字系のところ
@@ -37,65 +27,21 @@ public abstract class ABNFBaseParser<T, M> implements ABNFParser<T> {
     protected ABNFBaseParser(ABNF rule) {
         this.rule = rule;
         reg = null;
-        base = null;
     }
 
     /**
-     *  
+     * 上のparserから駆動される想定
      * @param rule 処理対象のABNF rule
      * @param reg ユーザ名前空間参照用 ABNF定義時などにつかう
-     * @param base Parser駆動用 ABNFParserのABNFReg
-     * @param subns 
+     * @param base Parser駆動 subns用, ABNFParserのABNFReg
+     * @param subns 参照する内側の要素
      */
-    protected ABNFBaseParser(ABNF rule, Object reg, ABNFReg base, String... subns) {
+    protected ABNFBaseParser(ABNF rule, Object reg) {
         this.rule = rule;
         this.reg = reg;
-        this.base = base;
-        setSub(subns);
     }
 
-    private void setSub(String... subns) {
-        subpClass = new Class[subns.length];
-        subName = subns;
-        
-//        for ( int i = 0; i < subns.length; i++ ) {
-//            subpClass[i] = (Class<? extends ABNFParser<? extends M>>) base.CL.get(subName[i]);
-//        }
-    }
 
-    protected void inst() {
-        if (subs == null && subpClass != null) {
-            try {
-                subs = new ABNFParser[subpClass.length];
-                for (int i = 0; i < subpClass.length; i++) {
-                    if ( base != null ) {
-//                        System.out.println(subName[i]);
-                        subpClass[i] = (Class<? extends ABNFParser<? extends M>>)base.CL.get(subName[i]);
-                        if ( subpClass[i] == null ) {
-                            subs[i] = (ABNFParser)new ABNFPacketParser(base.href(subName[i]));
-                        } else {
-                            Constructor<? extends ABNFParser<? extends M>> cnst;
-                            if ( reg == null ) {
-                                cnst = subpClass[i].getConstructor(ABNF.class, ABNFReg.class);
-                                subs[i] = cnst.newInstance(base.href(subName[i]),base);
-                            } else {
-                                cnst = subpClass[i].getConstructor(ABNF.class, reg.getClass(), ABNFReg.class);
-                                subs[i] = cnst.newInstance(base.href(subName[i]),reg,base);
-                            }
-                        }
-                    } else {
-                        subs[i] = subpClass[i].getConstructor(ABNFReg.class).newInstance(reg);
-                    }
-                }
-            } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
-                    | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
-                Logger.getLogger(ABNFBaseParser.class.getName()).log(Level.SEVERE, null, ex);
-                throw new java.lang.UnsupportedOperationException(ex);
-            }
-//                System.out.println("");
-            
-        }
-    }
 
     @Override
     public ABNF getBNF() {

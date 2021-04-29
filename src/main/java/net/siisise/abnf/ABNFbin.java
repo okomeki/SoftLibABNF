@@ -49,7 +49,8 @@ public class ABNFbin extends IsABNF {
     /**
      * 1文字単位でor分割。
      * どれかの文字に該当するor型ABNFをつくる
-     *
+     * 
+     * @deprecated ABNFmap に移行かな
      * @param val 文字の一括登録
      * @return
      */

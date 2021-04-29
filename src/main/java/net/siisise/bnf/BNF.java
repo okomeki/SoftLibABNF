@@ -49,7 +49,6 @@ public interface BNF {
      * @return 検索結果
      */
     <X> C<X> find(FrontPacket pac, BNFParser<? extends X>... parsers);
-    C<FrontPacket> findPacket(FrontPacket pac, BNF... rules);
 
     /**
      * 検索結果用構造

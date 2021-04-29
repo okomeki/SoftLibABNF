@@ -8,6 +8,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import net.siisise.abnf.parser.ABNFPacketParser;
 import net.siisise.abnf.parser.ABNFParser;
 import net.siisise.abnf.parser5234.ABNF5234;
 import net.siisise.bnf.parser.BNFParser;
@@ -256,6 +257,23 @@ public class ABNFReg<N> {
         in.close();
         return rl;
     }
+    
+    /**
+     * 特殊なので使わない方がいい
+     * @param pac
+     * @param rulename
+     * @param subrulenames
+     * @return 
+     */
+    public ABNF.C find(FrontPacket pac, String rulename, String... subrulenames) {
+        ABNF rule = href(rulename);
+        
+        BNFParser[] cll = new BNFParser[subrulenames.length];
+        for ( int i = 0; i < subrulenames.length; i++ ) {
+            cll[i] = parser(subrulenames[i], null);
+        }
+        return rule.find(pac, cll);
+    }
 
     /**
      * ユーザ側のParser(JSONなど)を駆動する
@@ -296,15 +314,20 @@ public class ABNFReg<N> {
      * @param namespace ユーザ空間 ABNF以外ではまだ使ってない 型は変えるかもしれない
      * @return 
      */
-    private <T> ABNFParser<T> parser(String rulename, N namespace) {
+    public <T> ABNFParser<T> parser(String rulename, N namespace) {
         try {
             Constructor<? extends ABNFParser> cnst;
+            ABNF rule = reg.get(rulename);
+            Class<? extends ABNFParser> rulep = CL.get(rulename);
+            if ( rulep == null ) {
+                return (ABNFParser<T>) new ABNFPacketParser(rule);
+            }
             if ( namespace != null ) {
-                cnst = (Constructor<? extends ABNFParser<T>>) CL.get(rulename).getConstructor(ABNF.class, namespace.getClass(), ABNFReg.class);
-                return cnst.newInstance(reg.get(rulename), namespace, this);
+                cnst = (Constructor<? extends ABNFParser<T>>) rulep.getConstructor(ABNF.class, namespace.getClass(), ABNFReg.class);
+                return cnst.newInstance(rule, namespace, this);
             } else {
-                cnst = (Constructor<? extends ABNFParser<T>>) CL.get(rulename).getConstructor(ABNF.class, ABNFReg.class);
-                return cnst.newInstance(reg.get(rulename), this);
+                cnst = (Constructor<? extends ABNFParser<T>>) rulep.getConstructor(ABNF.class, ABNFReg.class);
+                return cnst.newInstance(rule, this);
             }
         } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException
                 | IllegalArgumentException | InvocationTargetException ex) {

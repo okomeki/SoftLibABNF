@@ -20,15 +20,15 @@ public class Concatenation extends ABNFList<ABNF, ABNF> {
 
     /**
      * 
-     * @param pac 子のABNF要素
+     * @param val 子のABNF要素
      * @return 繋げた結果のABNF Concatenation
      */
     @Override
-    protected ABNF build(List<ABNF> pac) {
-        if (pac.size() == 1) {
-            return pac.get(0);
+    protected ABNF build(List<ABNF> val) {
+        if (val.size() == 1) {
+            return val.get(0);
         }
-        return new ABNFplm(pac.toArray(new ABNF[pac.size()]));
+        return new ABNFplm(val.toArray(new ABNF[val.size()]));
     }
 
 }

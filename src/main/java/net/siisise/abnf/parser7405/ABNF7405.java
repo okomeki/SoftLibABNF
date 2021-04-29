@@ -15,8 +15,8 @@ public class ABNF7405 {
 
     public static final ABNFReg REG = new ABNFReg(ABNF5234.copyREG());
 
-    static final ABNF caseInsensitiveString = REG.rule("case-insensitive-string", "[ \"%i\" ] quoted-string");
-    static final ABNF caseSensitiveString = REG.rule("case-sensitive-string", "\"%s\" quoted-string");
+    static final ABNF caseInsensitiveString = REG.rule("case-insensitive-string", IS.class, "[ \"%i\" ] quoted-string");
+    static final ABNF caseSensitiveString = REG.rule("case-sensitive-string", SS.class, "\"%s\" quoted-string");
     static final ABNF charVal = REG.rule("char-val", CharVal7405.class, caseInsensitiveString.or(caseSensitiveString));
     static final ABNF quotedString = REG.rule("quoted-string", QS.class, "DQUOTE *(%x20-21 / %x23-7E) DQUOTE");
 

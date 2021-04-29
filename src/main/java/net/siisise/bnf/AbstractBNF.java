@@ -63,15 +63,6 @@ public abstract class AbstractBNF implements BNF {
         }
     }
     
-    @Override
-    public C<FrontPacket> findPacket(FrontPacket pac, BNF... rules) {
-        BNFParser[] ps = new BNFParser[rules.length];
-        for ( int i = 0; i < rules.length; i++ ) {
-            ps[i] = new BNFPacketParser(rules[i]);
-        }
-        return find(pac, ps);
-    }
-
     public static Packet pac(String str) {
         Packet p = new PacketA();
         p.write(str.getBytes(UTF8));
