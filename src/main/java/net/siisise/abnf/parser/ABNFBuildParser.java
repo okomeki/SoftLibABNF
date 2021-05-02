@@ -6,6 +6,7 @@ import net.siisise.io.FrontPacket;
 
 /**
  * subnsで指定した名の部分を中間型で受け取り、変換後の型で渡すだけのお仕事にするための部分実装。
+ *
  * @param <T> 変換後の型
  * @param <M> 中間型
  */
@@ -15,13 +16,6 @@ public abstract class ABNFBuildParser<T, M> extends ABNFBaseParser<T, M> {
     private final ABNFReg base;
     private ABNFParser<? extends M>[] subs;
     protected final String[] subName;
-
-    protected ABNFBuildParser(ABNF rule) {
-        super(rule);
-        base = null;
-        subName = null;
-        subs = new ABNFParser[0];
-    }
 
     protected ABNFBuildParser(ABNF rule, ABNFReg base, String... subrulenames) {
         super(rule, null);
@@ -35,10 +29,10 @@ public abstract class ABNFBuildParser<T, M> extends ABNFBaseParser<T, M> {
         subName = subrulenames;
     }
 
-     /**
+    /**
      * 対象であるかの判定と要素抽出をする
      * @param pac
-     * @return 
+     * @return
      */
     @Override
     public T parse(FrontPacket pac) {

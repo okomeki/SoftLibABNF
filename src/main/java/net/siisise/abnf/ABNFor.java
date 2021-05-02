@@ -91,21 +91,20 @@ public class ABNFor extends FindABNF {
     }
 
     @Override
-    public <X> C<X> find(FrontPacket pac, BNFParser<? extends X>... parsers) {
-        ABNF.C ret = null;
-        BNFParser[] subps = isName(parsers) ? new BNFParser[0] : parsers;
+    public <X> C<X> buildFind(FrontPacket pac, BNFParser<? extends X>... parsers) {
+        ABNF.C<X> ret = null;
 
         for (ABNF sub : list) {
 
-            C subret = sub.find(pac, subps);
+            C<X> subret = sub.find(pac, parsers);
             if (subret != null) {
                 byte[] data = subret.ret.toByteArray();
                 pac.backWrite(data);
                 if (ret == null || ret.ret.length() < data.length) {
                     subret.ret.backWrite(data);
-                    if (ret != null) {
-                        System.out.println("+******DUUPP****+" + subret + "(" + sub.toString() + ")");
-                    }
+                    //if (ret != null) {
+                    //    System.out.println("+******DUUPP****+" + subret + "(" + subBuild.toString() + ")");
+                    //}
                     ret = subret;
                 }
             }
@@ -116,6 +115,6 @@ public class ABNFor extends FindABNF {
 
         byte[] e = new byte[(int) ret.ret.length()];
         pac.read(e);
-        return sub(ret, parsers); // parseが走る
+        return ret;
     }
 }

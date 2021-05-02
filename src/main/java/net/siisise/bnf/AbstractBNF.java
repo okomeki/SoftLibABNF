@@ -13,7 +13,7 @@ public abstract class AbstractBNF implements BNF {
     /**
      * 名前、またはABNFに近いもの (まだ抜けもある)
      */
-    String name;
+    protected String name;
 
     @Override
     public String getName() {
@@ -23,17 +23,22 @@ public abstract class AbstractBNF implements BNF {
         return name;
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
+
     public BNF name(String name) {
         return new BNFor(name, this); // ?
     }
 
-    protected boolean isName(BNFParser<?>[] parsers) {
-        for (BNFParser p : parsers ) {
-            if (name.equals(p.getBNF().getName())) {
-                return true;
+    protected <X> BNFParser<? extends X> matchParser(BNFParser<? extends X>[] parsers) {
+        for (BNFParser ps : parsers) {
+            if(name.equals(ps.getBNF().getName())) {
+                return ps;
             }
         }
-        return false;
+        return null;
     }
 
     @Override
@@ -63,29 +68,59 @@ public abstract class AbstractBNF implements BNF {
         }
     }
     
+    public boolean eq(Packet val) {
+        Packet r = is(val);
+        if (val.length() == 0) {
+            return true;
+        }
+        if (r != null) {
+            val.backWrite(r.toByteArray());
+        }
+        return false;
+    }
+    
+    public boolean eq(String val) {
+        return eq(pac(val));
+    }
+    
     public static Packet pac(String str) {
         Packet p = new PacketA();
         p.write(str.getBytes(UTF8));
         return p;
     }
 
+    public static String str(FrontPacket pac) {
+        return new String(pac.toByteArray(), UTF8);
+    }
+
     /**
-     * 
+     * 文字列に起こす。 データは元に戻す。
+     *
+     * @param pac
+     * @return
+     */
+    public static String strd(FrontPacket pac) {
+        byte[] data = pac.toByteArray();
+        pac.backWrite(data);
+        Packet n = new PacketA(data);
+        return str(n);
+    }
+
+    /**
+     * 名前が該当すればそれ以下を削除して詰め直す
      * @param <X>
      * @param cret
-     * @param parsers
-     * @return 
+     * @param parser 一致するものだけ必要
+     * @return
      */
-    <X> C<X> sub(C<X> cret, BNFParser<? extends X>... parsers) {
-        for (BNFParser<? extends X> p : parsers) {
-            String pname = p.getBNF().getName();
-            if (pname.equals(name)) {
-                cret.subs.clear();
-                byte[] data = cret.ret.toByteArray();
-                cret.ret.backWrite(data);
-                cret.add(name, p.parse(new PacketA(data)));
-            }
+    protected <X> C<X> subBuild(C<X> cret, BNFParser<? extends X> parser) {
+        if (parser != null) {
+            cret.subs.clear();
+            byte[] data = cret.ret.toByteArray();
+            cret.ret.backWrite(data);
+            cret.add(name, parser.parse(new PacketA(data)));
         }
         return cret;
     }
+
 }

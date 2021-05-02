@@ -47,20 +47,17 @@ public class ABNFpl extends FindABNF {
      * @return 
      */
     @Override
-    public <X> C<X> find(FrontPacket pac, BNFParser<? extends X>... parsers) {
+    public <X> C<X> buildFind(FrontPacket pac, BNFParser<? extends X>... parsers) {
         C<X> ret = new C<>();
-        BNFParser[] subparsers;
-        boolean n = isName(parsers);
-        subparsers = n ? new BNFParser[0] : parsers;
         
         for (ABNF sub : list) {
-            C<X> subret = sub.find(pac, subparsers);
+            C<X> subret = sub.find(pac, parsers);
             if (subret == null) {
                 pac.backWrite(ret.ret.toByteArray());
                 return null;
             }
             mix(ret, subret);
         }
-        return n ? sub(ret, parsers) : ret;
+        return ret;
     }
 }

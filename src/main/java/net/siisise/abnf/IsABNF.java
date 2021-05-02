@@ -23,6 +23,6 @@ public abstract class IsABNF extends AbstractABNF {
         if (r == null) {
             return null;
         }
-        return sub(new C(r), parsers);
+        return subBuild(new C(r), matchParser(parsers));
     }
 }

@@ -28,14 +28,8 @@ public class ABNFplm extends ABNFpl {
     }
 
     @Override
-    public <X> C<X> find(FrontPacket pac, BNFParser<? extends X>... names) {
-        C<X> ret = new C<>();
-        BNFParser[] subparsers;
-        boolean n = isName(names);
-        subparsers = n ? new BNFParser[0] : names;
-
-        ret = longfind(pac, list, subparsers);
-        return n ? sub(ret, names) : ret;
+    public <X> C<X> buildFind(FrontPacket pac, BNFParser<? extends X>... subps) {
+        return longfind(pac, list, subps);
     }
 
     /**
@@ -47,7 +41,7 @@ public class ABNFplm extends ABNFpl {
      * @param subparsers
      * @return
      */
-    protected <X> C<X> longfind(FrontPacket pac, ABNF[] list, BNFParser[] subparsers) {
+    protected <X> C<X> longfind(FrontPacket pac, ABNF[] list, BNFParser<? extends X>[] subparsers) {
         if (list.length == 0) {
             return new C();
         }

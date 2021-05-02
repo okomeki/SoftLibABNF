@@ -35,7 +35,7 @@ public class ABNFplu extends ABNFplm {
      * @return
      */
     @Override
-    protected <X> C<X> longfind(FrontPacket pac, ABNF[] list, BNFParser[] subparsers) {
+    protected <X> C<X> longfind(FrontPacket pac, ABNF[] list, BNFParser<? extends X>[] subparsers) {
         if (list.length == 0) {
             return new C();
         }
@@ -47,7 +47,7 @@ public class ABNFplu extends ABNFplm {
             byte[] data = new byte[flen];
             pac.read(data, 0, flen);
             frontPac.write(data, 0, flen);
-            C firstret = list[0].find(frontPac, subparsers);
+            C<X> firstret = list[0].find(frontPac, subparsers);
             pac.backWrite(frontPac.toByteArray());
 
             if (firstret == null || list.length == 1) { // 一致しないか最後ならここで戻り

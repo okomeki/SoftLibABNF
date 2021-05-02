@@ -48,12 +48,8 @@ public class ABNFReg<N> {
         }
 
         @Override
-        public C find(FrontPacket pac, BNFParser... parsers) {
-            C ret = reg.get(name).find(pac, parsers);
-            if (ret == null) {
-                return null;
-            }
-            return sub(ret, parsers);
+        public C buildFind(FrontPacket pac, BNFParser... parsers) {
+            return reg.get(name).find(pac, parsers);
         }
 
         @Override

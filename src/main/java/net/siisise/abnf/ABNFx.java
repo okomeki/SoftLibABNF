@@ -48,16 +48,8 @@ public class ABNFx extends FindABNF {
     }
 
     @Override
-    public C find(FrontPacket pac, BNFParser... names) {
-        if (isName(names)) { // ないかも
-            C p = find(pac);
-            if (p == null) {
-                return null;
-            }
-            return sub(p, names);
-        }
-
-        C ret = new C();
+    public <X> C<X> buildFind(FrontPacket pac, BNFParser<? extends X>... names) {
+        C<X> ret = new C<>();
         for (int i = 0; b == -1 || i < b; i++) {
 //            System.out.println(abnf+":" + strd(ret.ret)+"%"+strd(pac));
             C sub = abnf.find(pac, names);
