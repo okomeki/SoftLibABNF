@@ -33,18 +33,14 @@ public class Repetition extends ABNFBuildParser<ABNF, Object> {
         return ele;
     }
 
-    ABNF repeat(String rep, ABNF element) {
+    private ABNF repeat(String rep, ABNF element) {
         if (rep.contains("*")) {
             int off = rep.indexOf("*");
             String l = rep.substring(0, off);
             String r = rep.substring(off + 1);
-            if (l.isEmpty()) {
-                l = "0";
-            }
-            if (r.isEmpty()) {
-                r = "-1";
-            }
-            return element.x(Integer.parseInt(l), Integer.parseInt(r));
+            int min = l.isEmpty() ? 0 : Integer.parseInt(l);
+            int max = r.isEmpty() ? -1 : Integer.parseInt(r);
+            return element.x(min, max);
         } else {
             int r = Integer.parseInt(rep);
             return element.x(r, r);

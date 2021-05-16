@@ -15,13 +15,13 @@ public class ABNFpl extends FindABNF {
 
     public ABNFpl(ABNF... abnfs) {
         list = abnfs;
-        StringBuilder sb = new StringBuilder();
+        StringBuilder names = new StringBuilder();
         for (ABNF abnf : list) {
-            sb.append(abnf.getName());
-            sb.append(" ");
+            names.append(abnf.getName());
+            names.append(" ");
         }
-        sb.deleteCharAt(sb.length() - 1);
-        name = "( " + sb.toString() + " )";
+        names.deleteCharAt(names.length() - 1);
+        name = "( " + names.toString() + " )";
     }
 
     /**

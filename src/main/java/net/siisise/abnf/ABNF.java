@@ -117,13 +117,13 @@ public interface ABNF extends BNF {
     ABNF or(ABNF... val);
 
     /**
-     * a*bXXX.
+     * min*maxXXX.
      * 
-     * @param a 指定しない場合は 0
-     * @param b 指定しない場合は -1
+     * @param min 指定しない場合は 0
+     * @param max 指定しない場合は -1
      * @return 
      */
-    ABNF x(int a, int b);
+    ABNF x(int min, int max);
     /**
      * *XXX 繰り返し
      * @return 繰り返しABNF

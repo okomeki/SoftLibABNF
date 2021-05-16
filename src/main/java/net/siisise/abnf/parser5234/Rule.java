@@ -19,15 +19,15 @@ public class Rule extends ABNFBuildParser<ABNF, Object> {
         ABNF elements = (ABNF) ret.get("elements").get(0);
 
         if (defined.equals("=/")) {
-            ABNF val = ((ABNFReg) reg).href(rulename);
-            if (val instanceof ABNFReg.ABNFRef) {
+            ABNF rule = ((ABNFReg) reg).href(rulename);
+            if (rule instanceof ABNFReg.ABNFRef) {
                 throw new java.lang.UnsupportedOperationException();
             }
-            if (!(val instanceof ABNFor)) {
-                val = new ABNFor(rulename, val);
+            if (!(rule instanceof ABNFor)) {
+                rule = new ABNFor(rulename, rule);
             }
-            ((ABNFor) val).add(elements);
-            return val;
+            ((ABNFor) rule).add(elements);
+            return rule;
         } else {
             return elements.name(rulename);
         }

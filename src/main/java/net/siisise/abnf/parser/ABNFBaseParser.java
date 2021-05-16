@@ -33,8 +33,6 @@ public abstract class ABNFBaseParser<T, M> implements ABNFParser<T> {
      * 上のparserから駆動される想定
      * @param rule 処理対象のABNF rule
      * @param reg ユーザ名前空間参照用 ABNF定義時などにつかう
-     * @param base Parser駆動 subns用, ABNFParserのABNFReg
-     * @param subns 参照する内側の要素
      */
     protected ABNFBaseParser(ABNF rule, Object reg) {
         this.rule = rule;
