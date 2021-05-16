@@ -8,21 +8,25 @@ ABNFによるABNFのためのABNF
 とりあえず作ってみたので公開する
 RFC 5234 ABNF、RFC 7405の拡張を実装したもの
 
+https://siisise.net/abnf.html せつめい
+
 ### 何ができるのか?
 
-メールアドレスの判定がしたい
-URLの解析がしたい
-IPv6アドレスの(以下同文)
+ABNFのパース、一致判定
+rule単位でのパーサの埋め込み
+ メールアドレスの判定がしたい
+ URLの解析がしたい
+ IPv6アドレスの(以下同文)
 のようなものから
-JSONとかABNFとか使いたい
+ JSONとかABNFとか使いたい
 新しいプログラム言語とか作りたい?
 とRFCやABNFでお困りのいろいろを解決します
 
-
 - 機能1 ABNF Parser
-- 機能2 ABNF 比較とか
-- 機能3 名前参照対応
-- 機能4 オブジェクト/Collection/配列マッピング
+- 機能2 ABNF 比較/一致判定とか
+- 機能3 実体参照、名前参照(循環参照)対応
+- 機能4 rule単位のパーサ埋め込み
+- 例 JSON,JSON Pointerなどの実装
 
 とりあえずサンプル net.siisise.abnf.parser5234.ABNF5234.java がABNF Parserの本体でありサンプルであるかもしれません。
 
@@ -42,7 +46,7 @@ RFC 5234 の 4.ABNFのABNFによる定義から
 
     static final ABNF rulelist = REG.rule( "rulelist", "1*( rule / (*c-wsp c-nl) )");
 
-と書く方がおすすめです。rule( String rulename, String elements ) と rule( String rulename, ABNF elements ) のどちらでも使えるのでABNFをJavaのコードで書くこともできます。
+と書く方がおすすめです。rule( String rulename, String elements ) と rule( String rulename, ABNF elements ) のどちらでも使えるのでABNFをJavaのコードで書くこともできます。class ABNFはruleまたはelement相当です。
 
     rulelist.eq("文字列"); // 全体一致
     rulelist.is("文字列"); // 先頭一致
@@ -53,7 +57,7 @@ RFC 5234 の 4.ABNFのABNFによる定義から
 
 ## 演算子
 
-3.演算子のものをJavaで書くと
+3.演算子のものをJavaで書く手法です。不明であればABNFでも書けます。
 
 ### 連接 Rule1 Rule2 #pl(複数)
 
@@ -145,7 +149,6 @@ Javaから参照する場合は REG から参照することも rulelist を使�
     ABNF rl = REG.ref("rulelist");
     
 として取り出したり、他のrule中で使うことで参照できます。href(Strnig)とref(String)の違いは未定義のものを参照できるかできないかの違いです。上から順番に定義していける場合とネストしている場合があるので使い分けることもあります。
-
 
 
     class Test {
