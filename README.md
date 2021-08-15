@@ -9,6 +9,7 @@ ABNFによるABNFのためのABNF
 RFC 5234 ABNF、RFC 7405の拡張を実装したもの
 
 https://siisise.net/abnf.html せつめい
+https://siisise.net/softlib/ バイナリ
 
 ### 何ができるのか?
 
