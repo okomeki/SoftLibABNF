@@ -55,7 +55,7 @@ public class ABNFbin extends IsABNF {
      * @return
      */
     public static ABNF list(String val) {
-        Packet src = pac(val);
+        FrontPacket src = pac(val);
 
         List<ABNF> list = new ArrayList<>();
         while (src.length() > 0) {

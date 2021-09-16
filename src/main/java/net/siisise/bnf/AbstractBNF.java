@@ -1,5 +1,6 @@
 package net.siisise.bnf;
 
+import net.siisise.abnf.io.FrontIO;
 import net.siisise.bnf.parser.BNFParser;
 import net.siisise.io.FrontPacket;
 import net.siisise.io.Packet;
@@ -68,7 +69,7 @@ public abstract class AbstractBNF implements BNF {
         }
     }
     
-    public boolean eq(Packet val) {
+    public boolean eq(FrontPacket val) {
         Packet r = is(val);
         if (val.length() == 0) {
             return true;
@@ -83,9 +84,10 @@ public abstract class AbstractBNF implements BNF {
         return eq(pac(val));
     }
     
-    public static Packet pac(String str) {
-        Packet p = new PacketA();
-        p.write(str.getBytes(UTF8));
+    public static FrontPacket pac(String str) {
+        //Packet p = new PacketA();
+        //p.write(str.getBytes(UTF8));
+        FrontPacket p = new FrontIO(str.getBytes(UTF8));
         return p;
     }
 

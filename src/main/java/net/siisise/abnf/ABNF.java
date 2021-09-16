@@ -1,6 +1,7 @@
 package net.siisise.abnf;
 
 import net.siisise.bnf.BNF;
+import net.siisise.io.FrontPacket;
 import net.siisise.io.Packet;
 
 /**
@@ -148,7 +149,7 @@ public interface ABNF extends BNF {
      * @param pac 比較対象データ
      * @return 判定結果
      */
-    boolean eq(Packet pac);
+    boolean eq(FrontPacket pac);
     /**
      * 完全一致の判定
      * @param val 比較対象文字列

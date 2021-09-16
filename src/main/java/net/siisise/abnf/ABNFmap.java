@@ -20,7 +20,7 @@ public class ABNFmap extends IsABNF {
     }
     
     public ABNFmap(String val) {
-        Packet pac = pac(val);
+        FrontPacket pac = pac(val);
         while ( pac.size() > 0 ) {
             int ch = CodePoint.utf8(pac);
             if ( !map.contains(ch)) {

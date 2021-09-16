@@ -18,6 +18,7 @@ public abstract class FindBNF extends AbstractBNF {
         return ret.ret;
     }
     
+    @Override
     public <X> C<X> find(FrontPacket pac, BNFParser<? extends X>... parsers) {
         BNFParser<? extends X> mp = matchParser(parsers);
         C<X> ret = buildFind(pac, mp == null ? parsers : new BNFParser[0]);
