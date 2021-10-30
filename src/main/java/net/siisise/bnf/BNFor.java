@@ -8,7 +8,7 @@ import net.siisise.io.FrontPacket;
  */
 public class BNFor extends FindBNF {
 
-    private BNF[] list;
+    private final BNF[] list;
 
     public BNFor(BNF... abnfs) {
         list = abnfs;

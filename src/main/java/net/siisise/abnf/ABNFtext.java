@@ -69,7 +69,7 @@ public class ABNFtext extends IsABNF {
         if (u.equalsIgnoreCase(text)) {
             return new PacketA(d);
         }
-        pac.backWrite(d);
+        pac.dbackWrite(d);
         return null;
     }
 }

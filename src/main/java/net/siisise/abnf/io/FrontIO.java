@@ -62,10 +62,10 @@ public class FrontIO implements FrontPacket {
 
     @Override
     public byte[] toByteArray() {
-        byte[] data = new byte[this.data.length - offset];
-        System.arraycopy(this.data, offset, data, 0, data.length);
-        offset = this.data.length;
-        return data;
+        byte[] array = new byte[this.data.length - offset];
+        System.arraycopy(data, offset, array, 0, array.length);
+        offset = data.length;
+        return array;
     }
 
     @Override
@@ -82,6 +82,12 @@ public class FrontIO implements FrontPacket {
 
     @Override
     public void backWrite(byte[] data) {
+        this.offset -= data.length;
+        System.arraycopy(data, 0, this.data, offset, data.length);
+    }
+
+    @Override
+    public void dbackWrite(byte[] data) {
         this.offset -= data.length;
         System.arraycopy(data, 0, this.data, offset, data.length);
     }

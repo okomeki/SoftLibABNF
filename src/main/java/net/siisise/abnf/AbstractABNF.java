@@ -13,6 +13,11 @@ public abstract class AbstractABNF extends AbstractBNF implements ABNF {
         return new ABNFor(name, this); // ?
     }
 
+    /**
+     * *(a / b ) a の様なものが解析できないが速そう
+     * @param val
+     * @return 
+     */
     @Override
     public ABNF pl(ABNF... val) {
         if (val.length == 0) {
@@ -24,6 +29,11 @@ public abstract class AbstractABNF extends AbstractBNF implements ABNF {
         return new ABNFpl(list);
     }
 
+    /**
+     * *( a / b ) a にも対応
+     * @param val
+     * @return 
+     */
     @Override
     public ABNF plm(ABNF... val) {
         if (val.length == 0) {
@@ -35,6 +45,11 @@ public abstract class AbstractABNF extends AbstractBNF implements ABNF {
         return new ABNFplm(list);
     }
 
+    /**
+     * Unicode単位で比較する若干速いのかもしれない版 plm
+     * @param val
+     * @return 
+     */
     @Override
     public ABNF plu(ABNF... val) {
         if (val.length == 0) {

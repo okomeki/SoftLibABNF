@@ -48,7 +48,7 @@ public class ABNFplu extends ABNFplm {
             pac.read(data, 0, flen);
             frontPac.write(data, 0, flen);
             C<X> firstret = list[0].find(frontPac, subparsers);
-            pac.backWrite(frontPac.toByteArray());
+            pac.dbackWrite(frontPac.toByteArray());
 
             if (firstret == null || list.length == 1) { // 一致しないか最後ならここで戻り
                 return firstret;
@@ -65,7 +65,7 @@ public class ABNFplu extends ABNFplm {
             }
             // scのみ成立 破棄
             byte[] sdata = firstret.ret.toByteArray();
-            pac.backWrite(sdata);
+            pac.dbackWrite(sdata);
             // ToDo: utf-8で1文字戻る版にしてみた
             flen--;
             while ( flen >= 0 && (sdata[flen] & 0xc0) == 0x80 ) {

@@ -72,10 +72,10 @@ public class ABNFor extends FindABNF {
 
     @Override
     public ABNFor copy(ABNFReg reg) {
-        ABNF[] l = new ABNF[this.list.length];
+        ABNF[] l = new ABNF[list.length];
 
         for (int i = 0; i < list.length; i++) {
-            l[i] = this.list[i].copy(reg);
+            l[i] = list[i].copy(reg);
         }
         return new ABNFor(name, l);
     }
@@ -101,7 +101,7 @@ public class ABNFor extends FindABNF {
                 byte[] data = subret.ret.toByteArray();
                 pac.backWrite(data);
                 if (ret == null || ret.ret.length() < data.length) {
-                    subret.ret.backWrite(data);
+                    subret.ret.dbackWrite(data);
                     //if (ret != null) {
                     //    System.out.println("+******DUUPP****+" + subret + "(" + subBuild.toString() + ")");
                     //}

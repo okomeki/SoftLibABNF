@@ -53,7 +53,7 @@ public class ABNFpl extends FindABNF {
         for (ABNF sub : list) {
             C<X> subret = sub.find(pac, parsers);
             if (subret == null) {
-                pac.backWrite(ret.ret.toByteArray());
+                pac.dbackWrite(ret.ret.toByteArray());
                 return null;
             }
             mix(ret, subret);

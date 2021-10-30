@@ -75,7 +75,7 @@ public abstract class AbstractBNF implements BNF {
             return true;
         }
         if (r != null) {
-            val.backWrite(r.toByteArray());
+            val.dbackWrite(r.toByteArray());
         }
         return false;
     }

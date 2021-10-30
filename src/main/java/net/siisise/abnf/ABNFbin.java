@@ -77,7 +77,7 @@ public class ABNFbin extends IsABNF {
         if (Arrays.equals(data, d)) {
             return new PacketA(d);
         }
-        pac.backWrite(d);
+        pac.dbackWrite(d);
         return null;
     }
     

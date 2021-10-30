@@ -56,7 +56,7 @@ public class ABNFx extends FindABNF {
             if (sub == null) {
                 if (i < a) {
                     byte[] data = ret.ret.toByteArray();
-                    pac.backWrite(data);
+                    pac.dbackWrite(data);
                     return null;
                 } else {
                     return ret;

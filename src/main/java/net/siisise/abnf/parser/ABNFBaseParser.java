@@ -62,7 +62,7 @@ public abstract class ABNFBaseParser<T, M> implements ABNFParser<T> {
 
     protected static String strd(FrontPacket pac) {
         byte[] b = pac.toByteArray();
-        pac.backWrite(b);
+        pac.dbackWrite(b);
         return new String(b, ABNF.UTF8);
     }
 }

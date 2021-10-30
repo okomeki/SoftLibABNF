@@ -54,7 +54,7 @@ public class ABNFplm extends ABNFpl {
             pac.read(data, 0, flen);
             frontPac.write(data, 0, flen);
             C firstret = list[0].find(frontPac, subparsers);
-            pac.backWrite(frontPac.toByteArray());
+            pac.dbackWrite(frontPac.toByteArray());
 
             if (firstret == null || list.length == 1) { // 一致しないか最後ならここで戻り
                 return firstret;
@@ -71,7 +71,7 @@ public class ABNFplm extends ABNFpl {
             }
             // scのみ成立 破棄
             byte[] sdata = firstret.ret.toByteArray();
-            pac.backWrite(sdata);
+            pac.dbackWrite(sdata);
             flen--;
 
         } while (flen >= 0);

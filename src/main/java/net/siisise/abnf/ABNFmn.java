@@ -7,8 +7,8 @@ import net.siisise.io.Packet;
  * ABNFにはないがマイナス演算
  */
 public class ABNFmn extends IsABNF {
-    private ABNF a;
-    private ABNF b;
+    private final ABNF a;
+    private final ABNF b;
     
     ABNFmn(ABNF a, ABNF b) {
         this.a = a;
@@ -28,8 +28,8 @@ public class ABNFmn extends IsABNF {
         }
         Packet p2 = b.is(p1);
         if ( p2 != null ) {
-            pac.backWrite(p1.toByteArray());
-            pac.backWrite(p2.toByteArray());
+            pac.dbackWrite(p1.toByteArray());
+            pac.dbackWrite(p2.toByteArray());
             return null;
         }
         return p1;
