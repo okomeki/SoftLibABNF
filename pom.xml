@@ -2,8 +2,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.siisise</groupId>
-    <artifactId>SoftLibABNF</artifactId>
-    <version>1.1.0</version>
+    <artifactId>softlib-abnf</artifactId>
+    <version>1.1.1</version>
     <packaging>jar</packaging>
     <build>
         <plugins>
@@ -25,8 +25,8 @@
     <dependencies>
         <dependency>
             <groupId>net.siisise</groupId>
-            <artifactId>SoftLib</artifactId>
-            <version>1.1.0</version>
+            <artifactId>softlib</artifactId>
+            <version>1.1.1</version>
             <type>jar</type>
         </dependency>
         <dependency>
@@ -48,6 +48,20 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub okomeki Apache Maven SoftLib Packages</name>
+            <layout>default</layout>
+            <url>https://maven.pkg.github.com/okomeki/softlibabnf</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </distributionManagement>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>

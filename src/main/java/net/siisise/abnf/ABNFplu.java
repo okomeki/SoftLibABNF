@@ -10,7 +10,7 @@ import net.siisise.io.PacketA;
  *
  */
 public class ABNFplu extends ABNFplm {
-    
+
     public ABNFplu(ABNF[] list) {
         super(list);
     }
@@ -40,7 +40,7 @@ public class ABNFplu extends ABNFplm {
             return new C();
         }
         int flen = pac.size();
-        
+
         do {
             // 1つめ 指定サイズまでに制限する
             Packet frontPac = new PacketA();
@@ -68,7 +68,7 @@ public class ABNFplu extends ABNFplm {
             pac.dbackWrite(sdata);
             // ToDo: utf-8で1文字戻る版にしてみた
             flen--;
-            while ( flen >= 0 && (sdata[flen] & 0xc0) == 0x80 ) {
+            while (flen >= 0 && (sdata[flen] & 0xc0) == 0x80) {
                 flen--;
             }
 

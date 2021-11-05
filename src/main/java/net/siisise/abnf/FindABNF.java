@@ -18,13 +18,14 @@ public abstract class FindABNF extends AbstractABNF {
         }
         return ret.ret;
     }
-    
+
     /**
      * 詰め方の工夫をするターン
+     *
      * @param <X>
      * @param pac
      * @param parsers
-     * @return 
+     * @return
      */
     @Override
     public <X> C<X> find(FrontPacket pac, BNFParser<? extends X>... parsers) {
@@ -32,13 +33,14 @@ public abstract class FindABNF extends AbstractABNF {
         C<X> ret = buildFind(pac, mp == null ? parsers : new BNFParser[0]);
         return ret != null ? subBuild(ret, mp) : null;
     }
-    
+
     /**
      * find本体
+     *
      * @param <X>
      * @param pac
      * @param parsers
-     * @return 
+     * @return
      */
     abstract <X> C<X> buildFind(FrontPacket pac, BNFParser<? extends X>... parsers);
 }

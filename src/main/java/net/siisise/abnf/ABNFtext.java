@@ -15,8 +15,8 @@ public class ABNFtext extends IsABNF {
     private final byte[] utf8;
 
     /**
-     * 
-     * @param ch 
+     *
+     * @param ch
      */
     ABNFtext(int ch) {
         char[] chars = Character.toChars(ch);

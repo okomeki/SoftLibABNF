@@ -14,16 +14,16 @@ import net.siisise.lang.CodePoint;
 public class ABNFmap extends IsABNF {
 
     private final List<Integer> map = new ArrayList<>();
-    
+
     public ABNFmap() {
         name = "略";
     }
-    
+
     public ABNFmap(String val) {
         FrontPacket pac = pac(val);
-        while ( pac.size() > 0 ) {
+        while (pac.size() > 0) {
             int ch = CodePoint.utf8(pac);
-            if ( !map.contains(ch)) {
+            if (!map.contains(ch)) {
                 map.add(ch);
             }
         }
@@ -31,7 +31,7 @@ public class ABNFmap extends IsABNF {
 
     @Override
     public Packet is(FrontPacket pac) {
-        if ( pac.length() == 0 ) {
+        if (pac.length() == 0) {
             return null;
         }
         int ch = CodePoint.utf8(pac);
@@ -52,16 +52,16 @@ public class ABNFmap extends IsABNF {
         nm.map.addAll(map);
         return nm;
     }
-    
+
     @Override
     public ABNF or(ABNF... abnf) {
         List<Integer> tmap = new ArrayList<>();
-        List<ABNF> xabnf = new ArrayList();
+        List<ABNF> xabnf = new ArrayList<>();
         boolean n = true;
-        for ( ABNF a : abnf ) {
-            if ( n && a instanceof ABNFbin ) {
-                int ach = ((ABNFbin)a).ch();
-                if ( ach >= 0 && !map.contains(ach)) {
+        for (ABNF a : abnf) {
+            if (n && a instanceof ABNFbin) {
+                int ach = ((ABNFbin) a).ch();
+                if (ach >= 0 && !map.contains(ach)) {
                     tmap.add(((ABNFbin) a).ch());
                 }
             } else {
@@ -69,17 +69,17 @@ public class ABNFmap extends IsABNF {
                 xabnf.add(a);
             }
         }
-        if ( n ) {
+        if (n) {
             ABNFmap nm = new ABNFmap();
             nm.map.addAll(map);
             nm.map.addAll(tmap);
-            if (xabnf.isEmpty() ) {
+            if (xabnf.isEmpty()) {
                 return nm;
             }
-            xabnf.add(0,nm);
+            xabnf.add(0, nm);
             return new ABNFor(xabnf.toArray(new ABNF[0]));
         }
         return super.or(abnf);
     }
-    
+
 }

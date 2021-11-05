@@ -35,7 +35,7 @@ public abstract class AbstractBNF implements BNF {
 
     protected <X> BNFParser<? extends X> matchParser(BNFParser<? extends X>[] parsers) {
         for (BNFParser ps : parsers) {
-            if(name.equals(ps.getBNF().getName())) {
+            if (name.equals(ps.getBNF().getName())) {
                 return ps;
             }
         }
@@ -46,9 +46,11 @@ public abstract class AbstractBNF implements BNF {
     public boolean is(String val) {
         return is(pac(val)) != null;
     }
-    
+
     class BNFPacketParser implements BNFParser {
+
         BNF rule;
+
         BNFPacketParser(BNF rule) {
             this.rule = rule;
         }
@@ -68,7 +70,7 @@ public abstract class AbstractBNF implements BNF {
             return pac(src);
         }
     }
-    
+
     public boolean eq(FrontPacket val) {
         Packet r = is(val);
         if (val.length() == 0) {
@@ -79,11 +81,11 @@ public abstract class AbstractBNF implements BNF {
         }
         return false;
     }
-    
+
     public boolean eq(String val) {
         return eq(pac(val));
     }
-    
+
     public static FrontPacket pac(String str) {
         //Packet p = new PacketA();
         //p.write(str.getBytes(UTF8));
@@ -110,6 +112,7 @@ public abstract class AbstractBNF implements BNF {
 
     /**
      * 名前が該当すればそれ以下を削除して詰め直す
+     *
      * @param <X>
      * @param cret
      * @param parser 一致するものだけ必要

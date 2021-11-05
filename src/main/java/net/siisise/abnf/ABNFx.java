@@ -5,7 +5,7 @@ import net.siisise.io.FrontPacket;
 
 /**
  * ループの結果は最長だけでなく、各長さで判定したいこともあり
- * @author okome
+ *
  */
 public class ABNFx extends FindABNF {
 
