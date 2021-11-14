@@ -122,26 +122,7 @@ REG.rule() または #name(String)を通さないと名前はつかない。
 
 cが似ていたので
 
-## Parser
-
-booleanだけでは物足りないので ABNF定義1つにつき1つのParserを組み込むことができます。
-内側の要素を抽出することもできますが、基本的に埋め込むParser用なので少し特殊な構造です。あとで変更するかもしれません。
-
-    ABNF rule = (略);
-    ABNF.C c = rulelist.find(AbstractABNF.pac("文字列"), new ABNFPacketParser(rule, JSON8259Reg.REG));
-    List<FrontPacket> rule = c.get(rule);
-
-Stringやbyet[]ではなくPacketという可変長バイト列を用意して使っているのでそのあたりも特殊かもしれません。長さを気にしたくないので各所で使っています。
-
-ParserをABNFに組み込むことができます。
-
-    ABNF rulelist = REG.rule("rulelist", Rulelist.class, "1*( rule / (*c-wsp c-nl) )");
-
-Rulelist.class は net.siisise.abnf.parser.ABNFParser<T> を継承しています。TはParse後に取り出せるclassで何でもよいです。net.siissie.abnf.parser パッケージの中から最適なものを継承して使います。リフレクションで呼び出すのでコンストラクタはパラメータが決まっているところも要注意です。
-
-rulelits全体を読む場合は REG.rulelist( URL ) など他の読み方もいくつか用意しています。複数行を記述する場合、ABNFの改行コードはCRLFのみです。
-
-    List<ABNF> rulelist = REG.rulelist("https://example.com/example.abnf");
+## namespace 名前空間
 
 ABNFReg が1つの名前空間で、この中で参照を解決していきます。
 Javaから参照する場合は REG から参照することも rulelist を使うこともできます。
@@ -165,5 +146,32 @@ Javaから参照する場合は REG から参照することも rulelist を使�
 
 net.siisise.abnf.ABNFReg をstaticで定義して名前の入れ物にできる
 net.siisise.abnf.rfc.* サンプルかな
+
+## File
+
+rulelits全体を読む場合は REG.rulelist( URL ) など他の読み方もいくつか用意しています。複数行を記述する場合、ABNFの改行コードはCRLFのみです。
+
+    List<ABNF> rulelist = REG.rulelist("https://example.com/example.abnf");
+    
+REGにrulelistが読み込まれます。戻り値にも一覧が渡されます。
+書き出しはできません。ABNFのprintln()でそれっぽいものは出ますが参考程度です。
+
+## Parser
+
+booleanだけでは物足りないので ABNF定義1つにつき1つのParserを組み込むことができます。
+内側の要素を抽出することもできますが、基本的に埋め込むParser用なので少し特殊な構造です。あとで変更するかもしれません。
+
+    ABNF rule = (略);
+    ABNF.C c = rulelist.find(AbstractABNF.pac("文字列"), new ABNFPacketParser(rule, JSON8259Reg.REG));
+    List<FrontPacket> rule = c.get(rule);
+
+Stringやbyet[]ではなくPacketという可変長バイト列を用意して使っているのでそのあたりも特殊かもしれません。長さを気にしたくないので各所で使っています。
+
+ParserをABNFに組み込むことができます。
+
+    ABNF rulelist = REG.rule("rulelist", Rulelist.class, "1*( rule / (*c-wsp c-nl) )");
+
+Rulelist.class は net.siisise.abnf.parser.ABNFParser<T> を継承しています。TはParse後に取り出せるclassで何でもよいです。net.siissie.abnf.parser パッケージの中から最適なものを継承して使います。リフレクションで呼び出すのでコンストラクタはパラメータが決まっているところも要注意です。
+
 
 JSON の実装は SoftLibJSON くらいで
