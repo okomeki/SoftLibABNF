@@ -20,6 +20,11 @@ public class ABNFSelect<T> extends ABNFBuildParser<T, T> {
         super(rule, reg, base, casenames);
     }
 
+    /**
+     *
+     * @param pac
+     * @return
+     */
     @Override
     protected T build(ABNF.C<T> pac) {
         for (String sub : subName) {
