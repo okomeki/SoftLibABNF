@@ -81,8 +81,7 @@ public abstract class AbstractABNF extends AbstractBNF implements ABNF {
      */
     static <X> void mix(C<X> ret, C<X> sub) {
         ret.ret.write(sub.ret.toByteArray());
-        sub.subs.keySet().forEach((key) -> {
-            List<X> val = sub.subs.get(key);
+        sub.subs.forEach((key,val) -> {
             val.forEach((v) -> {
                 ret.add(key, v);
             });

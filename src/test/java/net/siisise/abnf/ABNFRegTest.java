@@ -62,40 +62,6 @@ public class ABNFRegTest {
     /**
      * Test of rule method, of class ABNFReg.
      */
-/*    @Test
-    public void testRule_3args_1() {
-        System.out.println("rule");
-        String name = "";
-        Class<? extends ABNFParser> cl = null;
-        ABNF abnf = null;
-        ABNFReg reg = new ABNFReg();
-        ABNF expResult = null;
-        ABNF result = reg.rule(name, cl, abnf);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-*/
-    /**
-     * Test of rule method, of class ABNFReg.
-     */
-/*    @Test
-    public void testRule_3args_2() {
-        System.out.println("rule");
-        String name = "";
-        Class<? extends ABNFParser> cl = null;
-        String rule = "";
-        ABNFReg reg = new ABNFReg();
-        ABNF expResult = null;
-        ABNF result = reg.rule(name, cl, rule);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-*/
-    /**
-     * Test of rule method, of class ABNFReg.
-     */
     @Test
     public void testRule_String() {
         System.out.println("rule");
@@ -103,59 +69,11 @@ public class ABNFRegTest {
         ABNFReg instance = new ABNFReg();
         //ABNF expResult = null;
         ABNF result = instance.rule(rule);
-        //assertEquals(expResult, result);
+        assertNotNull(result);
         // TODO review the generated test code and remove the default call to fail.
         //fail("The test case is a prototype.");
     }
 
-    /**
-     * Test of baseParse method, of class ABNFReg.
-     */
-/*    @Test
-    public void testBaseParse() {
-        System.out.println("baseParse");
-        String name = "";
-        String src = "";
-        ABNFReg reg = new ABNFReg();
-        Object expResult = null;
-        Object result = reg.baseParse(name, src);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-*/
-    /**
-     * Test of parse method, of class ABNFReg.
-     */
-/*    @Test
-    public void testParse() {
-        System.out.println("parse");
-        String name = "";
-        String src = "";
-        ABNFReg reg = new ABNFReg();
-        Object expResult = null;
-        Object result = reg.parse(name, src);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-*/
-    /**
-     * Test of rule method, of class ABNFReg.
-     */
-/*    @Test
-    public void testRule_String_String() {
-        System.out.println("rule");
-        String name = "";
-        String elements = "";
-        ABNFReg reg = new ABNFReg();
-        ABNF expResult = null;
-        ABNF result = reg.rule(name, elements);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-*/
     /**
      * Test of rulelist method, of class ABNFReg.
      */
@@ -167,11 +85,9 @@ public class ABNFRegTest {
 //        List<ABNF> expResult = null;
         List<ABNF> result = reg.rulelist(rulelist);
         ABNF a = reg.href("a");
-//        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
+        assertNotNull(a);
     }
-    
+
     @Test
     public void test7() {
         System.out.println("ABNF7405");
@@ -187,5 +103,5 @@ public class ABNFRegTest {
         assertEquals(v.is("DE"), false);
         
     }
-    
+
 }

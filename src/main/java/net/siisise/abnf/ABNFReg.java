@@ -8,13 +8,13 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import net.siisise.abnf.io.FrontIO;
 import net.siisise.abnf.parser.ABNFPacketParser;
 import net.siisise.abnf.parser.ABNFParser;
 import net.siisise.abnf.parser5234.ABNF5234;
 import net.siisise.bnf.parser.BNFParser;
 import net.siisise.io.FrontPacket;
 import net.siisise.io.FrontPacketF;
+import net.siisise.io.PacketA;
 
 /**
  * ABNFの名前担当、Parserの機能もあり。
@@ -75,11 +75,11 @@ public class ABNFReg<N> {
     public ABNFReg(ABNFReg<N> up, ABNFReg<?> bnfParser) {
         if (up != null) {
             //reg = new HashMap<>(up.reg); // 複製しておくのが簡単
-            up.CL.keySet().forEach((key) -> {
-                CL.put(key, up.CL.get(key));
+            up.CL.forEach((key,val) -> {
+                CL.put(key, val);
             });
-            up.reg.keySet().forEach((key) -> { // 循環参照対策が必要
-                reg.put(key, up.reg.get(key).copy(this));
+            up.reg.forEach((key,val) -> { // 循環参照対策が必要
+                reg.put(key, val.copy(this));
             });
         }
         bnfReg = bnfParser;
@@ -284,7 +284,7 @@ public class ABNFReg<N> {
     }
 
     public <T> T parse(String rulename, byte[] src) {
-        FrontPacket pac = new FrontIO(src);
+        FrontPacket pac = new PacketA(src);
         //pac.write(src);
         return (T) parser(rulename, null).parse(pac);
     }

@@ -1,13 +1,12 @@
 package net.siisise.bnf;
 
-import net.siisise.abnf.io.FrontIO;
 import net.siisise.bnf.parser.BNFParser;
 import net.siisise.io.FrontPacket;
 import net.siisise.io.Packet;
 import net.siisise.io.PacketA;
 
 /**
- *
+ * 基本実装
  */
 public abstract class AbstractBNF implements BNF {
 
@@ -87,10 +86,9 @@ public abstract class AbstractBNF implements BNF {
     }
 
     public static FrontPacket pac(String str) {
-        //Packet p = new PacketA();
-        //p.write(str.getBytes(UTF8));
-        FrontPacket p = new FrontIO(str.getBytes(UTF8));
-        return p;
+        PacketA pac = new PacketA();
+        pac.dwrite(str.getBytes(UTF8));
+        return pac;
     }
 
     public static String str(FrontPacket pac) {
@@ -105,8 +103,8 @@ public abstract class AbstractBNF implements BNF {
      */
     public static String strd(FrontPacket pac) {
         byte[] data = pac.toByteArray();
-        pac.backWrite(data);
         Packet n = new PacketA(data);
+        pac.dbackWrite(data);
         return str(n);
     }
 

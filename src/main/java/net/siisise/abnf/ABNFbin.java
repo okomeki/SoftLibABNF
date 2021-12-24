@@ -67,6 +67,11 @@ public class ABNFbin extends IsABNF {
         return new ABNFor(list.toArray(new ABNF[list.size()]));
     }
 
+    /**
+     * 比較
+     * @param pac 比較対象
+     * @return 一致した場合pacと同じ 一致しなければnull
+     */
     @Override
     public Packet is(FrontPacket pac) {
         if (pac.length() < data.length) {

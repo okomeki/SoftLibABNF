@@ -1,6 +1,7 @@
 package net.siisise.bnf;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,7 +17,7 @@ import net.siisise.io.PacketA;
  */
 public interface BNF {
     
-    static Charset UTF8 = Charset.forName("utf-8");
+    static final Charset UTF8 = StandardCharsets.UTF_8;
 
     /**
      * 名前または構文っぽいものの取得。
