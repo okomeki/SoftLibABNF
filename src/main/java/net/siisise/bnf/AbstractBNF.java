@@ -46,30 +46,6 @@ public abstract class AbstractBNF implements BNF {
         return is(pac(val)) != null;
     }
 
-    class BNFPacketParser implements BNFParser {
-
-        BNF rule;
-
-        BNFPacketParser(BNF rule) {
-            this.rule = rule;
-        }
-
-        @Override
-        public BNF getBNF() {
-            return rule;
-        }
-
-        @Override
-        public Object parse(FrontPacket pac) {
-            return pac;
-        }
-
-        @Override
-        public Object parse(String src) {
-            return pac(src);
-        }
-    }
-
     public boolean eq(FrontPacket val) {
         Packet r = is(val);
         if (val.length() == 0) {

@@ -1,7 +1,11 @@
 package net.siisise.abnf;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.StringReader;
 import java.util.List;
 import net.siisise.abnf.parser7405.ABNF7405;
+import net.siisise.io.FrontPacketF;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 /**
@@ -83,7 +87,12 @@ public class ABNFRegTest {
         String rulelist = "a = b\r\nv = d\r\n";
         ABNFReg reg = new ABNFReg();
 //        List<ABNF> expResult = null;
-        List<ABNF> result = reg.rulelist(rulelist);
+        byte[] rl = rulelist.getBytes(java.nio.charset.StandardCharsets.UTF_8);
+        InputStream in = new ByteArrayInputStream(rl);
+        List<ABNF> result = reg.rulelist(new FrontPacketF(in));
+        assertNotNull(result);
+        result = reg.rulelist(new FrontPacketF(new StringReader(rulelist)));
+        assertNotNull(result);
         ABNF a = reg.href("a");
         assertNotNull(a);
     }

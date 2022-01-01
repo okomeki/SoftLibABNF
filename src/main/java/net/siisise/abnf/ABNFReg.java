@@ -1,5 +1,6 @@
 package net.siisise.abnf;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
@@ -13,8 +14,7 @@ import net.siisise.abnf.parser.ABNFParser;
 import net.siisise.abnf.parser5234.ABNF5234;
 import net.siisise.bnf.parser.BNFParser;
 import net.siisise.io.FrontPacket;
-import net.siisise.io.FrontPacketF;
-import net.siisise.io.PacketA;
+import net.siisise.io.StreamFrontPacket;
 
 /**
  * ABNFの名前担当、Parserの機能もあり。
@@ -248,7 +248,7 @@ public class ABNFReg<N> {
      */
     public List<ABNF> rulelist(URL url) throws IOException {
         InputStream in = url.openStream();
-        List<ABNF> rl = rulelist(new FrontPacketF(in));
+        List<ABNF> rl = rulelist(new StreamFrontPacket(in));
         in.close();
         return rl;
     }
@@ -284,8 +284,7 @@ public class ABNFReg<N> {
     }
 
     public <T> T parse(String rulename, byte[] src) {
-        FrontPacket pac = new PacketA(src);
-        //pac.write(src);
+        FrontPacket pac = new StreamFrontPacket(new ByteArrayInputStream(src));
         return (T) parser(rulename, null).parse(pac);
     }
 

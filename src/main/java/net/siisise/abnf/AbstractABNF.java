@@ -1,6 +1,5 @@
 package net.siisise.abnf;
 
-import java.util.List;
 import net.siisise.bnf.AbstractBNF;
 
 /**
