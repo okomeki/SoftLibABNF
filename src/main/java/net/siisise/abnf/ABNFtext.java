@@ -59,11 +59,15 @@ public class ABNFtext extends IsABNF {
 
     @Override
     public Packet is(FrontPacket pac) {
-        if (pac.length() < utf8.length) {
+        if (pac.length() < 1) {
             return null;
         }
         byte[] d = new byte[utf8.length];
-        pac.read(d);
+        int size = pac.read(d);
+        if ( size < utf8.length ) {
+            pac.backWrite(d, 0, size);
+            return null;
+        }
         String u;
         u = new String(d, UTF8);
         if (u.equalsIgnoreCase(text)) {

@@ -1,9 +1,8 @@
 package net.siisise.abnf.parser;
 
-import java.io.StringReader;
 import net.siisise.abnf.ABNF;
+import net.siisise.abnf.AbstractABNF;
 import net.siisise.io.FrontPacket;
-import net.siisise.io.StreamFrontPacket;
 
 /**
  * ABNF パース後の変換処理。
@@ -54,8 +53,8 @@ public abstract class ABNFBaseParser<T, M> implements ABNFParser<T> {
      */
     @Override
     public T parse(String str) {
-        FrontPacket pac = new StreamFrontPacket(new StringReader(str));
-        return parse(pac);
+//        FrontPacket pac = new StreamFrontPacket(new StringReader(str));
+        return parse(AbstractABNF.pac(str));
     }
 
     protected static String str(FrontPacket pac) {

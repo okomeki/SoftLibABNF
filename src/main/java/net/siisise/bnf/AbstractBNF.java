@@ -1,9 +1,11 @@
 package net.siisise.bnf;
 
+import java.io.StringReader;
 import net.siisise.bnf.parser.BNFParser;
 import net.siisise.io.FrontPacket;
 import net.siisise.io.Packet;
 import net.siisise.io.PacketA;
+import net.siisise.io.StreamFrontPacket;
 
 /**
  * 基本実装
@@ -65,6 +67,10 @@ public abstract class AbstractBNF implements BNF {
         PacketA pac = new PacketA();
         pac.dwrite(str.getBytes(UTF8));
         return pac;
+    }
+    
+    public static FrontPacket fpac(String str) {
+        return new StreamFrontPacket(new StringReader(str));
     }
 
     public static String str(FrontPacket pac) {

@@ -74,11 +74,15 @@ public class ABNFbin extends IsABNF {
      */
     @Override
     public Packet is(FrontPacket pac) {
-        if (pac.length() < data.length) {
+        if (pac.length() < 1) {
             return null;
         }
         byte[] d = new byte[data.length];
-        pac.read(d);
+        int dlsize = pac.read(d);
+        if ( dlsize < data.length ) {
+            pac.backWrite(d,0,dlsize);
+            return null;
+        }
         if (Arrays.equals(data, d)) {
             return new PacketA(d);
         }

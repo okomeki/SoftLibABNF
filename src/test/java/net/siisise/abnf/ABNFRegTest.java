@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.io.StringReader;
 import java.util.List;
 import net.siisise.abnf.parser7405.ABNF7405;
-import net.siisise.io.FrontPacketF;
+import net.siisise.io.StreamFrontPacket;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 /**
@@ -89,9 +89,9 @@ public class ABNFRegTest {
 //        List<ABNF> expResult = null;
         byte[] rl = rulelist.getBytes(java.nio.charset.StandardCharsets.UTF_8);
         InputStream in = new ByteArrayInputStream(rl);
-        List<ABNF> result = reg.rulelist(new FrontPacketF(in));
+        List<ABNF> result = reg.rulelist(new StreamFrontPacket(in));
         assertNotNull(result);
-        result = reg.rulelist(new FrontPacketF(new StringReader(rulelist)));
+        result = reg.rulelist(new StreamFrontPacket(new StringReader(rulelist)));
         assertNotNull(result);
         ABNF a = reg.href("a");
         assertNotNull(a);
