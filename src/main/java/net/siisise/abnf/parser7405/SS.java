@@ -7,8 +7,8 @@ import net.siisise.bnf.BNF;
 
 public class SS extends ABNFBuildParser<ABNF, String> {
     
-    public SS(ABNF rule, ABNFReg reg, ABNFReg base) {
-        super(rule, reg, base, "quoted-string");
+    public SS(ABNF rule, ABNFReg base) {
+        super(rule, base, "quoted-string");
     }
 
     @Override

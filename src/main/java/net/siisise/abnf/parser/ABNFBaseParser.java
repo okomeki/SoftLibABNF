@@ -14,32 +14,14 @@ import net.siisise.io.FrontPacket;
 public abstract class ABNFBaseParser<T, M> implements ABNFParser<T> {
 
     protected final ABNF rule;
-    /**
-     * ユーザ側名前空間参照用
-     * ABNFでは使うがJSONでは未使用など
-     */
-    protected final Object reg;
-
-    /**
-     * regが不要な文字系のところ
-     * @param rule 
-     */
-    protected ABNFBaseParser(ABNF rule) {
-        this.rule = rule;
-        reg = null;
-    }
 
     /**
      * 上のparserから駆動される想定
      * @param rule 処理対象のABNF rule
-     * @param reg ユーザ名前空間参照用 ABNF定義時などにつかう
      */
-    protected ABNFBaseParser(ABNF rule, Object reg) {
+    protected ABNFBaseParser(ABNF rule) {
         this.rule = rule;
-        this.reg = reg;
     }
-
-
 
     @Override
     public ABNF getBNF() {
@@ -53,8 +35,17 @@ public abstract class ABNFBaseParser<T, M> implements ABNFParser<T> {
      */
     @Override
     public T parse(String str) {
-//        FrontPacket pac = new StreamFrontPacket(new StringReader(str));
         return parse(AbstractABNF.pac(str));
+    }
+    
+    @Override
+    public <N> T parse(String str, N ns) {
+        return parse(AbstractABNF.pac(str), ns);
+    }
+
+    @Override
+    public <N> T parse(FrontPacket pac, N ns) {
+        return parse(pac);
     }
 
     protected static String str(FrontPacket pac) {

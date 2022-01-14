@@ -48,6 +48,11 @@ public abstract class AbstractBNF implements BNF {
         return is(pac(val)) != null;
     }
 
+    @Override
+    public <N> boolean is(String val, N ns) {
+        return is(pac(val), ns) != null;
+    }
+
     public boolean eq(FrontPacket val) {
         Packet r = is(val);
         if (val.length() == 0) {
@@ -98,12 +103,12 @@ public abstract class AbstractBNF implements BNF {
      * @param parser 一致するものだけ必要
      * @return
      */
-    protected <X> C<X> subBuild(C<X> cret, BNFParser<? extends X> parser) {
+    protected <X,N> C<X> subBuild(C<X> cret, N ns, BNFParser<? extends X> parser) {
         if (parser != null) {
             cret.subs.clear();
             byte[] data = cret.ret.toByteArray();
             cret.ret.backWrite(data);
-            cret.add(name, parser.parse(new PacketA(data)));
+            cret.add(name, parser.parse(new PacketA(data), ns));
         }
         return cret;
     }

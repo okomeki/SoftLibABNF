@@ -42,13 +42,22 @@ public class BNFor extends FindBNF {
         return sb.toString();
     }
 
+    /**
+     *
+     * @param <X> return object type
+     * @param <N> user name space type
+     * @param pac
+     * @param ns user name space
+     * @param parsers
+     * @return
+     */
     @Override
-    public <X> C<X> buildFind(FrontPacket pac, BNFParser<? extends X>... parsers) {
+    public <X,N> C<X> buildFind(FrontPacket pac, N ns, BNFParser<? extends X>... parsers) {
         BNF.C ret = null;
 
         for (BNF sub : list) {
 
-            C subret = sub.find(pac, parsers);
+            C subret = sub.find(pac, ns, parsers);
             if (subret != null) {
                 byte[] data = subret.ret.toByteArray();
                 pac.backWrite(data);

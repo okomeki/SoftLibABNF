@@ -29,27 +29,35 @@ public interface BNF {
     /**
      * 先頭一致でパースする。
      * findとどちらかの実装が必要、片方は省略可能
+     * @param <N> user name space type
      * @param pac
+     * @param ns user name space
      * @return 一致した範囲
      */
+    <N> Packet is(FrontPacket pac, N ns);
     Packet is(FrontPacket pac);
 
     /**
      * 先頭一致でパースする。
      * 
+     * @param <N> user name space type
      * @param val
+     * @param ns user name space
      * @return 一致ありなし
      */
+    <N> boolean is(String val, N ns);
     boolean is(String val);
 
     /**
      * サブ要素含んで抽出するパーサな機能.
      * @param <X> 返し型
+     * @param <N> user name space type
      * @param pac 元データ
+     * @param ns user name space
      * @param parsers おまけで検索するサブ要素
      * @return 検索結果
      */
-    <X> C<X> find(FrontPacket pac, BNFParser<? extends X>... parsers);
+    <X,N> C<X> find(FrontPacket pac, N ns, BNFParser<? extends X>... parsers);
 
     /**
      * 検索結果用構造

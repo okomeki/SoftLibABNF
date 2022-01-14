@@ -10,8 +10,8 @@ import net.siisise.abnf.parser.ABNFList;
  */
 public class Rulelist extends ABNFList<List<ABNF>, ABNF> {
 
-    public Rulelist(ABNF rule, ABNFReg reg, ABNFReg base) {
-        super(rule, reg, base, "rule");
+    public Rulelist(ABNF rule, ABNFReg base) {
+        super(rule, base, "rule");
     }
 
     @Override

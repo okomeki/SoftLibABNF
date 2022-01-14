@@ -6,7 +6,7 @@ import net.siisise.abnf.parser.ABNFSelect;
 
 public class CharVal7405 extends ABNFSelect<ABNF> {
 
-    public CharVal7405(ABNF rule, ABNFReg reg, ABNFReg base) {
-        super(rule, reg, base, "case-insensitive-string", "case-sensitive-string");
+    public CharVal7405(ABNF rule, ABNFReg base) {
+        super(rule, base, "case-insensitive-string", "case-sensitive-string");
     }
 }    

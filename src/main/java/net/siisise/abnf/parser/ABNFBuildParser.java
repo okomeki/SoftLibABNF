@@ -18,36 +18,43 @@ public abstract class ABNFBuildParser<T, M> extends ABNFBaseParser<T, M> {
     protected final String[] subName;
 
     protected ABNFBuildParser(ABNF rule, ABNFReg base, String... subrulenames) {
-        super(rule, null);
+        super(rule);
         this.base = base;
         subName = subrulenames;
     }
-
-    protected ABNFBuildParser(ABNF rule, Object reg, ABNFReg base, String... subrulenames) {
-        super(rule, reg);
-        this.base = base;
-        subName = subrulenames;
+    
+    @Override
+    public T parse(FrontPacket pac) {
+        return parse(pac, null);
     }
 
     /**
      * 対象であるかの判定と要素抽出をする
+     * @param <N>
      * @param pac
+     * @param ns
      * @return
      */
     @Override
-    public T parse(FrontPacket pac) {
+    public <N> T parse(FrontPacket pac, N ns) {
         if (subs == null) {
             subs = new ABNFParser[subName.length];
             for (int i = 0; i < subName.length; i++) {
-                subs[i] = base.parser(subName[i], reg);
+                subs[i] = base.parser(subName[i]);
             }
         }
-        ABNF.C<M> val = rule.find(pac, subs);
+        ABNF.C<M> val = rule.find(pac, ns, subs);
         if (val == null) {
             return null;
         }
-        return build(val);
+        return build(val, ns);
     }
 
-    protected abstract T build(ABNF.C<M> src);
+    protected <N> T build(ABNF.C<M> src, N ns) {
+        return build(src);
+    }
+
+    protected T build(ABNF.C<M> src) {
+        throw new java.lang.UnsupportedOperationException();
+    }
 }

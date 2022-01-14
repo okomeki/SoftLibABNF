@@ -15,11 +15,10 @@ public class Repetition extends ABNFBuildParser<ABNF, Object> {
      * abnfの他、ABNF5234のrepeat も参照する
      *
      * @param rule
-     * @param reg
      * @param base
      */
-    public Repetition(ABNF rule, ABNFReg reg, ABNFReg base) {
-        super(rule, reg, base, "repeat", "element");
+    public Repetition(ABNF rule, ABNFReg base) {
+        super(rule, base, "repeat", "element");
     }
 
     @Override
@@ -28,7 +27,7 @@ public class Repetition extends ABNFBuildParser<ABNF, Object> {
         ABNF ele = (ABNF) ret.get("element").get(0);
 
         if (rep != null) {
-            return repeat(str((FrontPacket) rep.get(0)), ele);
+            return repeat((String)rep.get(0), ele);
         }
         return ele;
     }

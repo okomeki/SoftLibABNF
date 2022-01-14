@@ -2,6 +2,7 @@ package net.siisise.abnf.parser5234;
 
 import net.siisise.abnf.ABNF;
 import net.siisise.abnf.ABNFReg;
+import net.siisise.abnf.parser.ABNFStringParser;
 
 /**
  * ABNFの定義をJavaで書いてみたりしたもの.
@@ -49,7 +50,7 @@ public class ABNF5234 {
     /**
      * orで短いものをそれを含む長いものの前に配置すると誤判定するので順序を入れ換えるなど
      */
-    public static final ABNF repeat = REG.rule("repeat", DIGIT.x().pl(ABNF.bin('*'), DIGIT.x()).or(DIGIT.ix()));
+    public static final ABNF repeat = REG.rule("repeat", ABNFStringParser.class, DIGIT.x().pl(ABNF.bin('*'), DIGIT.x()).or(DIGIT.ix()));
     public static final ABNF repetition = REG.rule("repetition", Repetition.class, repeat.c().pl(REG.ref("element")));
     static final ABNF cNl = REG.rule("c-nl", comment.or(CRLF));
     static final ABNF cWsp = REG.rule("c-wsp", WSP.or(cNl.pl(WSP)));

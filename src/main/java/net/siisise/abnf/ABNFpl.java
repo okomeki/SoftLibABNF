@@ -42,16 +42,18 @@ public class ABNFpl extends FindABNF {
     /**
      * 
      * @param <X> 返却予定の型
+     * @param <N> user name space type ユーザ名前空間型
      * @param pac 解析対象
+     * @param ns user name space
      * @param parsers サブ解析装置
      * @return 
      */
     @Override
-    public <X> C<X> buildFind(FrontPacket pac, BNFParser<? extends X>... parsers) {
+    public <X,N> C<X> buildFind(FrontPacket pac, N ns, BNFParser<? extends X>... parsers) {
         C<X> ret = new C<>();
         
         for (ABNF sub : list) {
-            C<X> subret = sub.find(pac, parsers);
+            C<X> subret = sub.find(pac, ns, parsers);
             if (subret == null) {
                 pac.dbackWrite(ret.ret.toByteArray());
                 return null;

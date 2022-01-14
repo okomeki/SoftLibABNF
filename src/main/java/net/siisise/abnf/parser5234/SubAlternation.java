@@ -14,10 +14,9 @@ public class SubAlternation extends ABNFSelect<ABNF> {
     /**
      * 
      * @param rule groupのABNF構文
-     * @param reg 名前空間参照用
      * @param base Parser駆動用
      */
-    public SubAlternation(ABNF rule, ABNFReg reg, ABNFReg base) {
-        super(rule, reg, base, "alternation");
+    public SubAlternation(ABNF rule, ABNFReg base) {
+        super(rule, base, "alternation");
     }
 }

@@ -4,7 +4,7 @@
     <groupId>net.siisise</groupId>
     <artifactId>softlib-abnf</artifactId>
     <name>SoftLibABNF</name>
-    <version>1.1.2</version>
+    <version>1.1.3-SNAPSHOT</version>
     <packaging>jar</packaging>
     <build>
         <plugins>
@@ -30,7 +30,7 @@
         <dependency>
             <groupId>net.siisise</groupId>
             <artifactId>softlib</artifactId>
-            <version>1.1.2</version>
+            <version>1.1.3-SNAPSHOT</version>
             <type>jar</type>
         </dependency>
         <dependency>

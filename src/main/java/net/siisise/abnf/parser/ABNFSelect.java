@@ -16,10 +16,6 @@ public class ABNFSelect<T> extends ABNFBuildParser<T, T> {
         super(rule, base, casenames);
     }
 
-    protected ABNFSelect(ABNF rule, Object reg, ABNFReg base, String...  casenames) {
-        super(rule, reg, base, casenames);
-    }
-
     /**
      *
      * @param pac

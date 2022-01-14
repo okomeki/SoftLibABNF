@@ -14,8 +14,8 @@ import net.siisise.abnf.parser.ABNFList;
  */
 public class Alternation extends ABNFList<ABNF, ABNF> {
 
-    public Alternation(ABNF rule, ABNFReg reg, ABNFReg base) {
-        super(rule, reg, base, "concatenation");
+    public Alternation(ABNF rule, ABNFReg base) {
+        super(rule, base, "concatenation");
     }
 
     @Override

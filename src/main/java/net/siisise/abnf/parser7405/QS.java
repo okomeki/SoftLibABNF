@@ -8,8 +8,8 @@ import net.siisise.io.Packet;
 
 public class QS extends ABNFBuildParser<String,Packet> {
 
-    public QS(ABNF rule, ABNFReg reg, ABNFReg base) {
-        super(rule, reg, base);
+    public QS(ABNF rule, ABNFReg base) {
+        super(rule, base);
     }
 
     @Override

@@ -8,18 +8,25 @@ import net.siisise.io.FrontPacket;
 
 public class Rule extends ABNFBuildParser<ABNF, Object> {
 
-    public Rule(ABNF rule, ABNFReg reg, ABNFReg base) {
-        super(rule, reg, base, "rulename", "defined-as", "elements");
+    public Rule(ABNF rule, ABNFReg base) {
+        super(rule, base, "rulename", "defined-as", "elements");
     }
 
+    /**
+     *
+     * @param <N>
+     * @param ret
+     * @param ns abnf名前空間(ユーザ定義側)
+     * @return
+     */
     @Override
-    protected ABNF build(ABNF.C<Object> ret) {
+    protected <N> ABNF build(ABNF.C<Object> ret, N ns) {
         String rulename = ((ABNF) ret.get("rulename").get(0)).getName();
         String defined = str((FrontPacket) ret.get("defined-as").get(0));
         ABNF elements = (ABNF) ret.get("elements").get(0);
 
         if (defined.equals("=/")) {
-            ABNF rule = ((ABNFReg) reg).href(rulename);
+            ABNF rule = ((ABNFReg)ns).href(rulename);
             if (rule instanceof ABNFReg.ABNFRef) {
                 throw new java.lang.UnsupportedOperationException();
             }

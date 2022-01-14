@@ -6,9 +6,13 @@ import net.siisise.abnf.parser.ABNFBaseParser;
 import net.siisise.io.FrontPacket;
 import net.siisise.io.Packet;
 
+/**
+ * コメント的なもの
+ * 対応していないので止まりたい
+ */
 public class ProseVal extends ABNFBaseParser<ABNF, ABNF> {
 
-    public ProseVal(ABNF abnf, ABNFReg reg, ABNFReg base) {
+    public ProseVal(ABNF abnf, ABNFReg base) {
         super(abnf);
     }
 

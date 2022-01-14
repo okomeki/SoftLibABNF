@@ -47,8 +47,8 @@ public class ABNFReg<N> {
         }
 
         @Override
-        public C buildFind(FrontPacket pac, BNFParser... parsers) {
-            return reg.get(name).find(pac, parsers);
+        public <X,N> C<X> buildFind(FrontPacket pac, N ns, BNFParser<? extends X>... parsers) {
+            return reg.get(name).find(pac, ns, parsers);
         }
 
         @Override
@@ -265,7 +265,7 @@ public class ABNFReg<N> {
         
         BNFParser[] cll = new BNFParser[subrulenames.length];
         for ( int i = 0; i < subrulenames.length; i++ ) {
-            cll[i] = parser(subrulenames[i], null);
+            cll[i] = parser(subrulenames[i]);
         }
         return rule.find(pac, cll);
     }
@@ -280,12 +280,12 @@ public class ABNFReg<N> {
      * @return 解析後の実体
      */
     public <T> T parse(String rulename, String src) {
-        return (T) parser(rulename, null).parse(src);
+        return (T) parser(rulename).parse(src);
     }
 
     public <T> T parse(String rulename, byte[] src) {
         FrontPacket pac = new StreamFrontPacket(new ByteArrayInputStream(src));
-        return (T) parser(rulename, null).parse(pac);
+        return (T) parser(rulename).parse(pac);
     }
 
     /**
@@ -298,17 +298,16 @@ public class ABNFReg<N> {
      * @return 解析後の実体
      */
     public <T> T parse(String rulename, FrontPacket pac) {
-        return (T)parser(rulename, null).parse(pac);
+        return (T)parser(rulename).parse(pac);
     }
     
     /**
      * 
      * @param <T>
      * @param rulename
-     * @param namespace ユーザ空間 ABNF以外ではまだ使ってない 型は変えるかもしれない
      * @return 
      */
-    public <T> ABNFParser<T> parser(String rulename, N namespace) {
+    public <T> ABNFParser<T> parser(String rulename) {
         try {
             Constructor<? extends ABNFParser> cnst;
             ABNF rule = reg.get(rulename);
@@ -316,13 +315,8 @@ public class ABNFReg<N> {
             if ( rulep == null ) {
                 return (ABNFParser<T>) new ABNFPacketParser(rule);
             }
-            if ( namespace != null ) {
-                cnst = (Constructor<? extends ABNFParser<T>>) rulep.getConstructor(ABNF.class, namespace.getClass(), ABNFReg.class);
-                return cnst.newInstance(rule, namespace, this);
-            } else {
-                cnst = (Constructor<? extends ABNFParser<T>>) rulep.getConstructor(ABNF.class, ABNFReg.class);
-                return cnst.newInstance(rule, this);
-            }
+            cnst = (Constructor<? extends ABNFParser<T>>) rulep.getConstructor(ABNF.class, ABNFReg.class);
+            return cnst.newInstance(rule, this);
         } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException
                 | IllegalArgumentException | InvocationTargetException ex) {
             throw new java.lang.UnsupportedOperationException(ex);
@@ -339,7 +333,7 @@ public class ABNFReg<N> {
      * @return
      */
     private <T> T bnfParse(String rulename, String src) {
-        return (T) bnfReg.parser(rulename, this).parse(src);
+        return (T) bnfReg.parser(rulename).parse(src, this);
     }
 
     /**
@@ -350,7 +344,7 @@ public class ABNFReg<N> {
      * @return
      */
     private <T> T bnfParse(String rulename, FrontPacket pac) {
-        return (T) bnfReg.parser(rulename, this).parse(pac);
+        return (T) bnfReg.parser(rulename).parse(pac, this);
     }
 
 }
