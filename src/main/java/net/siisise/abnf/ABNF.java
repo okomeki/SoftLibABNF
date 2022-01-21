@@ -53,13 +53,18 @@ public interface ABNF extends BNF {
     /**
      * どれかの文字に一致するかな
      *
-     * @param binlist
-     * @return
+     * @param binlist バイト列的な文字列
+     * @return どれかが含まれるABNF構文
      */
     static ABNF binlist(String binlist) {
         return new ABNFmap(binlist);
     }
 
+    /**
+     * 
+     * @param ch 文字
+     * @return 文字と一致するABNF
+     */
     static ABNFbin bin(int ch) {
         return new ABNFbin(ch);
     }
@@ -68,7 +73,7 @@ public interface ABNF extends BNF {
      * 文字列/文字との比較
      *
      * @param str utf-8で一致文字列
-     * @return
+     * @return 一致するABNF
      */
     static ABNFbin bin(String str) {
         return new ABNFbin(str);
@@ -111,8 +116,9 @@ public interface ABNF extends BNF {
      * マイナス演算
      * ABNFにはないので仮
      *
-     * @param val
-     * @return
+     * @deprecated 未定
+     * @param val 引かれるABNF
+     * @return 引き算できるABNF
      */
     ABNF mn(ABNF val);
 
@@ -130,7 +136,7 @@ public interface ABNF extends BNF {
      *
      * @param min 指定しない場合は 0
      * @param max 指定しない場合は -1
-     * @return
+     * @return 繰り返しのABNF
      */
     ABNF x(int min, int max);
 
@@ -145,7 +151,7 @@ public interface ABNF extends BNF {
      * 1回以上ループ
      * 1*XXX
      *
-     * @return
+     * @return 1回以上繰り返しのABNF
      */
     ABNF ix();
 
@@ -177,7 +183,7 @@ public interface ABNF extends BNF {
      * 複製可能な構造を推奨(ループがあると複製は難しい)
      *
      * @param reg 複製もと
-     * @return
+     * @return ABNFの複製
      */
     ABNF copy(ABNFReg reg);
 }

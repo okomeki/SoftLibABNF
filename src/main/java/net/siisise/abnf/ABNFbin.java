@@ -52,7 +52,7 @@ public class ABNFbin extends IsABNF {
      * 
      * @deprecated ABNFmap に移行かな
      * @param val 文字の一括登録
-     * @return
+     * @return 1文字単位で比較するorっぽいABNF
      */
     public static ABNF list(String val) {
         FrontPacket src = pac(val);

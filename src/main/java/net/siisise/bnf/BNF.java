@@ -30,7 +30,7 @@ public interface BNF {
      * 先頭一致でパースする。
      * findとどちらかの実装が必要、片方は省略可能
      * @param <N> user name space type
-     * @param pac
+     * @param pac 比較バイナリ列
      * @param ns user name space
      * @return 一致した範囲
      */
@@ -41,7 +41,7 @@ public interface BNF {
      * 先頭一致でパースする。
      * 
      * @param <N> user name space type
-     * @param val
+     * @param val 比較文字列
      * @param ns user name space
      * @return 一致ありなし
      */

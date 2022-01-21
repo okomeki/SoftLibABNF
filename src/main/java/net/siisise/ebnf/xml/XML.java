@@ -7,8 +7,7 @@ package net.siisise.ebnf.xml;
  * IETF BCP 47
  * IANA-LANGCODES
  * 
- * @see net.siisise.abnf.rfc.Lang5646 BCP 47
- * @author okome
+ * net.siisise.abnf.rfc.Lang5646 BCP 47
  */
 public class XML {
     static final XMLEBNFReg REG = new XMLEBNFReg();

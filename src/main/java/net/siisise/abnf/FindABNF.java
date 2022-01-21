@@ -31,11 +31,11 @@ public abstract class FindABNF extends AbstractABNF {
     /**
      * 詰め方の工夫をするターン
      *
-     * @param <X>
-     * @param pac
-     * @param ns
-     * @param parsers
-     * @return
+     * @param <X> 戻り型
+     * @param pac 入りデータ
+     * @param ns name space
+     * @param parsers サブ要素のパーサー
+     * @return パース結果
      */
     @Override
     public <X,N> C<X> find(FrontPacket pac, N ns, BNFParser<? extends X>... parsers) {

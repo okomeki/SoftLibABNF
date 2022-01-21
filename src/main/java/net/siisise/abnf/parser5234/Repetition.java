@@ -4,7 +4,6 @@ import java.util.List;
 import net.siisise.abnf.ABNF;
 import net.siisise.abnf.ABNFReg;
 import net.siisise.abnf.parser.ABNFBuildParser;
-import net.siisise.io.FrontPacket;
 
 /**
  * リピートはorに展開せよ?

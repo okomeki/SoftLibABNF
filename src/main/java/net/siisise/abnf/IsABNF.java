@@ -17,11 +17,11 @@ public abstract class IsABNF extends AbstractABNF {
 
     /**
      * sub要素のない場合の軽い対応
-     * @param <X>
-     * @param pac
-     * @param ns
-     * @param parsers
-     * @return 
+     * @param <X> パラメータっぽい型
+     * @param pac 解析データ
+     * @param ns name space
+     * @param parsers サブ要素のparser
+     * @return 処理結果
      */
     @Override
     public <X,N> C<X> find(FrontPacket pac, N ns, BNFParser<? extends X>... parsers) {

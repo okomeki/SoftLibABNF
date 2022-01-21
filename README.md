@@ -1,10 +1,11 @@
-# てきとーな ABNF ライブラリ
+# SoftLibABNF Augumented BNF ライブラリ
 
 Twitter @okomeki
 
 ## 概要
 
-ABNFによるABNFのためのABNF
+ABNFによるABNFのためのABNF parser または JavaCCのように ABNF compiler compiler と呼べばいいのかよくわからないもの
+
 とりあえず作ってみたので公開する
 RFC 5234 ABNF、RFC 7405の拡張を実装したもの
 
@@ -13,7 +14,7 @@ https://siisise.net/abnf.html せつめい
 ### 何ができるのか?
 
 ABNFのパース、一致判定
-rule単位でのパーサの埋め込み
+rule単位での parser? builder? の埋め込み
  メールアドレスの判定がしたい
  URLの解析がしたい
  IPv6アドレスの(以下同文)
@@ -25,8 +26,8 @@ rule単位でのパーサの埋め込み
 - 機能1 ABNF Parser
 - 機能2 ABNF 比較/一致判定とか
 - 機能3 実体参照、名前参照(循環参照)対応
-- 機能4 rule単位のパーサ埋め込み
-- 例 JSON,JSON Pointerなどの実装
+- 機能4 rule単位の builder 埋め込み
+- 例 JSON parser,JSON Pointerなどの実装
 
 とりあえずサンプル net.siisise.abnf.parser5234.ABNF5234.java がABNF Parserの本体でありサンプルであるかもしれません。
 
@@ -42,7 +43,7 @@ RFC 5234 の 4.ABNFのABNFによる定義から
         static final ABNF rulelist = REG.rule( "rulelist = 1*( rule / (*c-wsp c-nl) )");
     }
 
-とりあえずこれでよいです。未定義のruleなども次の行に続けて定義していけば全体が完成します。
+とりあえずこれでよいです。未定義のruleやc-wspなども使えるので後の行に定義していけば全体が完成します。
 
     static final ABNF rulelist = REG.rule( "rulelist", "1*( rule / (*c-wsp c-nl) )");
 
@@ -55,11 +56,11 @@ RFC 5234 の 4.ABNFのABNFによる定義から
 
 その他、ABNFとABNFRegをみれば何とかなるのかも。
 
-## 演算子
+## 演算子 Operators
 
 3.演算子のものをJavaで書く手法です。不明であればABNFでも書けます。
 
-### 連接 Rule1 Rule2 #pl(複数)
+### 連接 Concatenation: Rule1 Rule2 #pl(複数)
 
     foo = %x61 ; a
     bar = %x62 ; b
@@ -70,28 +71,29 @@ RFC 5234 の 4.ABNFのABNFによる定義から
     ABNF mumble = REG.rule("mumble", foo.pl(bar, foo));
 
 パース手法の違いで pl , plm , plu などがある。繰り返しを厳密に判定するなら plm や plu がいいのだが違いはまた別途。
+plu : unicode base
 
-### 選択肢 Rule1 / Rule2 #or(複数)
+### 選択肢 Alternatives: Rule1 / Rule2 #or(複数)
 
-    foo / bar
-    foo / bar / baz
+    ora = foo / bar
+    orb = foo / bar / baz
 
-    foo.or( bar )
-    foo.or( bar. baz )
+    ABNF ora = REG.rule("ora", foo.or( bar ) );
+    ABNF orb = REG.rule("orb", foo.or( bar. baz ) );
    
-### 増分選択肢 Rule1 =/ Rule2 #or(複数)
+### 増分選択肢 Incremental Alternatives: Rule1 =/ Rule2 #or(複数)
 
     ABNF oldrule = REG.rule( "oldrule", oldrule.or( additionalAlternatives ) ); // 特に定義なし
 
 REG.rule() または #name(String)を通さないと名前はつかない。
 
-### 範囲選択肢 %c##-##
+### 範囲選択肢 Value Range Alternatives: %c##-##
 
     DIGIT = %x30-39
 
     ABNF digit = REG.rule("digit", ABNF.range(0x30, 0x39));
 
-### 並びグループ
+### 並びグループ Sequence Group:
 
     elem (foo / bar) blat
     elem foo / bar blat
@@ -99,7 +101,7 @@ REG.rule() または #name(String)を通さないと名前はつかない。
     elem.pl( foo.or( bar ), blat )
     elem.pl(foo).or(bar.pl(blat))
 
-### 可変回数反復 *Rule
+### 可変回数反復 Variable Repetition: *Rule
 
     <a>*<b>element
     
@@ -108,13 +110,13 @@ REG.rule() または #name(String)を通さないと名前はつかない。
     element.x() // a,bの省略 *element
     値で省略する場合、a = 0, b = -1 と少々複雑
 
-### 特定回数反復 nRule
+### 特定回数反復 Specific Repetition: nRule
 
     <n>element
     
     element.x(n)
     
-### 省略可能並び: [Rule]
+### 省略可能並び Optional Sequence: [Rule]
 
     [foo bar]
     

@@ -83,10 +83,10 @@ public abstract class AbstractBNF implements BNF {
     }
 
     /**
-     * 文字列に起こす。 データは元に戻す。
+     * 文字列に起こす。 データは元に戻すので減らない。
      *
-     * @param pac
-     * @return
+     * @param pac 元パケット
+     * @return 文字に変えたもの
      */
     public static String strd(FrontPacket pac) {
         byte[] data = pac.toByteArray();
@@ -98,10 +98,12 @@ public abstract class AbstractBNF implements BNF {
     /**
      * 名前が該当すればそれ以下を削除して詰め直す
      *
-     * @param <X>
-     * @param cret
+     * @param <X> 戻りの型
+     * @param <N> name space の型
+     * @param cret 戻り
+     * @param ns name space
      * @param parser 一致するものだけ必要
-     * @return
+     * @return 戻りからさらにparserを通したものを追加したもの
      */
     protected <X,N> C<X> subBuild(C<X> cret, N ns, BNFParser<? extends X> parser) {
         if (parser != null) {

@@ -13,9 +13,10 @@ public abstract class AbstractABNF extends AbstractBNF implements ABNF {
     }
 
     /**
+     * Concatenation の単純版
      * *(a / b ) a の様なものが解析できないが速そう
-     * @param val
-     * @return 
+     * @param val plus  する ABNF列
+     * @return 簡易に比較するABNF
      */
     @Override
     public ABNF pl(ABNF... val) {
@@ -29,9 +30,10 @@ public abstract class AbstractABNF extends AbstractBNF implements ABNF {
     }
 
     /**
+     * やや厳密に対応する足し算版
      * *( a / b ) a にも対応
-     * @param val
-     * @return 
+     * @param val plus する ABNF列
+     * @return 厳密に比較できるABNF
      */
     @Override
     public ABNF plm(ABNF... val) {
@@ -46,8 +48,8 @@ public abstract class AbstractABNF extends AbstractBNF implements ABNF {
 
     /**
      * Unicode単位で比較する若干速いのかもしれない版 plm
-     * @param val
-     * @return 
+     * @param val plus する ABNF列
+     * @return unicodeで比較されるABNF処理
      */
     @Override
     public ABNF plu(ABNF... val) {
@@ -73,10 +75,10 @@ public abstract class AbstractABNF extends AbstractBNF implements ABNF {
     }
 
     /**
-     *
-     * @param <X>
-     * @param ret
-     * @param sub
+     * 結果2を1に混ぜる
+     * @param <X> 戻り型
+     * @param ret 結果1
+     * @param sub 結果2
      */
     static <X> void mix(C<X> ret, C<X> sub) {
         ret.ret.write(sub.ret.toByteArray());

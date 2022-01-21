@@ -17,9 +17,10 @@ public class ABNFSelect<T> extends ABNFBuildParser<T, T> {
     }
 
     /**
-     *
-     * @param pac
-     * @return
+     * select っぽいことをする
+     * casenames 内に該当するものがあればそれを返す なければ otherに振る
+     * @param pac 解析済みデータ列
+     * @return 処理結果
      */
     @Override
     protected T build(ABNF.C<T> pac) {
