@@ -2,7 +2,7 @@
 
 Twitter @okomeki
 
-## 概要
+## 概要 about
 
 ABNFによるABNFのためのABNF parser または JavaCCのように ABNF compiler compiler と呼べばいいのかよくわからないもの
 
@@ -37,25 +37,35 @@ RFC 5234 の 4.ABNFのABNFによる定義から
     rulelist = 1*( rule / *c-wsp c-nl) )
     
 があるとします。Javaにすると
-
-    class ABNFSample {
-        static final ABNFReg REG = new ABNFReg();
-        static final ABNF rulelist = REG.rule( "rulelist = 1*( rule / (*c-wsp c-nl) )");
-    }
-
+~~~
+class ABNFSample {
+    static final ABNFReg REG = new ABNFReg();
+    static final ABNF rulelist = REG.rule( "rulelist = 1*( rule / (*c-wsp c-nl) )");
+}
+~~~
 とりあえずこれでよいです。未定義のruleやc-wspなども使えるので後の行に定義していけば全体が完成します。
 
     static final ABNF rulelist = REG.rule( "rulelist", "1*( rule / (*c-wsp c-nl) )");
 
 と書く方がおすすめです。rule( String rulename, String elements ) と rule( String rulename, ABNF elements ) のどちらでも使えるのでABNFをJavaのコードで書くこともできます。class ABNFはruleまたはelement相当です。
-
-    rulelist.eq("文字列"); // 全体一致
-    rulelist.is("文字列"); // 先頭一致
-
+~~~
+rulelist.eq("文字列"); // 全体一致
+rulelist.is("文字列"); // 先頭一致
+~~~
 で boolean の一致判定ができます。
 
 その他、ABNFとABNFRegをみれば何とかなるのかも。
 
+## Maven
+pom.xml に次のように追加すればいいです
+~~~
+<dependency>
+    <groupId>net.siisise<groupId>
+    <artifactId>softlib-abnf</artifactId>
+    <version>1.1.5</version>
+    <type>jar</type>
+</dependency>
+~~~
 ## 演算子 Operators
 
 3.演算子のものをJavaで書く手法です。不明であればABNFでも書けます。
