@@ -1,3 +1,18 @@
+/*
+ * Copyright 2021 Siisise Net.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package net.siisise.abnf;
 
 import java.io.ByteArrayInputStream;
@@ -51,6 +66,11 @@ public class ABNFReg<N> {
             return reg.get(name).find(pac, ns, parsers);
         }
 
+        /**
+         * 複製する.
+         * @param reg 複製先
+         * @return 複製
+         */
         @Override
         public ABNF copy(ABNFReg reg) {
             return reg.ref(name);
@@ -65,11 +85,12 @@ public class ABNFReg<N> {
     }
 
     /**
+     * 名前空間作成.
      * いろいろ未定
      * up の定義を複製する
      * HTTP7230では拡張の実験をしている
      *
-     * @param up
+     * @param up 前提とする定義など継承もと
      * @param bnfParser ruleをparseするParserの種類 ABNF5234.REG,RFC 7405, RFC 7230など微妙に違うとき。利用しないときのみ省略したい
      */
     public ABNFReg(ABNFReg<N> up, ABNFReg<?> bnfParser) {
@@ -86,6 +107,10 @@ public class ABNFReg<N> {
         rn = ( bnfParser == null ) ? null : bnfParser.reg.get("rulename");
     }
 
+    /**
+     * 名前空間作成.
+     * @param up 前提とする定義など継承もと
+     */
     public ABNFReg(ABNFReg<N> up) {
         this(up, ABNF5234.REG);
     }
@@ -100,8 +125,8 @@ public class ABNFReg<N> {
      * ファイルではなくURLで渡すと幅が広がる
      *
      * @param url ABNF定義ファイルのURL
-     * @param up 前提とする定義など
-     * @throws IOException
+     * @param up 前提とする定義など継承もと
+     * @throws IOException 入力エラー全般
      */
     public ABNFReg(URL url, ABNFReg<N> up) throws IOException {
         this(up);
@@ -112,7 +137,7 @@ public class ABNFReg<N> {
      * 参照リンク優先。
      * 間接参照のため、あとの定義でいろいろ変わるときに便利。
      *
-     * @param rulename
+     * @param rulename rulename
      * @return rulenameへの参照
      */
     public ABNF ref(String rulename) {
@@ -123,7 +148,7 @@ public class ABNFReg<N> {
      * 直リンク優先 差し替えが困難
      * rulenameに該当するものがない場合は参照を返す。
      *
-     * @param rulename
+     * @param rulename rulename
      * @return REGに登録されているrulenameの値
      */
     public ABNF href(String rulename) {
@@ -137,9 +162,9 @@ public class ABNFReg<N> {
     /**
      * ref の参照先を変えないよう書き換えたい
      *
-     * @param rulename
-     * @param elements
-     * @return rule
+     * @param rulename rulename
+     * @param elements rule の element
+     * @return rule elements にrulenameをつけたABNF
      */
     public ABNF rule(String rulename, ABNF elements) {
         // ABNF5234の初期化時はnullなので無視できるようにする
@@ -160,7 +185,7 @@ public class ABNFReg<N> {
      *
      * @param rulename ABNFの名
      * @param parser ソースまたは子の要素を渡され対象オブジェクトに組み上げる機能
-     * @param elements
+     * @param elements ruleのelements部分
      * @return 名前つき rule
      */
     public ABNF rule(String rulename, Class<? extends ABNFParser> parser, ABNF elements) {
@@ -176,16 +201,17 @@ public class ABNFReg<N> {
      * @param rulename ABNFの名
      * @param parser ABNFから対象オブジェクトに変換する解析装置
      * @param elements ABNF構文
-     * @return
+     * @return elementsを解析してrulenameをつけたABNF
      */
     public ABNF rule(String rulename, Class<? extends ABNFParser> parser, String elements) {
         return rule(rulename, parser, elements(elements));
     }
 
     /**
-     *
+     * rule 1行のパース.
+     * 最後の改行は省略可能
      * @param rule name = value 改行を省略可能に改変している
-     * @return
+     * @return rule 1行をABNFにしたもの
      */
     public ABNF rule(String rule) {
         ABNF abnf = bnfParse("rule", rule + "\r\n");
@@ -244,7 +270,7 @@ public class ABNFReg<N> {
      *
      * @param url abnf一覧のテキストが存在するURL
      * @return 解析されたABNF一覧
-     * @throws IOException
+     * @throws IOException 読み込みException系
      */
     public List<ABNF> rulelist(URL url) throws IOException {
         InputStream in = url.openStream();
@@ -255,10 +281,10 @@ public class ABNFReg<N> {
     
     /**
      * 特殊なので使わない方がいい
-     * @param pac
-     * @param rulename
-     * @param subrulenames
-     * @return 
+     * @param pac 解析対象
+     * @param rulename rulename
+     * @param subrulenames サブ要素rulename
+     * @return 仮型
      */
     public ABNF.C find(FrontPacket pac, String rulename, String... subrulenames) {
         ABNF rule = href(rulename);
@@ -274,7 +300,7 @@ public class ABNFReg<N> {
      * ユーザ側のParser(JSONなど)を駆動する
      * BASEのみで参照先がないなど
      *
-     * @param <T>
+     * @param <T> 解析型
      * @param rulename 解析装置付き構文の名。駆動コマンドのようなもの
      * @param src パース対象ソース
      * @return 解析後の実体
@@ -292,7 +318,7 @@ public class ABNFReg<N> {
      * ユーザ側のParser(JSONなど)を駆動する
      * BASEのみで参照先がないなど
      *
-     * @param <T>
+     * @param <T> 解析型
      * @param rulename 解析装置付き構文の名。駆動コマンドのようなもの
      * @param pac パース対象ソース
      * @return 解析後の実体
@@ -303,9 +329,9 @@ public class ABNFReg<N> {
     
     /**
      * 
-     * @param <T>
-     * @param rulename
-     * @return 
+     * @param <T> 解析型
+     * @param rulename 解析装置付き構文の名。駆動コマンドのようなもの
+     * @return パーサー実体
      */
     public <T> ABNFParser<T> parser(String rulename) {
         try {

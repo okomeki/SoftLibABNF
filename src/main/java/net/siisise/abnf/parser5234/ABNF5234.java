@@ -1,3 +1,18 @@
+/*
+ * Copyright 2021 Siisise Net.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package net.siisise.abnf.parser5234;
 
 import net.siisise.abnf.ABNF;
@@ -67,7 +82,7 @@ public class ABNF5234 {
     /**
      * 複製できる弱結合版
      *
-     * @return
+     * @return 複製しやすい版
      */
     public static ABNFReg copyREG() {
         ABNFReg reg = new ABNFReg(BASE, null);
@@ -81,7 +96,7 @@ public class ABNF5234 {
         reg.rule("rulename", Rulename.class, ABNF5234.rulename);
         reg.rule("element", Element.class, reg.ref("rulename").or(reg.ref("group"), reg.ref("option"), reg.ref("char-val"), reg.ref("num-val"), reg.ref("prose-val")));
         reg.rule("comment", ABNF5234.comment);
-        reg.rule("repeat", DIGIT.x().pl(ABNF.bin('*'), DIGIT.x()).or(DIGIT.ix()));
+        reg.rule("repeat", ABNFStringParser.class, DIGIT.x().pl(ABNF.bin('*'), DIGIT.x()).or(DIGIT.ix()));
         reg.rule("repetition", Repetition.class, reg.ref("repeat").c().pl(reg.ref("element")));
         reg.rule("c-nl", reg.ref("comment").or(CRLF));
         reg.rule("c-wsp", WSP.or(cNl.pl(WSP)));

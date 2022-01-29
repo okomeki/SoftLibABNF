@@ -1,4 +1,4 @@
-# SoftLibABNF Augumented BNF ライブラリ
+# SoftLibABNF Augmented BNF for Java ライブラリ
 
 Twitter @okomeki
 

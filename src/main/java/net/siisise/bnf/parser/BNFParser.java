@@ -5,7 +5,7 @@ import net.siisise.io.FrontPacket;
 
 /**
  * BNF Parserの基本型。
- * @param <T>
+ * @param <T> 戻り型
  */
 public interface BNFParser<T> {
 

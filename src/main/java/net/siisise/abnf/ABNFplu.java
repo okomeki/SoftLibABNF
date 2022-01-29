@@ -1,3 +1,18 @@
+/*
+ * Copyright 2021 Siisise Net.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package net.siisise.abnf;
 
 import static net.siisise.abnf.AbstractABNF.mix;
@@ -15,6 +30,11 @@ public class ABNFplu extends ABNFplm {
         super(list);
     }
 
+    /**
+     * 複製する.
+     * @param reg 複製先
+     * @return 複製 
+     */
     @Override
     public ABNFpl copy(ABNFReg reg) {
         ABNF[] l = new ABNF[list.length];
@@ -28,13 +48,13 @@ public class ABNFplu extends ABNFplm {
     /**
      * 詳細検索
      *
-     * @param <X>
-     * @param <N>
-     * @param pac
-     * @param ns
-     * @param list
-     * @param subparsers
-     * @return
+     * @param <X> 適度な戻り型
+     * @param <N> user name space type 名前空間型
+     * @param pac source 解析対象
+     * @param ns user name space 名前空間
+     * @param list サブ要素
+     * @param subparsers サブ要素パーサ
+     * @return ざっくりまとめ
      */
     @Override
     protected <X,N> C<X> longfind(FrontPacket pac, N ns, ABNF[] list, BNFParser<? extends X>[] subparsers) {
