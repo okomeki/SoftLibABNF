@@ -75,7 +75,7 @@ public class ABNF5234 {
     public static final ABNF option = REG.rule("option", Option.class, ABNF.bin('[').pl(cWsp.x(), alternation, cWsp.x(), ABNF.bin(']')));
     public static final ABNF element = REG.rule("element", Element.class, rulename.or(group, option, charVal, numVal, proseVal));
     public static final ABNF elements = REG.rule("elements", SubAlternation.class, alternation.pl(cWsp.x()));
-    public static final ABNF definedAs = REG.rule("defined-as", cWsp.x().pl(ABNF.bin('=').or(ABNF.bin("=/")), cWsp.x()));
+    public static final ABNF definedAs = REG.rule("defined-as", ABNFStringParser.class, cWsp.x().pl(ABNF.bin('=').or(ABNF.bin("=/")), cWsp.x()));
     public static final ABNF rule = REG.rule("rule", Rule.class, rulename.pl(definedAs, elements, cNl));
     public static final ABNF rulelist = REG.rule("rulelist", Rulelist.class, rule.or(cWsp.x().pl(cNl)).ix());
 
@@ -105,7 +105,7 @@ public class ABNF5234 {
         reg.rule("group", SubAlternation.class, ABNF.bin('(').pl(cWsp.x(), reg.ref("alternation"), cWsp.x(), ABNF.bin(')')));
         reg.rule("option", Option.class, ABNF.bin('[').pl(cWsp.x(), reg.ref("alternation"), cWsp.x(), ABNF.bin(']')));
         reg.rule("elements", SubAlternation.class, reg.ref("alternation").pl(cWsp.x()));
-        reg.rule("defined-as", ABNF5234.definedAs);
+        reg.rule("defined-as", ABNFStringParser.class, ABNF5234.definedAs);
         reg.rule("rule", Rule.class, reg.ref("rulename").pl(definedAs, reg.ref("elements"), cNl));
         reg.rule("rulelist", Rulelist.class, reg.ref("rule").or(cWsp.x().pl(cNl)).ix());
 

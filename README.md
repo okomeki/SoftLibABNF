@@ -56,8 +56,14 @@ rulelist.is("文字列"); // 先頭一致
 
 その他、ABNFとABNFRegをみれば何とかなるのかも。
 
+## 使い方
+
+JDK 1.8以降用
+SoftLibとSoftLibABNFのjarが必要です。
+
 ## Maven
-pom.xml に次のように追加すればいいです
+
+pom.xml に次のように追加します
 ~~~
 <dependency>
     <groupId>net.siisise<groupId>
@@ -66,6 +72,7 @@ pom.xml に次のように追加すればいいです
     <type>jar</type>
 </dependency>
 ~~~
+
 ## 演算子 Operators
 
 3.演算子のものをJavaで書く手法です。不明であればABNFでも書けます。

@@ -37,11 +37,7 @@ public class ABNFPacketParser extends ABNFBaseParser<Packet, ABNF> {
      */
     @Override
     public Packet parse(FrontPacket pac) {
-        Packet r = rule.is(pac);
-        if ( r == null ) {
-            return null;
-        }
-        return r;
+        return rule.is(pac);
     }
 
 }
