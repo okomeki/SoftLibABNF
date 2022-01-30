@@ -53,6 +53,7 @@ public abstract class AbstractBNF implements BNF {
         return is(pac(val), ns) != null;
     }
 
+    @Override
     public boolean eq(FrontPacket val) {
         Packet r = is(val);
         if (val.length() == 0) {
@@ -64,6 +65,7 @@ public abstract class AbstractBNF implements BNF {
         return false;
     }
 
+    @Override
     public boolean eq(String val) {
         return eq(pac(val));
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Siisise Net.
+ * Copyright 2022 okome.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,15 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.siisise.abnf.parser7405;
+package net.siisise.bnf.parser;
 
 import net.siisise.abnf.ABNF;
-import net.siisise.abnf.ABNFReg;
-import net.siisise.bnf.parser.BNFSelect;
+import net.siisise.bnf.BNF;
+import net.siisise.bnf.BNFReg;
 
-public class CharVal7405 extends BNFSelect<ABNF> {
+/**
+ * 文字列を抽出するタイプ
+ */
+public class BNFStringParser extends BNFBuildParser<String,ABNF> {
 
-    public CharVal7405(ABNF rule, ABNFReg base) {
-        super(rule, base, "case-insensitive-string", "case-sensitive-string");
+    public BNFStringParser(BNF rule, BNFReg base) {
+        super(rule, base);
     }
-}    
+
+    /**
+     * find専用なのでなにもしていない
+     * @param val 解析結果
+     * @return 構築結果
+     */
+    @Override
+    public String build(ABNF.C val) {
+        return str(val.ret);
+    }
+    
+}
+

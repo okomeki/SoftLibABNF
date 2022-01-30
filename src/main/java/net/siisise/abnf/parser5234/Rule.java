@@ -18,9 +18,10 @@ package net.siisise.abnf.parser5234;
 import net.siisise.abnf.ABNF;
 import net.siisise.abnf.ABNFReg;
 import net.siisise.abnf.ABNFor;
-import net.siisise.abnf.parser.ABNFBuildParser;
+import net.siisise.bnf.BNF;
+import net.siisise.bnf.parser.BNFBuildParser;
 
-public class Rule extends ABNFBuildParser<ABNF, Object> {
+public class Rule extends BNFBuildParser<ABNF, Object> {
 
     /**
      * 
@@ -33,13 +34,12 @@ public class Rule extends ABNFBuildParser<ABNF, Object> {
 
     /**
      * 解析組み立て
-     * @param <N> name space type ABNFRef
      * @param ret 解析ABNFパーツ
      * @param ns user name space 名前空間(ユーザ定義側)
      * @return 解析結果
      */
     @Override
-    protected <N> ABNF build(ABNF.C<Object> ret, N ns) {
+    protected ABNF build(BNF.C<Object> ret, Object ns) {
         String rulename = ((ABNF) ret.get("rulename").get(0)).getName();
         String defined = (String) ret.get("defined-as").get(0);
         ABNF elements = (ABNF) ret.get("elements").get(0);

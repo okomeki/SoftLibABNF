@@ -17,10 +17,10 @@ package net.siisise.abnf.parser7405;
 
 import net.siisise.abnf.ABNF;
 import net.siisise.abnf.ABNFReg;
-import net.siisise.abnf.parser.ABNFBuildParser;
 import net.siisise.bnf.BNF;
+import net.siisise.bnf.parser.BNFBuildParser;
 
-public class IS extends ABNFBuildParser<ABNF, String> {
+public class IS extends BNFBuildParser<ABNF, String> {
 
     public IS(ABNF rule, ABNFReg base) {
         super(rule, base, "quoted-string");

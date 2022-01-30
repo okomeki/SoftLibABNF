@@ -93,4 +93,9 @@ public class BNFor extends FindBNF {
         pac.read(e);
         return ret;
     }
+
+    @Override
+    public BNF copy(BNFReg reg) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }

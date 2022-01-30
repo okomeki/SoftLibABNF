@@ -21,13 +21,13 @@ import net.siisise.abnf.ABNFReg;
 import net.siisise.abnf.ABNFbin;
 import net.siisise.abnf.ABNFmap;
 import net.siisise.abnf.ABNFor;
-import net.siisise.abnf.parser.ABNFList;
+import net.siisise.bnf.parser.BNFList;
 
 /**
  * or 相当.
  * 先頭一致なのでアナログな解釈と異なる場合もあるかもしれない
  */
-public class Alternation extends ABNFList<ABNF, ABNF> {
+public class Alternation extends BNFList<ABNF, ABNF> {
 
     public Alternation(ABNF rule, ABNFReg base) {
         super(rule, base, "concatenation");

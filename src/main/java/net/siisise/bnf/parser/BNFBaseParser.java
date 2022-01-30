@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Siisise Net.
+ * Copyright 2022 okome.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,50 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.siisise.abnf.parser;
+package net.siisise.bnf.parser;
 
 import java.nio.charset.StandardCharsets;
-import net.siisise.abnf.ABNF;
 import net.siisise.abnf.AbstractABNF;
+import net.siisise.bnf.BNF;
 import net.siisise.io.FrontPacket;
 
-/**
- * ABNF パース後の変換処理。
- * ABNFに一致したときに処理が走るので基本的に例外返しがない。
- * 
- * @deprecated net.siisise.bnf.parser.BNFBaseParser
- * @param <T> 戻り型
- */
-public abstract class ABNFBaseParser<T> implements ABNFParser<T> {
-
-    protected final ABNF rule;
+public abstract class BNFBaseParser<T> implements BNFParser<T> {
+    
+    protected BNF rule;
 
     /**
      * 上のparserから駆動される想定
      * @param rule 処理対象のABNF rule
      */
-    protected ABNFBaseParser(ABNF rule) {
+    protected BNFBaseParser(BNF rule) {
         this.rule = rule;
     }
 
     @Override
-    public ABNF getBNF() {
+    public BNF getBNF() {
         return rule;
-    }
-
-    /**
-     * 入り口
-     * @param str 解析対象文字列
-     * @return 変換されたデータ 不一致の場合はnull
-     */
-    @Override
-    public T parse(String str) {
-        return parse(AbstractABNF.pac(str));
-    }
-    
-    @Override
-    public T parse(String str, Object ns) {
-        return parse(AbstractABNF.pac(str), ns);
     }
 
     @Override
@@ -64,6 +42,21 @@ public abstract class ABNFBaseParser<T> implements ABNFParser<T> {
         return parse(pac);
     }
 
+    @Override
+    public T parse(String str, Object ns) {
+        return parse(AbstractABNF.pac(str), ns);
+    }
+
+    /**
+     * 入り口
+     * @param src 解析対象文字列
+     * @return 変換されたデータ 不一致の場合はnull
+     */
+    @Override
+    public T parse(String src) {
+        return parse(AbstractABNF.pac(src));
+    }
+    
     protected static String str(FrontPacket pac) {
         return new String(pac.toByteArray(), StandardCharsets.UTF_8);
     }

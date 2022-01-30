@@ -102,7 +102,7 @@ public class ABNFRegTest {
         System.out.println("ABNF7405");
         String rulelist = "a = b\r\nv = %s\"dE\"\r\n";
 //        String rulelist = "a = b\r\nv = d\r\n";
-        ABNFReg<?> reg = new ABNFReg((ABNFReg<?>)null, ABNF7405.REG);
+        ABNFReg reg = new ABNFReg((ABNFReg)null, ABNF7405.REG);
         reg.rulelist(rulelist);
         ABNF a = reg.href("a");
         boolean aref = a instanceof ABNFReg.ABNFRef;

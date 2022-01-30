@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Siisise Net.
+ * Copyright 2022 okome.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.siisise.abnf.parser;
+package net.siisise.bnf.parser;
 
-import net.siisise.abnf.ABNF;
-import net.siisise.abnf.ABNFReg;
-import net.siisise.bnf.parser.BNFParser;
+import net.siisise.bnf.BNF;
+import net.siisise.bnf.BNFReg;
 import net.siisise.io.FrontPacket;
 
 /**
  * subnsで指定した名の部分を中間型で受け取り、変換後の型で渡すだけのお仕事にするための部分実装。
- * 
- * @deprecated net.siisise.bnf.parser.BNFBuildParser
+ *
  * @param <T> 変換後の型
  * @param <M> 中間型
  */
-public abstract class ABNFBuildParser<T, M> extends ABNFBaseParser<T> {
+public class BNFBuildParser<T, M> extends BNFBaseParser<T> {
 
     /** ABNF Parser側 名前空間 */
-    private final ABNFReg base;
+    private final BNFReg base;
     private BNFParser<? extends M>[] subs;
     protected final String[] subName;
 
@@ -40,17 +38,17 @@ public abstract class ABNFBuildParser<T, M> extends ABNFBaseParser<T> {
      * @param base ABNF名前空間Reg
      * @param subrulenames サブ要素
      */
-    protected ABNFBuildParser(ABNF rule, ABNFReg base, String... subrulenames) {
+    protected BNFBuildParser(BNF rule, BNFReg base, String... subrulenames) {
         super(rule);
         this.base = base;
         subName = subrulenames;
     }
-    
+
     @Override
     public T parse(FrontPacket pac) {
         return parse(pac, null);
     }
-
+    
     /**
      * 対象であるかの判定と要素抽出をする
      * @param pac 解析対象
@@ -65,7 +63,7 @@ public abstract class ABNFBuildParser<T, M> extends ABNFBaseParser<T> {
                 subs[i] = base.parser(subName[i]);
             }
         }
-        ABNF.C<M> val = rule.find(pac, ns, subs);
+        BNF.C<M> val = rule.find(pac, ns, subs);
         if (val == null) {
             return null;
         }
@@ -78,11 +76,11 @@ public abstract class ABNFBuildParser<T, M> extends ABNFBaseParser<T> {
      * @param ns user name space 名前空間
      * @return 解析結果
      */
-    protected T build(ABNF.C<M> src, Object ns) {
+    protected T build(BNF.C<M> src, Object ns) {
         return build(src);
     }
 
-    protected T build(ABNF.C<M> src) {
+    protected T build(BNF.C<M> src) {
         throw new java.lang.UnsupportedOperationException();
     }
 }

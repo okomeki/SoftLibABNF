@@ -17,14 +17,14 @@ package net.siisise.abnf.parser5234;
 
 import net.siisise.abnf.ABNF;
 import net.siisise.abnf.ABNFReg;
-import net.siisise.abnf.parser.ABNFBaseParser;
+import net.siisise.bnf.parser.BNFBaseParser;
 import net.siisise.io.FrontPacket;
 
 /**
  * ルール名.
  * ルールへの参照として機能する
  */
-public class Rulename extends ABNFBaseParser<ABNF, Object> {
+public class Rulename extends BNFBaseParser<ABNF> {
 
     public Rulename(ABNF rule, ABNFReg base) {
         super(rule);
@@ -32,13 +32,12 @@ public class Rulename extends ABNFBaseParser<ABNF, Object> {
 
     /**
      * 
-     * @param <N>
-     * @param pac
-     * @param ns
+     * @param pac データ
+     * @param ns 名前空間
      * @return 名前で指定されたルールへの参照
      */
     @Override
-    public <N> ABNF parse(FrontPacket pac, N ns) {
+    public ABNF parse(FrontPacket pac, Object ns) {
         FrontPacket name = rule.is(pac);
         if (name == null) {
             return null;

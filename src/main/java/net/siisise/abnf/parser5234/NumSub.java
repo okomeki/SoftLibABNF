@@ -16,7 +16,7 @@
 package net.siisise.abnf.parser5234;
 
 import net.siisise.abnf.ABNF;
-import net.siisise.abnf.parser.ABNFBaseParser;
+import net.siisise.bnf.parser.BNFBaseParser;
 import net.siisise.io.FrontPacket;
 import net.siisise.io.Packet;
 import net.siisise.io.PacketA;
@@ -27,7 +27,7 @@ import net.siisise.lang.CodePoint;
  * 数値の抽出でだいたい共通の部分。
  *
  */
-class NumSub extends ABNFBaseParser<ABNF, ABNF> {
+class NumSub extends BNFBaseParser<ABNF> {
 
     private static final ABNF hf = ABNF.bin('-');
     private static final ABNF dot = ABNF.bin('.');
@@ -65,16 +65,16 @@ class NumSub extends ABNFBaseParser<ABNF, ABNF> {
         }
 
         r = dot.is(pac);
-        if (r != null) {
-            Packet data = new PacketA();
-            data.write(CodePoint.utf8(val));
-            do {
-                data.write(CodePoint.utf8(num(pac)));
-                r = dot.is(pac);
-            } while (r != null);
-            return ABNF.bin(str(data));
+        if (r == null) {
+            return ABNF.bin(val);
         }
-        return ABNF.bin(val);
+        Packet data = new PacketA();
+        data.write(CodePoint.utf8(val));
+        do {
+            data.write(CodePoint.utf8(num(pac)));
+            r = dot.is(pac);
+        } while (r != null);
+        return ABNF.bin(str(data));
     }
 
     private int num(FrontPacket pac) {

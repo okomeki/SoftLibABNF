@@ -18,12 +18,12 @@ package net.siisise.abnf.parser5234;
 import java.util.List;
 import net.siisise.abnf.ABNF;
 import net.siisise.abnf.ABNFReg;
-import net.siisise.abnf.parser.ABNFList;
+import net.siisise.bnf.parser.BNFList;
 
 /**
  * RuleをまとめてListにした結果.
  */
-public class Rulelist extends ABNFList<List<ABNF>, ABNF> {
+public class Rulelist extends BNFList<List<ABNF>, ABNF> {
 
     public Rulelist(ABNF rule, ABNFReg base) {
         super(rule, base, "rule");

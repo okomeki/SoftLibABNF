@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Siisise Net.
+ * Copyright 2022 Siisise Net.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,15 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.siisise.abnf.parser7405;
+package net.siisise.bnf.parser;
 
-import net.siisise.abnf.ABNF;
-import net.siisise.abnf.ABNFReg;
-import net.siisise.bnf.parser.BNFSelect;
+import net.siisise.bnf.BNF;
+import net.siisise.io.FrontPacket;
+import net.siisise.io.Packet;
 
-public class CharVal7405 extends BNFSelect<ABNF> {
+/**
+ * Packetに分割するだけ。
+ * ABNFで指定の対象クラスには変換しない。
+ * みかんせい?
+ */
+public class BNFPacketParser extends BNFBaseParser<Packet> {
 
-    public CharVal7405(ABNF rule, ABNFReg base) {
-        super(rule, base, "case-insensitive-string", "case-sensitive-string");
+    public BNFPacketParser(BNF rule) {
+        super(rule);
     }
-}    
+
+    @Override
+    public Packet parse(FrontPacket pac) {
+        return rule.is(pac);
+    }
+    
+}

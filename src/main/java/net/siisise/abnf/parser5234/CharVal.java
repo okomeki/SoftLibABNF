@@ -15,16 +15,17 @@
  */
 package net.siisise.abnf.parser5234;
 
+import java.nio.charset.StandardCharsets;
 import net.siisise.abnf.ABNF;
 import net.siisise.abnf.ABNFReg;
-import net.siisise.abnf.parser.ABNFBaseParser;
+import net.siisise.bnf.parser.BNFBaseParser;
 import net.siisise.io.FrontPacket;
 import net.siisise.io.Packet;
 
 /**
  *
  */
-public class CharVal extends ABNFBaseParser<ABNF, ABNF> {
+public class CharVal extends BNFBaseParser<ABNF> {
 
     public CharVal(ABNF rule, ABNFReg base) {
         super(rule);
@@ -39,7 +40,7 @@ public class CharVal extends ABNFBaseParser<ABNF, ABNF> {
         p.backRead();
         p.read();
         byte[] d = p.toByteArray();
-        return ABNF.text(new String(d, ABNF.UTF8));
+        return ABNF.text(new String(d, StandardCharsets.UTF_8));
     }
 
 }

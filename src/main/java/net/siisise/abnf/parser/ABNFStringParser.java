@@ -17,15 +17,12 @@ package net.siisise.abnf.parser;
 
 import net.siisise.abnf.ABNF;
 import net.siisise.abnf.ABNFReg;
+import net.siisise.bnf.parser.BNFBuildParser;
 
 /**
  * 文字列を抽出するタイプ
  */
-public class ABNFStringParser extends ABNFBuildParser<String,ABNF> {
-
-    public ABNFStringParser(ABNF rule) {
-        super(rule, null);
-    }
+public class ABNFStringParser extends BNFBuildParser<String,ABNF> {
 
     public ABNFStringParser(ABNF rule, ABNFReg base) {
         super(rule, base);

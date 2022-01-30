@@ -17,14 +17,14 @@ package net.siisise.abnf.parser5234;
 
 import net.siisise.abnf.ABNF;
 import net.siisise.abnf.ABNFReg;
-import net.siisise.abnf.parser.ABNFSelect;
+import net.siisise.bnf.parser.BNFSelect;
 
 /**
  * elementsとgroup のParser.
  * alternationを取り出すだけ
  * 定義のみなので消せる?
  */
-public class SubAlternation extends ABNFSelect<ABNF> {
+public class SubAlternation extends BNFSelect<ABNF> {
     
     /**
      * 

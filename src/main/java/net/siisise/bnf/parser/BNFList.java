@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Siisise Net.
+ * Copyright 2022 okome.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,31 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.siisise.abnf.parser;
+package net.siisise.bnf.parser;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.siisise.abnf.ABNF;
-import net.siisise.abnf.ABNFReg;
 import net.siisise.bnf.BNF;
-import net.siisise.bnf.parser.BNFBuildParser;
+import net.siisise.bnf.BNFReg;
 
 /**
  * リスト系のものを一度まとめてからパース後特定型にして返す.
- * @deprecated net.siisise.bnf.parser.BNFList
  * @param <T> 最終形式 抽出型
  * @param <M> 要素の形式
  */
-public abstract class ABNFList<T, M> extends BNFBuildParser<T, M> {
+public abstract class BNFList<T, M> extends BNFBuildParser<T, M> {
 
     /**
-     * ABNF系で自動的に呼ばれる形のコンストラクタ。
+     * BNF系で自動的に呼ばれる形のコンストラクタ。
      * 継承する場合はそのままの形で
      * @param rule 処理対象のABNF構文
      * @param base subrulenameのParser駆動用
      * @param subrulenames 抽出するサブ要素
      */
-    protected ABNFList(ABNF rule, ABNFReg base, String... subrulenames) {
+    protected BNFList(BNF rule, BNFReg base, String... subrulenames) {
         super(rule, base, subrulenames);
     }
 
@@ -57,7 +54,7 @@ public abstract class ABNFList<T, M> extends BNFBuildParser<T, M> {
         }
         return build(mlist, ns);
     }
-    
+
     protected T build(List<M> val, Object ns) {
         return build(val);
     }

@@ -22,13 +22,12 @@ public interface BNFParser<T> {
      * 先頭一致で解析するのでpacにデータが残る場合もある
      * 失敗した(一致しなかった)場合、pacは元の状態、戻り値はnullとなる
      *
-     * @param <N> user name space type
      * @param pac 解析対象データ
      * @param ns user name space
      * @return 一致しない場合はnull、一致した場合は一致部分
      */
-    <N> T parse(FrontPacket pac, N ns);
+    T parse(FrontPacket pac, Object ns);
     T parse(FrontPacket pac);
-    <N> T parse(String src, N ns);
+    T parse(String src, Object ns);
     T parse(String src);
 }

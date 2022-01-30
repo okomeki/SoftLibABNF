@@ -17,12 +17,12 @@ package net.siisise.abnf.parser5234;
 
 import net.siisise.abnf.ABNF;
 import net.siisise.abnf.ABNFReg;
-import net.siisise.abnf.parser.ABNFSelect;
+import net.siisise.bnf.parser.BNFSelect;
 
 /**
  * 数値系まとめてParser
  */
-public class NumVal extends ABNFSelect<ABNF> {
+public class NumVal extends BNFSelect<ABNF> {
 
     public NumVal(ABNF rule, ABNFReg base) {
         super(rule, base, "bin-val", "dec-val", "hex-val");

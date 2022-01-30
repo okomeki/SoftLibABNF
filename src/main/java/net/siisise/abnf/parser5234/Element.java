@@ -17,13 +17,13 @@ package net.siisise.abnf.parser5234;
 
 import net.siisise.abnf.ABNF;
 import net.siisise.abnf.ABNFReg;
-import net.siisise.abnf.parser.ABNFSelect;
+import net.siisise.bnf.parser.BNFSelect;
 
 /**
  * ABNF element の Parser.
  * 選択するだけ
  */
-public class Element extends ABNFSelect<ABNF> {
+public class Element extends BNFSelect<ABNF> {
 
     /**
      * より抽象化したもの

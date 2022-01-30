@@ -19,7 +19,7 @@ import java.util.List;
 import net.siisise.abnf.ABNF;
 import net.siisise.abnf.ABNFReg;
 import net.siisise.abnf.ABNFplm;
-import net.siisise.abnf.parser.ABNFList;
+import net.siisise.bnf.parser.BNFList;
 
 /**
  * 並びを結合する。
@@ -27,7 +27,7 @@ import net.siisise.abnf.parser.ABNFList;
  * 要素が1つの場合はABNFplを省略している。
  * RFC 5432
  */
-public class Concatenation extends ABNFList<ABNF, ABNF> {
+public class Concatenation extends BNFList<ABNF, ABNF> {
 
     public Concatenation(ABNF rule, ABNFReg base) {
         super(rule, base, "repetition");

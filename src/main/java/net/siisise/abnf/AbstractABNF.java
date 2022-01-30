@@ -16,6 +16,8 @@
 package net.siisise.abnf;
 
 import net.siisise.bnf.AbstractBNF;
+import net.siisise.bnf.BNF;
+import net.siisise.bnf.BNFReg;
 
 /**
  * 簡単なプレ実装
@@ -133,5 +135,10 @@ public abstract class AbstractABNF extends AbstractBNF implements ABNF {
         } else {
             return "%x" + Integer.toHexString(0x1000000 + ch).substring(1);
         }
+    }
+
+    @Override
+    public BNF copy(BNFReg reg) {
+        return copy((ABNFReg)reg);
     }
 }

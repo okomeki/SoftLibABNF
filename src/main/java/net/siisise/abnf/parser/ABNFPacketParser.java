@@ -16,6 +16,8 @@
 package net.siisise.abnf.parser;
 
 import net.siisise.abnf.ABNF;
+import net.siisise.bnf.parser.BNFBaseParser;
+import net.siisise.bnf.parser.BNFParser;
 import net.siisise.io.FrontPacket;
 import net.siisise.io.Packet;
 
@@ -23,8 +25,9 @@ import net.siisise.io.Packet;
  * Packetに分割するだけ。
  * ABNFで指定の対象クラスには変換しない。
  * みかんせい?
+ * @deprecated net.siisise.bnf.parser.BNFPacketParser
  */
-public class ABNFPacketParser extends ABNFBaseParser<Packet, ABNF> {
+public class ABNFPacketParser extends BNFBaseParser<Packet> implements BNFParser<Packet> {
 
     public ABNFPacketParser(ABNF rule) {
         super(rule);

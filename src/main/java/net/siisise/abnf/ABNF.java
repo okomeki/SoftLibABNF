@@ -16,7 +16,6 @@
 package net.siisise.abnf;
 
 import net.siisise.bnf.BNF;
-import net.siisise.io.FrontPacket;
 
 /**
  * RFC 5234.
@@ -176,23 +175,6 @@ public interface ABNF extends BNF {
      * @return ABNF構文
      */
     ABNF c();
-
-    /**
-     * 完全一致の判定
-     * valの最後まで一致するかどうか判定する
-     *
-     * @param pac 比較対象データ
-     * @return 判定結果
-     */
-    boolean eq(FrontPacket pac);
-
-    /**
-     * 完全一致の判定
-     *
-     * @param val 比較対象文字列
-     * @return 判定結果
-     */
-    boolean eq(String val);
 
     /**
      * 複製可能な構造を推奨(ループがあると複製は難しい)

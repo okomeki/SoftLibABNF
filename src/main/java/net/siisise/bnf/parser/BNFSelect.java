@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Siisise Net.
+ * Copyright 2022 okome.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.siisise.abnf.parser;
+package net.siisise.bnf.parser;
 
 import java.util.List;
-import net.siisise.abnf.ABNF;
-import net.siisise.abnf.ABNFReg;
 import net.siisise.bnf.BNF;
-import net.siisise.bnf.parser.BNFBuildParser;
+import net.siisise.bnf.BNFReg;
 import net.siisise.io.FrontPacket;
 
 /**
  * 一致するものを選択する (分岐).
  * 含まれている要素(名前)なので全体一致ではなくていい
- * @deprecated net.siisise.bnf.parser.BNFSelect
  * @param <T> 中間型、戻り型
  */
-public class ABNFSelect<T> extends BNFBuildParser<T, T> {
+public class BNFSelect<T> extends BNFBuildParser<T, T> {
 
-    protected ABNFSelect(ABNF rule, ABNFReg base, String...  casenames) {
+    protected BNFSelect(BNF rule, BNFReg base, String...  casenames) {
         super(rule, base, casenames);
     }
 
@@ -51,7 +48,7 @@ public class ABNFSelect<T> extends BNFBuildParser<T, T> {
         return other(src.ret, ns);
     }
     
-    protected T other(FrontPacket src, Object ns) {
+    protected <N> T other(FrontPacket src, N ns) {
         return other(src);
     }
 
@@ -65,3 +62,4 @@ public class ABNFSelect<T> extends BNFBuildParser<T, T> {
     }
 
 }
+
