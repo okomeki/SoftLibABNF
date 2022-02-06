@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Siisise Net.
+ * Copyright 2022 okome.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.siisise.abnf;
+package net.siisise.bnf;
 
-import net.siisise.bnf.BNF;
 import net.siisise.bnf.parser.BNFParser;
 import net.siisise.io.FrontPacket;
 import net.siisise.io.Packet;
@@ -24,52 +23,56 @@ import net.siisise.io.PacketA;
 /**
  *
  */
-public class ABNFplu extends ABNFplm {
+public class BNFplm extends BNFpl {
 
-    public ABNFplu(BNF[] list) {
+    public BNFplm(BNF[] list) {
         super(list);
     }
 
     /**
      * 複製する.
      * @param reg 複製先
-     * @return 複製 
+     * @return 複製
      */
     @Override
-    public ABNFpl copy(ABNFReg reg) {
+    public BNFpl copy(BNFReg reg) {
         BNF[] l = new BNF[list.length];
 
         for (int i = 0; i < list.length; i++) {
             l[i] = this.list[i].copy(reg);
         }
-        return new ABNFplu(l);
+        return new BNFplm(l);
+    }
+
+    @Override
+    public <X,N> C<X> buildFind(FrontPacket pac, N ns, BNFParser<? extends X>... subps) {
+        return longfind(pac, ns, list, subps);
     }
 
     /**
      * 詳細検索
      *
-     * @param <X> 適度な戻り型
-     * @param <N> user name space type 名前空間型
+     * @param <X> 戻り型例
+     * @param <N> name space type 名前空間型
      * @param pac source 解析対象
-     * @param ns user name space 名前空間
+     * @param ns user name space
      * @param list サブ要素
      * @param subparsers サブ要素パーサ
-     * @return ざっくりまとめ
+     * @return ざっくり戻り
      */
-    @Override
     protected <X,N> C<X> longfind(FrontPacket pac, N ns, BNF[] list, BNFParser<? extends X>[] subparsers) {
         if (list.length == 0) {
             return new C();
         }
         int flen = pac.size();
-
+        
         do {
             // 1つめ 指定サイズまでに制限する
             Packet frontPac = new PacketA();
             byte[] data = new byte[flen];
             pac.read(data, 0, flen);
             frontPac.write(data, 0, flen);
-            C<X> firstret = list[0].find(frontPac, ns, subparsers);
+            C firstret = list[0].find(frontPac, ns, subparsers);
             pac.dbackWrite(frontPac.toByteArray());
 
             if (firstret == null || list.length == 1) { // 一致しないか最後ならここで戻り
@@ -88,13 +91,10 @@ public class ABNFplu extends ABNFplm {
             // scのみ成立 破棄
             byte[] sdata = firstret.ret.toByteArray();
             pac.dbackWrite(sdata);
-            // ToDo: utf-8で1文字戻る版にしてみた
             flen--;
-            while (flen >= 0 && (sdata[flen] & 0xc0) == 0x80) {
-                flen--;
-            }
 
         } while (flen >= 0);
         return null;
     }
+
 }

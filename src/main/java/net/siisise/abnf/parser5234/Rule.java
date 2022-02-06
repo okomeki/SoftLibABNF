@@ -19,6 +19,7 @@ import net.siisise.abnf.ABNF;
 import net.siisise.abnf.ABNFReg;
 import net.siisise.abnf.ABNFor;
 import net.siisise.bnf.BNF;
+import net.siisise.bnf.BNFReg;
 import net.siisise.bnf.parser.BNFBuildParser;
 
 public class Rule extends BNFBuildParser<ABNF, Object> {
@@ -28,7 +29,7 @@ public class Rule extends BNFBuildParser<ABNF, Object> {
      * @param rule ルールABNF
      * @param base ABNF名前空間Reg
      */
-    public Rule(ABNF rule, ABNFReg base) {
+    public Rule(BNF rule, BNFReg base) {
         super(rule, base, "rulename", "defined-as", "elements");
     }
 

@@ -16,16 +16,16 @@
 package net.siisise.ebnf;
 
 import net.siisise.bnf.BNF;
-import net.siisise.bnf.BNFReg;
+import net.siisise.bnf.BNFCC;
 import net.siisise.ebnf.parser.EBNFISO14977;
 
 /**
  *
  */
-public class EBNFReg extends BNFReg {
+public class EBNFReg extends BNFCC {
     
     public EBNFReg() {
-        bnfReg = EBNFISO14977.REG;
+        super(null, EBNFISO14977.REG, "syntax","syntax-rule","meta-identifier","definitions-list");
         rn = EBNFISO14977.metaIdentifier;
     }
 
@@ -34,14 +34,6 @@ public class EBNFReg extends BNFReg {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    public EBNF rule(String syntaxrule, String element) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    public EBNF rule(String metaIdentifier, BNF definitionsList) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-    
     public EBNF ref(String rulename) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }

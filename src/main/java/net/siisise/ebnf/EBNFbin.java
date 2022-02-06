@@ -54,6 +54,16 @@ public class EBNFbin extends IsEBNF {
     }
 
     /**
+     * 複製する.
+     * @param reg 複製先
+     * @return 複製
+     */
+    @Override
+    public EBNFbin copy(EBNFReg reg) {
+        return new EBNFbin(new String(data, UTF8));
+    }
+
+    /**
      * 比較
      * @param pac 比較対象
      * @return 一致した場合pacと同じ 一致しなければnull

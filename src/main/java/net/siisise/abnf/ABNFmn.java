@@ -15,6 +15,7 @@
  */
 package net.siisise.abnf;
 
+import net.siisise.bnf.BNF;
 import net.siisise.io.FrontPacket;
 import net.siisise.io.Packet;
 
@@ -23,10 +24,10 @@ import net.siisise.io.Packet;
  */
 public class ABNFmn extends IsABNF {
 
-    private final ABNF a;
-    private final ABNF b;
+    private final BNF a;
+    private final BNF b;
 
-    ABNFmn(ABNF a, ABNF b) {
+    ABNFmn(BNF a, BNF b) {
         this.a = a;
         this.b = b;
     }

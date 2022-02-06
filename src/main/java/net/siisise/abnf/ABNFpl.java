@@ -15,6 +15,7 @@
  */
 package net.siisise.abnf;
 
+import net.siisise.bnf.BNF;
 import net.siisise.bnf.parser.BNFParser;
 import net.siisise.io.FrontPacket;
 
@@ -26,12 +27,12 @@ import net.siisise.io.FrontPacket;
  */
 public class ABNFpl extends FindABNF {
 
-    protected final ABNF[] list;
+    protected final BNF[] list;
 
-    public ABNFpl(ABNF... abnfs) {
+    public ABNFpl(BNF... abnfs) {
         list = abnfs;
         StringBuilder names = new StringBuilder();
-        for (ABNF abnf : list) {
+        for (BNF abnf : list) {
             names.append(abnf.getName());
             names.append(" ");
         }
@@ -46,7 +47,7 @@ public class ABNFpl extends FindABNF {
      */
     @Override
     public ABNFpl copy(ABNFReg reg) {
-        ABNF[] cplist = new ABNF[list.length];
+        BNF[] cplist = new BNF[list.length];
 
         for (int i = 0; i < list.length; i++) {
             cplist[i] = list[i].copy(reg);
@@ -67,7 +68,7 @@ public class ABNFpl extends FindABNF {
     public <X,N> C<X> buildFind(FrontPacket pac, N ns, BNFParser<? extends X>... parsers) {
         C<X> ret = new C<>();
         
-        for (ABNF sub : list) {
+        for (BNF sub : list) {
             C<X> subret = sub.find(pac, ns, parsers);
             if (subret == null) {
                 pac.dbackWrite(ret.ret.toByteArray());

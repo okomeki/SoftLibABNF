@@ -21,6 +21,8 @@ import net.siisise.abnf.ABNFReg;
 import net.siisise.abnf.ABNFbin;
 import net.siisise.abnf.ABNFmap;
 import net.siisise.abnf.ABNFor;
+import net.siisise.bnf.BNF;
+import net.siisise.bnf.BNFReg;
 import net.siisise.bnf.parser.BNFList;
 
 /**
@@ -29,7 +31,7 @@ import net.siisise.bnf.parser.BNFList;
  */
 public class Alternation extends BNFList<ABNF, ABNF> {
 
-    public Alternation(ABNF rule, ABNFReg base) {
+    public Alternation(BNF rule, BNFReg base) {
         super(rule, base, "concatenation");
     }
 

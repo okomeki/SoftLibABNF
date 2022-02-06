@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Siisise Net.
+ * Copyright 2022 okome.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,27 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.siisise.abnf.parser5234;
+package net.siisise.abnf;
 
-import java.util.List;
-import net.siisise.abnf.ABNF;
-import net.siisise.bnf.BNF;
+import net.siisise.abnf.parser5234.ABNF5234;
 import net.siisise.bnf.BNFReg;
-import net.siisise.bnf.parser.BNFList;
 
 /**
- * OptionのParser.
- * 繰り返し0*1に変換する
+ * CC は parse担当.
+ * BNFReg と BNFCCに役割分担をする
+ * 
  */
-public class Option extends BNFList<ABNF,ABNF> {
-
-    public Option(BNF rule, BNFReg base) {
-        super(rule, base, "alternation");
+public class ABNFCC extends ABNFReg {
+    
+    public ABNFCC(BNFReg up) {
+        this(up, ABNF5234.REG);
     }
-
-    @Override
-    protected ABNF build(List<ABNF> pac) {
-        return pac.get(0).c();
+    
+    public ABNFCC(BNFReg up, ABNFCC cc) {
+        super(up, cc, "rulelist", "rule", "rulename", "elements");
     }
-
+    
 }

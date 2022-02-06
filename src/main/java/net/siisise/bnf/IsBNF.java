@@ -22,7 +22,7 @@ import net.siisise.io.Packet;
 /**
  * isとfindをis側でなんとかする系
  */
-public abstract class IsBNF extends AbstractBNF {
+public abstract class IsBNF extends AbstractBNF<BNF> {
 
     /**
      *

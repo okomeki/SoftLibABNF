@@ -1,6 +1,7 @@
 package net.siisise.ebnf.parser;
 
 import net.siisise.abnf.parser5234.ABNF5234;
+import net.siisise.bnf.BNF;
 import net.siisise.ebnf.EBNF;
 import net.siisise.ebnf.EBNFReg;
 
@@ -60,15 +61,15 @@ public class EBNFISO14977 {
     static final EBNF syntacticPrimary = REG.rule("syntactic-primary", optionalSequence.or(repeatedSequence, groupedSequence, metaIdentifier,
             terminalString, specialSequence, emptySequence));
     /** 4.9. */
-    static final EBNF integer = REG.rule("integer",ABNF5234.DIGIT);
-    static final EBNF syntacticFactor = REG.rule("syntactic-factor", integer.pl(repetitionSymbol, syntacticPrimary).or(syntacticPrimary));
-    static final EBNF syntacticException = REG.rule("syntactic-exception", syntacticFactor);
+    static final BNF integer = REG.rule("integer",ABNF5234.DIGIT);
+    static final BNF syntacticFactor = REG.rule("syntactic-factor", integer.pl(repetitionSymbol, syntacticPrimary).or(syntacticPrimary));
+    static final BNF syntacticException = REG.rule("syntactic-exception", syntacticFactor);
     /** 4.6. */
-    static final EBNF syntacticTerm = REG.rule("syntactic-term", syntacticFactor.pl(exceptSymbol.pl(syntacticException).c()));
+    static final BNF syntacticTerm = REG.rule("syntactic-term", syntacticFactor.pl(exceptSymbol.pl(syntacticException).c()));
     /** 4.5. plus */
-    static final EBNF singleDefinition = REG.rule("single-definition", syntacticTerm.pl(concatenateSymbol).x().pl(syntacticTerm));
+    static final BNF singleDefinition = REG.rule("single-definition", syntacticTerm.pl(concatenateSymbol).x().pl(syntacticTerm));
     /** 4.4. or select */
-    static final EBNF definitionsList = REG.rule("definitions-list",singleDefinition.pl(definitionSeparatorSymbol).x().pl(singleDefinition));
+    static final BNF definitionsList = REG.rule("definitions-list",singleDefinition.pl(definitionSeparatorSymbol).x().pl(singleDefinition));
     static final EBNF syntaxRule = REG.rule("syntax-rule", metaIdentifier.pl(definingSymbol, definitionsList, terminatorSymbol));
     static final EBNF syntax = REG.rule("syntax", syntaxRule.ix());
 

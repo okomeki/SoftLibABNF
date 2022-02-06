@@ -16,6 +16,7 @@
 package net.siisise.abnf.parser5234;
 
 import net.siisise.abnf.ABNF;
+import net.siisise.bnf.BNF;
 import net.siisise.bnf.parser.BNFBaseParser;
 import net.siisise.io.FrontPacket;
 import net.siisise.io.Packet;
@@ -32,11 +33,11 @@ class NumSub extends BNFBaseParser<ABNF> {
     private static final ABNF hf = ABNF.bin('-');
     private static final ABNF dot = ABNF.bin('.');
 
-    private final ABNF nrule;
+    private final BNF nrule;
     private final int dig;
     private final char a, b;
 
-    NumSub(ABNF rule, ABNF numrule, int dig, char a, char b) {
+    NumSub(BNF rule, BNF numrule, int dig, char a, char b) {
         super(rule);
         nrule = numrule.ix();
         this.dig = dig;

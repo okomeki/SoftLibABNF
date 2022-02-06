@@ -17,6 +17,8 @@ package net.siisise.abnf.parser5234;
 
 import net.siisise.abnf.ABNF;
 import net.siisise.abnf.ABNFReg;
+import net.siisise.bnf.BNF;
+import net.siisise.bnf.BNFReg;
 import net.siisise.bnf.parser.BNFSelect;
 
 /**
@@ -24,27 +26,27 @@ import net.siisise.bnf.parser.BNFSelect;
  */
 public class NumVal extends BNFSelect<ABNF> {
 
-    public NumVal(ABNF rule, ABNFReg base) {
+    public NumVal(BNF rule, BNFReg base) {
         super(rule, base, "bin-val", "dec-val", "hex-val");
     }
 
     public static class BinVal extends NumSub {
 
-        public BinVal(ABNF rule, ABNFReg base) {
+        public BinVal(BNF rule, BNFReg base) {
             super(rule, ABNF5234.BIT, 2, 'b', 'B');
         }
     }
 
     public static class DecVal extends NumSub {
 
-        public DecVal(ABNF rule, ABNFReg base) {
+        public DecVal(BNF rule, BNFReg base) {
             super(rule, ABNF5234.DIGIT, 10, 'd', 'D');
         }
     }
 
     public static class HexVal extends NumSub {
 
-        public HexVal(ABNF rule, ABNFReg base) {
+        public HexVal(BNF rule, BNFReg base) {
             super(rule, ABNF5234.HEXDIG, 16, 'x', 'X');
         }
     }

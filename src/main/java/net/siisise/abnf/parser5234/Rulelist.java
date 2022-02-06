@@ -17,7 +17,8 @@ package net.siisise.abnf.parser5234;
 
 import java.util.List;
 import net.siisise.abnf.ABNF;
-import net.siisise.abnf.ABNFReg;
+import net.siisise.bnf.BNF;
+import net.siisise.bnf.BNFReg;
 import net.siisise.bnf.parser.BNFList;
 
 /**
@@ -25,7 +26,7 @@ import net.siisise.bnf.parser.BNFList;
  */
 public class Rulelist extends BNFList<List<ABNF>, ABNF> {
 
-    public Rulelist(ABNF rule, ABNFReg base) {
+    public Rulelist(BNF rule, BNFReg base) {
         super(rule, base, "rule");
     }
 

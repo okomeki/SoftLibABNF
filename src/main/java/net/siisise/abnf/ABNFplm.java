@@ -15,6 +15,7 @@
  */
 package net.siisise.abnf;
 
+import net.siisise.bnf.BNF;
 import net.siisise.bnf.parser.BNFParser;
 import net.siisise.io.FrontPacket;
 import net.siisise.io.Packet;
@@ -28,7 +29,7 @@ import net.siisise.io.PacketA;
  */
 public class ABNFplm extends ABNFpl {
 
-    public ABNFplm(ABNF[] list) {
+    public ABNFplm(BNF[] list) {
         super(list);
     }
 
@@ -39,7 +40,7 @@ public class ABNFplm extends ABNFpl {
      */
     @Override
     public ABNFpl copy(ABNFReg reg) {
-        ABNF[] l = new ABNF[list.length];
+        BNF[] l = new BNF[list.length];
 
         for (int i = 0; i < list.length; i++) {
             l[i] = this.list[i].copy(reg);
@@ -63,7 +64,7 @@ public class ABNFplm extends ABNFpl {
      * @param subparsers サブ要素パーサ
      * @return ざっくり戻り
      */
-    protected <X,N> C<X> longfind(FrontPacket pac, N ns, ABNF[] list, BNFParser<? extends X>[] subparsers) {
+    protected <X,N> C<X> longfind(FrontPacket pac, N ns, BNF[] list, BNFParser<? extends X>[] subparsers) {
         if (list.length == 0) {
             return new C();
         }
@@ -83,7 +84,7 @@ public class ABNFplm extends ABNFpl {
             }
             flen = firstret.ret.size();
             // 2つめ以降
-            ABNF[] slist = new ABNF[list.length - 1];
+            BNF[] slist = new BNF[list.length - 1];
             System.arraycopy(list, 1, slist, 0, slist.length);
             C nextret = longfind(pac, ns, slist, subparsers);
             if (nextret != null) {

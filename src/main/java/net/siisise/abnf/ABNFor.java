@@ -17,6 +17,7 @@ package net.siisise.abnf;
 
 import java.util.ArrayList;
 import java.util.List;
+import net.siisise.bnf.BNF;
 import net.siisise.bnf.parser.BNFParser;
 import net.siisise.io.FrontPacket;
 import net.siisise.lang.CodePoint;
@@ -26,14 +27,14 @@ import net.siisise.lang.CodePoint;
  */
 public class ABNFor extends FindABNF {
 
-    private ABNF[] list;
+    private BNF[] list;
 
-    public ABNFor(ABNF... abnfs) {
+    public ABNFor(BNF... abnfs) {
         list = abnfs;
         name = toName(abnfs);
     }
 
-    public ABNFor(String n, ABNF... abnfs) {
+    public ABNFor(String n, BNF... abnfs) {
         name = n;
         list = abnfs;
     }
@@ -64,12 +65,12 @@ public class ABNFor extends FindABNF {
         this.name = name;
     }
 
-    static String toName(ABNF[] abnfs) {
+    static String toName(BNF[] abnfs) {
         StringBuilder sb = new StringBuilder();
         //if ( list.length > 1) {
         sb.append("( ");
         //}
-        for (ABNF v : abnfs) {
+        for (BNF v : abnfs) {
             String n = v.getName();
             if (v instanceof ABNFor && n.startsWith("( ") && n.endsWith(" )")) {
                 n = n.substring(2, n.length() - 2);
@@ -93,7 +94,7 @@ public class ABNFor extends FindABNF {
      */
     @Override
     public ABNFor copy(ABNFReg reg) {
-        ABNF[] l = new ABNF[list.length];
+        BNF[] l = new BNF[list.length];
 
         for (int i = 0; i < list.length; i++) {
             l[i] = list[i].copy(reg);
@@ -115,7 +116,7 @@ public class ABNFor extends FindABNF {
     public <X,N> C<X> buildFind(FrontPacket pac, N ns, BNFParser<? extends X>... parsers) {
         ABNF.C<X> ret = null;
 
-        for (ABNF sub : list) {
+        for (BNF sub : list) {
 
             C<X> subret = sub.find(pac, ns, parsers);
             if (subret != null) {

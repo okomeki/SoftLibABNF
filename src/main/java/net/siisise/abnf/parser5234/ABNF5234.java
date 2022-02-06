@@ -16,8 +16,11 @@
 package net.siisise.abnf.parser5234;
 
 import net.siisise.abnf.ABNF;
+import net.siisise.abnf.ABNFCC;
 import net.siisise.abnf.ABNFReg;
 import net.siisise.abnf.parser.ABNFStringParser;
+import net.siisise.bnf.BNFReg;
+import net.siisise.bnf.parser.BNFStringParser;
 
 /**
  * ABNFの定義をJavaで書いてみたりしたもの.
@@ -27,7 +30,7 @@ import net.siisise.abnf.parser.ABNFStringParser;
  */
 public class ABNF5234 {
 
-    public static final ABNFReg BASE = new ABNFReg((ABNFReg)null, null);
+    public static final BNFReg BASE = new ABNFReg((BNFReg)null, null);
 
     // classのようなもの RFC 2234 6.1 Core Rules から変わらず
     public static final ABNF ALPHA = BASE.rule("ALPHA", ABNF.range(0x41, 0x5a).or(ABNF.range(0x61, 0x7a)));
@@ -51,7 +54,7 @@ public class ABNF5234 {
      * 各ABNFの定義をParserを使わずJavaで書いたもの
      * 
      */
-    public static final ABNFReg REG = new ABNFReg(BASE, null);
+    public static final ABNFCC REG = new ABNFCC(BASE, null);
 
     public static final ABNF charVal = REG.rule("char-val", CharVal.class, DQUOTE.pl(ABNF.range(0x20, 0x21).or(ABNF.range(0x23, 0x7e)).x(), DQUOTE));
     public static final ABNF binVal = REG.rule("bin-val", NumVal.BinVal.class, ABNF.text('b').pl(BIT.ix(), ABNF.bin('.').pl(BIT.ix()).ix().or(ABNF.bin('-').pl(BIT.ix())).c()));
@@ -65,7 +68,7 @@ public class ABNF5234 {
     /**
      * orで短いものをそれを含む長いものの前に配置すると誤判定するので順序を入れ換えるなど
      */
-    public static final ABNF repeat = REG.rule("repeat", ABNFStringParser.class, DIGIT.x().pl(ABNF.bin('*'), DIGIT.x()).or(DIGIT.ix()));
+    public static final ABNF repeat = REG.rule("repeat", BNFStringParser.class, DIGIT.x().pl(ABNF.bin('*'), DIGIT.x()).or(DIGIT.ix()));
     public static final ABNF repetition = REG.rule("repetition", Repetition.class, repeat.c().pl(REG.ref("element")));
     static final ABNF cNl = REG.rule("c-nl", comment.or(CRLF));
     static final ABNF cWsp = REG.rule("c-wsp", WSP.or(cNl.pl(WSP)));
@@ -75,7 +78,7 @@ public class ABNF5234 {
     public static final ABNF option = REG.rule("option", Option.class, ABNF.bin('[').pl(cWsp.x(), alternation, cWsp.x(), ABNF.bin(']')));
     public static final ABNF element = REG.rule("element", Element.class, rulename.or(group, option, charVal, numVal, proseVal));
     public static final ABNF elements = REG.rule("elements", SubAlternation.class, alternation.pl(cWsp.x()));
-    public static final ABNF definedAs = REG.rule("defined-as", ABNFStringParser.class, cWsp.x().pl(ABNF.bin('=').or(ABNF.bin("=/")), cWsp.x()));
+    public static final ABNF definedAs = REG.rule("defined-as", BNFStringParser.class, cWsp.x().pl(ABNF.bin('=').or(ABNF.bin("=/")), cWsp.x()));
     public static final ABNF rule = REG.rule("rule", Rule.class, rulename.pl(definedAs, elements, cNl));
     public static final ABNF rulelist = REG.rule("rulelist", Rulelist.class, rule.or(cWsp.x().pl(cNl)).ix());
 
@@ -84,8 +87,8 @@ public class ABNF5234 {
      *
      * @return 複製しやすい版
      */
-    public static ABNFReg copyREG() {
-        ABNFReg reg = new ABNFReg(BASE, null);
+    public static ABNFCC copyREG() {
+        ABNFCC reg = new ABNFCC(BASE, null);
 
         reg.rule("char-val", CharVal.class, ABNF5234.charVal);
         reg.rule("bin-val", NumVal.BinVal.class, ABNF5234.binVal);
@@ -96,7 +99,7 @@ public class ABNF5234 {
         reg.rule("rulename", Rulename.class, ABNF5234.rulename);
         reg.rule("element", Element.class, reg.ref("rulename").or(reg.ref("group"), reg.ref("option"), reg.ref("char-val"), reg.ref("num-val"), reg.ref("prose-val")));
         reg.rule("comment", ABNF5234.comment);
-        reg.rule("repeat", ABNFStringParser.class, DIGIT.x().pl(ABNF.bin('*'), DIGIT.x()).or(DIGIT.ix()));
+        reg.rule("repeat", BNFStringParser.class, DIGIT.x().pl(ABNF.bin('*'), DIGIT.x()).or(DIGIT.ix()));
         reg.rule("repetition", Repetition.class, reg.ref("repeat").c().pl(reg.ref("element")));
         reg.rule("c-nl", reg.ref("comment").or(CRLF));
         reg.rule("c-wsp", WSP.or(cNl.pl(WSP)));
@@ -105,7 +108,7 @@ public class ABNF5234 {
         reg.rule("group", SubAlternation.class, ABNF.bin('(').pl(cWsp.x(), reg.ref("alternation"), cWsp.x(), ABNF.bin(')')));
         reg.rule("option", Option.class, ABNF.bin('[').pl(cWsp.x(), reg.ref("alternation"), cWsp.x(), ABNF.bin(']')));
         reg.rule("elements", SubAlternation.class, reg.ref("alternation").pl(cWsp.x()));
-        reg.rule("defined-as", ABNFStringParser.class, ABNF5234.definedAs);
+        reg.rule("defined-as", BNFStringParser.class, ABNF5234.definedAs);
         reg.rule("rule", Rule.class, reg.ref("rulename").pl(definedAs, reg.ref("elements"), cNl));
         reg.rule("rulelist", Rulelist.class, reg.ref("rule").or(cWsp.x().pl(cNl)).ix());
 

@@ -17,6 +17,8 @@ package net.siisise.abnf.parser5234;
 
 import net.siisise.abnf.ABNF;
 import net.siisise.abnf.ABNFReg;
+import net.siisise.bnf.BNF;
+import net.siisise.bnf.BNFReg;
 import net.siisise.bnf.parser.BNFBaseParser;
 import net.siisise.io.FrontPacket;
 
@@ -26,7 +28,7 @@ import net.siisise.io.FrontPacket;
  */
 public class Rulename extends BNFBaseParser<ABNF> {
 
-    public Rulename(ABNF rule, ABNFReg base) {
+    public Rulename(BNF rule, BNFReg base) {
         super(rule);
     }
 

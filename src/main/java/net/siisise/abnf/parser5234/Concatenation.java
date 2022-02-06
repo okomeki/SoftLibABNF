@@ -17,8 +17,9 @@ package net.siisise.abnf.parser5234;
 
 import java.util.List;
 import net.siisise.abnf.ABNF;
-import net.siisise.abnf.ABNFReg;
 import net.siisise.abnf.ABNFplm;
+import net.siisise.bnf.BNF;
+import net.siisise.bnf.BNFReg;
 import net.siisise.bnf.parser.BNFList;
 
 /**
@@ -29,7 +30,7 @@ import net.siisise.bnf.parser.BNFList;
  */
 public class Concatenation extends BNFList<ABNF, ABNF> {
 
-    public Concatenation(ABNF rule, ABNFReg base) {
+    public Concatenation(BNF rule, BNFReg base) {
         super(rule, base, "repetition");
     }
 

@@ -9,8 +9,9 @@ import net.siisise.io.StreamFrontPacket;
 
 /**
  * 基本実装
+ * @param <B>
  */
-public abstract class AbstractBNF implements BNF {
+public abstract class AbstractBNF<B extends BNF> implements BNF<B> {
 
     /**
      * 名前、またはABNFに近いもの (まだ抜けもある)
@@ -30,8 +31,9 @@ public abstract class AbstractBNF implements BNF {
         return name;
     }
 
-    public BNF name(String name) {
-        return new BNFor(name, this); // ?
+    @Override
+    public B name(String name) {
+        return (B) new BNFor(name, this); // ?
     }
 
     protected <X> BNFParser<? extends X> matchParser(BNFParser<? extends X>[] parsers) {
@@ -68,6 +70,85 @@ public abstract class AbstractBNF implements BNF {
     @Override
     public boolean eq(String val) {
         return eq(pac(val));
+    }
+
+    /**
+     * Concatenation の単純版
+     * *(a / b ) a の様なものが解析できないが速そう
+     * @param val plus  する ABNF列
+     * @return 簡易に比較するABNF
+     */
+    @Override
+    public B pl(BNF... val) {
+        if (val.length == 0) {
+            return (B) this;
+        }
+        BNF[] list = new BNF[val.length + 1];
+        list[0] = this;
+        System.arraycopy(val, 0, list, 1, val.length);
+        return (B) new BNFpl(list);
+    }
+
+    /**
+     * やや厳密に対応する足し算版
+     * *( a / b ) a にも対応
+     * @param val plus する ABNF列
+     * @return 厳密に比較できるABNF
+     */
+    @Override
+    public B plm(BNF... val) {
+        if (val.length == 0) {
+            return (B) this;
+        }
+        BNF[] list = new BNF[val.length + 1];
+        list[0] = this;
+        System.arraycopy(val, 0, list, 1, val.length);
+        return (B) new BNFplm(list);
+    }
+
+    /**
+     * Unicode単位で比較する若干速いのかもしれない版 plm
+     * @param val plus する ABNF列
+     * @return unicodeで比較されるABNF処理
+     */
+    @Override
+    public B plu(BNF... val) {
+        if (val.length == 0) {
+            return (B) this;
+        }
+        BNF[] list = new BNF[val.length + 1];
+        list[0] = this;
+        System.arraycopy(val, 0, list, 1, val.length);
+        return (B) new BNFplu(list);
+    }
+
+    @Override
+    public B or(BNF... val) {
+        BNF[] list = new BNF[val.length + 1];
+        list[0] = this;
+        System.arraycopy(val, 0, list, 1, val.length);
+        return (B) new BNFor(list);
+    }
+
+
+    @Override
+    public B x(int min, int max) {
+        return (B) new BNFx(min, max, this);
+    }
+
+    @Override
+    public B x() {
+        return x(0, -1);
+    }
+
+    @Override
+    public B ix() {
+        return x(1, -1);
+    }
+
+    @Override
+    public B c() {
+        return x(0, 1);
     }
 
     public static FrontPacket pac(String str) {
@@ -117,4 +198,28 @@ public abstract class AbstractBNF implements BNF {
         return cret;
     }
 
+    /**
+     * 結果2を1に混ぜる
+     * @param <X> 戻り型
+     * @param ret 結果1
+     * @param sub 結果2
+     */
+    protected static <X> void mix(C<X> ret, C<X> sub) {
+        ret.ret.write(sub.ret.toByteArray());
+        sub.subs.forEach((key,val) -> {
+            val.forEach((v) -> {
+                ret.add(key, v);
+            });
+        });
+    }
+
+    protected String hex(int ch) {
+        if (ch < 0x100) {
+            return "%x" + Integer.toHexString(0x100 + ch).substring(1);
+        } else if (ch < 0x10000) {
+            return "%x" + Integer.toHexString(0x10000 + ch).substring(1);
+        } else {
+            return "%x" + Integer.toHexString(0x1000000 + ch).substring(1);
+        }
+    }
 }

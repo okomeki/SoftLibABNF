@@ -17,6 +17,7 @@ package net.siisise.abnf;
 
 import java.util.ArrayList;
 import java.util.List;
+import net.siisise.bnf.BNF;
 import net.siisise.io.FrontPacket;
 import net.siisise.io.Packet;
 import net.siisise.io.PacketA;
@@ -74,11 +75,11 @@ public class ABNFmap extends IsABNF {
     }
 
     @Override
-    public ABNF or(ABNF... abnf) {
+    public ABNF or(BNF... abnf) {
         List<Integer> tmap = new ArrayList<>();
-        List<ABNF> xabnf = new ArrayList<>();
+        List<BNF> xabnf = new ArrayList<>();
         boolean n = true;
-        for (ABNF a : abnf) {
+        for (BNF a : abnf) {
             if (n && a instanceof ABNFbin) {
                 int ach = ((ABNFbin) a).ch();
                 if (ach >= 0 && !map.contains(ach)) {
@@ -97,7 +98,7 @@ public class ABNFmap extends IsABNF {
                 return nm;
             }
             xabnf.add(0, nm);
-            return new ABNFor(xabnf.toArray(new ABNF[0]));
+            return new ABNFor(xabnf.toArray(new BNF[0]));
         }
         return super.or(abnf);
     }

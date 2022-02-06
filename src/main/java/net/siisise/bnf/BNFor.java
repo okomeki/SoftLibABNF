@@ -68,7 +68,7 @@ public class BNFor extends FindBNF {
      */
     @Override
     public <X,N> C<X> buildFind(FrontPacket pac, N ns, BNFParser<? extends X>... parsers) {
-        BNF.C ret = null;
+        C ret = null;
 
         for (BNF sub : list) {
 
@@ -96,6 +96,11 @@ public class BNFor extends FindBNF {
 
     @Override
     public BNF copy(BNFReg reg) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        BNF[] l = new BNF[list.length];
+
+        for (int i = 0; i < list.length; i++) {
+            l[i] = list[i].copy(reg);
+        }
+        return new BNFor(name, l);
     }
 }

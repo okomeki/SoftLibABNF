@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Siisise Net.
+ * Copyright 2022 okome.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.siisise.ebnf;
+package net.siisise.bnf;
 
-import net.siisise.bnf.BNF;
 import net.siisise.bnf.parser.BNFParser;
 import net.siisise.io.FrontPacket;
 
 /**
  *
  */
-public class EBNFpl extends FindEBNF {
+public class BNFpl extends FindBNF {
 
     protected final BNF[] list;
 
-    public EBNFpl(BNF... bnfs) {
+    public BNFpl(BNF... bnfs) {
         list = bnfs;
         StringBuilder names = new StringBuilder();
         for (BNF abnf : list) {
@@ -35,21 +34,6 @@ public class EBNFpl extends FindEBNF {
         }
         names.deleteCharAt(names.length() - 1);
         name = "( " + names.toString() + " )";
-    }
-
-    /**
-     * 複製する
-     * @param reg 複製先
-     * @return 複製
-     */
-    @Override
-    public EBNFpl copy(EBNFReg reg) {
-        BNF[] cplist = new BNF[list.length];
-
-        for (int i = 0; i < list.length; i++) {
-            cplist[i] = list[i].copy(reg);
-        }
-        return new EBNFpl(cplist);
     }
 
     /**
@@ -76,4 +60,15 @@ public class EBNFpl extends FindEBNF {
         return ret;
     }
 
+    @Override
+    public BNF copy(BNFReg reg) {
+        BNF[] cplist = new BNF[list.length];
+
+        for (int i = 0; i < list.length; i++) {
+            cplist[i] = list[i].copy(reg);
+        }
+        return new BNFpl(cplist);
+    }
+
+    
 }

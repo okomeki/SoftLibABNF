@@ -16,7 +16,8 @@
 package net.siisise.abnf.parser5234;
 
 import net.siisise.abnf.ABNF;
-import net.siisise.abnf.ABNFReg;
+import net.siisise.bnf.BNF;
+import net.siisise.bnf.BNFReg;
 import net.siisise.bnf.parser.BNFSelect;
 
 /**
@@ -30,7 +31,7 @@ public class Element extends BNFSelect<ABNF> {
      * @param rule rule
      * @param base 名前空間
      */
-    public Element(ABNF rule, ABNFReg base) {
+    public Element(BNF rule, BNFReg base) {
         super(rule, base, "rulename", "group", "option", "char-val", "num-val", "prose-val");
     }
 }

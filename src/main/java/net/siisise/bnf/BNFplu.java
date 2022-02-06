@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Siisise Net.
+ * Copyright 2022 okome.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.siisise.abnf;
+package net.siisise.bnf;
 
-import net.siisise.bnf.BNF;
 import net.siisise.bnf.parser.BNFParser;
 import net.siisise.io.FrontPacket;
 import net.siisise.io.Packet;
@@ -24,9 +23,9 @@ import net.siisise.io.PacketA;
 /**
  *
  */
-public class ABNFplu extends ABNFplm {
+public class BNFplu extends BNFplm {
 
-    public ABNFplu(BNF[] list) {
+    public BNFplu(BNF[] list) {
         super(list);
     }
 
@@ -36,13 +35,13 @@ public class ABNFplu extends ABNFplm {
      * @return 複製 
      */
     @Override
-    public ABNFpl copy(ABNFReg reg) {
+    public BNFpl copy(BNFReg reg) {
         BNF[] l = new BNF[list.length];
 
         for (int i = 0; i < list.length; i++) {
             l[i] = this.list[i].copy(reg);
         }
-        return new ABNFplu(l);
+        return new BNFplu(l);
     }
 
     /**
@@ -97,4 +96,5 @@ public class ABNFplu extends ABNFplm {
         } while (flen >= 0);
         return null;
     }
+
 }

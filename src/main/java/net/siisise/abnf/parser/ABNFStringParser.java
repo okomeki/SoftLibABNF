@@ -16,7 +16,8 @@
 package net.siisise.abnf.parser;
 
 import net.siisise.abnf.ABNF;
-import net.siisise.abnf.ABNFReg;
+import net.siisise.bnf.BNF;
+import net.siisise.bnf.BNFReg;
 import net.siisise.bnf.parser.BNFBuildParser;
 
 /**
@@ -24,7 +25,7 @@ import net.siisise.bnf.parser.BNFBuildParser;
  */
 public class ABNFStringParser extends BNFBuildParser<String,ABNF> {
 
-    public ABNFStringParser(ABNF rule, ABNFReg base) {
+    public ABNFStringParser(BNF rule, BNFReg base) {
         super(rule, base);
     }
 

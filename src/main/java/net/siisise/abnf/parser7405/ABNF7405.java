@@ -16,7 +16,7 @@
 package net.siisise.abnf.parser7405;
 
 import net.siisise.abnf.ABNF;
-import net.siisise.abnf.ABNFReg;
+import net.siisise.abnf.ABNFCC;
 import net.siisise.abnf.parser5234.ABNF5234;
 import net.siisise.abnf.parser5234.Element;
 
@@ -28,7 +28,7 @@ import net.siisise.abnf.parser5234.Element;
  */
 public class ABNF7405 {
 
-    public static final ABNFReg REG = new ABNFReg(ABNF5234.copyREG());
+    public static final ABNFCC REG = new ABNFCC(ABNF5234.copyREG());
 
     static final ABNF caseInsensitiveString = REG.rule("case-insensitive-string", IS.class, "[ \"%i\" ] quoted-string");
     static final ABNF caseSensitiveString = REG.rule("case-sensitive-string", SS.class, "\"%s\" quoted-string");

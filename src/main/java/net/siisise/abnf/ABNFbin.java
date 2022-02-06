@@ -15,9 +15,7 @@
  */
 package net.siisise.abnf;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import net.siisise.io.FrontPacket;
 import net.siisise.io.Packet;
 import net.siisise.io.PacketA;
@@ -64,27 +62,6 @@ public class ABNFbin extends IsABNF {
     @Override
     public ABNFbin copy(ABNFReg reg) {
         return new ABNFbin(new String(data, UTF8));
-    }
-
-    /**
-     * 1文字単位でor分割。
-     * どれかの文字に該当するor型ABNFをつくる
-     * 
-     * @deprecated ABNFmap に移行かな
-     * @param val 文字の一括登録
-     * @return 1文字単位で比較するorっぽいABNF
-     */
-    public static ABNF list(String val) {
-        FrontPacket src = pac(val);
-
-        List<ABNF> list = new ArrayList<>();
-        while (src.length() > 0) {
-            list.add(new ABNFbin(CodePoint.utf8(src)));
-        }
-        if (list.size() == 1) {
-            return list.get(0);
-        }
-        return new ABNFor(list.toArray(new ABNF[list.size()]));
     }
 
     /**

@@ -23,7 +23,7 @@ import net.siisise.io.Packet;
  * isとfindの実装が必要だが
  * find側の実装だけで済ませたい処理.
  */
-public abstract class FindBNF extends AbstractBNF {
+public abstract class FindBNF extends AbstractBNF<BNF> {
 
     /**
      * 単純な比較をfind で処理する.
@@ -67,5 +67,5 @@ public abstract class FindBNF extends AbstractBNF {
         return ret != null ? subBuild(ret, ns, mp) : null;
     }
     
-    abstract <X,N> C<X> buildFind(FrontPacket pac, N ns, BNFParser<? extends X>... parsers);
+    protected abstract <X,N> C<X> buildFind(FrontPacket pac, N ns, BNFParser<? extends X>... parsers);
 }

@@ -21,7 +21,6 @@ import net.siisise.io.Packet;
 
 /**
  *
- * @author okome
  */
 public class EBNFmn extends IsEBNF {
 
@@ -62,5 +61,5 @@ public class EBNFmn extends IsEBNF {
     public Packet is(FrontPacket pac) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-    
+
 }

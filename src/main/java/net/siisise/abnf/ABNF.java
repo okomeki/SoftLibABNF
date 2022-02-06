@@ -24,15 +24,7 @@ import net.siisise.bnf.BNF;
  * RegExpのPattern相当?
  * ABNFのparserは含まない。
  */
-public interface ABNF extends BNF {
-
-    /**
-     * 名付ける。
-     *
-     * @param name この構文に付与する名前
-     * @return 名前付きABNF構文
-     */
-    ABNF name(String name);
+public interface ABNF extends BNF<ABNF> {
 
     /**
      * 大文字小文字を区別しない1文字。
@@ -98,35 +90,6 @@ public interface ABNF extends BNF {
     }
 
     /**
-     * Concatenation に翻訳される ABNF をスペースで並べた相当の記述。
-     * 最長一致は期待しないでよい場合の軽量簡易版。
-     *
-     * @param vals 接続したいABNF構文の列挙
-     * @return 繋がったABNF構文
-     */
-    ABNF pl(ABNF... vals);
-
-    /**
-     * Concatenation に翻訳されるABNF。
-     * 難しい繰り返しにも対応する最長一致。
-     * バイト列単位で厳密に比較する.
-     *
-     * @param vals 接続したいABNF構文の列挙
-     * @return 繋がったABNF構文
-     */
-    ABNF plm(ABNF... vals);
-
-    /**
-     * Concatenation に翻訳されるABNF。
-     * 難しい繰り返しにも対応する最長一致。
-     * utf-8の単位で厳密に比較する. plmよりは速い?
-     *
-     * @param vals 接続したいABNF構文の列挙
-     * @return 繋がったABNF構文
-     */
-    ABNF plu(ABNF... vals);
-
-    /**
      * マイナス演算
      * ABNFにはないので仮
      *
@@ -134,47 +97,7 @@ public interface ABNF extends BNF {
      * @param val 引かれるABNF
      * @return 引き算できるABNF
      */
-    ABNF mn(ABNF val);
-
-    /**
-     * Alternation に翻訳される ABNF / 的な構文の生成装置。
-     * 最大一致で検索されるので誤読もある。
-     *
-     * @param val 接続したいABNF構文の列挙
-     * @return Alternationに結合されたABNF構文
-     */
-    ABNF or(ABNF... val);
-
-    /**
-     * min*maxXXX.
-     *
-     * @param min 指定しない場合は 0
-     * @param max 指定しない場合は -1
-     * @return 繰り返しのABNF
-     */
-    ABNF x(int min, int max);
-
-    /**
-     * *XXX 繰り返し
-     *
-     * @return 繰り返しABNF
-     */
-    ABNF x();
-
-    /**
-     * 1回以上ループ
-     * 1*XXX
-     *
-     * @return 1回以上繰り返しのABNF
-     */
-    ABNF ix();
-
-    /**
-     * [XXX] 省略可能
-     *
-     * @return ABNF構文
-     */
-    ABNF c();
+    ABNF mn(BNF val);
 
     /**
      * 複製可能な構造を推奨(ループがあると複製は難しい)

@@ -29,10 +29,19 @@ import net.siisise.io.PacketA;
 
 /**
  * 抽象的なBNF全般
+ * @param <B>
  */
-public interface BNF {
+public interface BNF<B extends BNF> {
     
     static final Charset UTF8 = StandardCharsets.UTF_8;
+
+    /**
+     * 名付ける。
+     *
+     * @param name この構文に付与する名前
+     * @return 名前付きABNF構文
+     */
+    B name(String name);
 
     /**
      * 名前または構文っぽいものの取得。
@@ -133,6 +142,68 @@ public interface BNF {
      * @return 判定結果
      */
     boolean eq(String val);
+    
+    B pl(BNF... val);
+
+    /**
+     * Concatenation に翻訳されるABNF。
+     * 難しい繰り返しにも対応する最長一致。
+     * バイト列単位で厳密に比較する.
+     *
+     * @param vals 接続したいABNF構文の列挙
+     * @return 繋がったABNF構文
+     */
+    B plm(BNF... vals);
+
+    /**
+     * Concatenation に翻訳されるABNF。
+     * 難しい繰り返しにも対応する最長一致。
+     * utf-8の単位で厳密に比較する. plmよりは速い?
+     *
+     * @param vals 接続したいABNF構文の列挙
+     * @return 繋がったABNF構文
+     */
+    B plu(BNF... vals);
+    
+    /**
+     * Alternation に翻訳される ABNF / 的な構文の生成装置。
+     * 最大一致で検索されるので誤読もある。
+     *
+     * @param val 接続したいABNF構文の列挙
+     * @return Alternationに結合されたABNF構文
+     */
+    B or(BNF... val);
+
+    /**
+     * min*maxXXX.
+     *
+     * @param min 指定しない場合は 0
+     * @param max 指定しない場合は -1
+     * @return 繰り返しのABNF
+     */
+    B x(int min, int max);
+
+    /**
+     * *XXX 繰り返し
+     *
+     * @return 繰り返しABNF
+     */
+    B x();
+
+    /**
+     * 1回以上ループ
+     * 1*XXX
+     *
+     * @return 1回以上繰り返しのABNF
+     */
+    B ix();
+
+    /**
+     * [XXX] 省略可能
+     *
+     * @return ABNF構文
+     */
+    B c();
 
     /**
      * 複製可能な構造を推奨(ループがあると複製は難しい)
@@ -140,5 +211,5 @@ public interface BNF {
      * @param reg 複製先
      * @return ABNFの複製
      */
-    BNF copy(BNFReg reg);
+    B copy(BNFReg reg);
 }

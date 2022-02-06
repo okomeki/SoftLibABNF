@@ -16,12 +16,13 @@
 package net.siisise.abnf.parser7405;
 
 import net.siisise.abnf.ABNF;
-import net.siisise.abnf.ABNFReg;
+import net.siisise.bnf.BNF;
+import net.siisise.bnf.BNFReg;
 import net.siisise.bnf.parser.BNFSelect;
 
 public class CharVal7405 extends BNFSelect<ABNF> {
 
-    public CharVal7405(ABNF rule, ABNFReg base) {
+    public CharVal7405(BNF rule, BNFReg base) {
         super(rule, base, "case-insensitive-string", "case-sensitive-string");
     }
 }    

@@ -5,7 +5,7 @@ import net.siisise.bnf.BNF;
 /**
  * ISO 14977 くらいの標準で?
  */
-public interface EBNF extends BNF {
+public interface EBNF extends BNF<EBNF> {
 
     /**
      * 
@@ -24,13 +24,6 @@ public interface EBNF extends BNF {
         return new EBNFrange(min, max);
     }
 
-    public EBNF c();
-    public EBNF ix();
-    public EBNF x();
-    public EBNF x(int min, int max);
-    public EBNF pl(BNF... ebnfs);
-    public EBNF or(BNF... bnfs);
-    
     /**
      * 複製可能な構造を推奨(ループがあると複製は難しい)
      *

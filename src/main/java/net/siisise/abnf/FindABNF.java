@@ -70,5 +70,5 @@ public abstract class FindABNF extends AbstractABNF {
      * @param parsers サブ要素のパーサ
      * @return サブ要素を含む解析結果
      */
-    abstract <X,N> C<X> buildFind(FrontPacket pac, N ns, BNFParser<? extends X>... parsers);
+    abstract protected <X,N> C<X> buildFind(FrontPacket pac, N ns, BNFParser<? extends X>... parsers);
 }
