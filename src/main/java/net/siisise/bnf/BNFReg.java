@@ -125,15 +125,38 @@ public class BNFReg {
         return (T) parser(rulename).parse(src);
     }
 
+    /**
+     * 
+     * @param <T> 解析型
+     * @param rulename 解析装置付き構文の名。駆動コマンドのようなもの
+     * @param src パース対象ソース
+     * @param ns
+     * @return 解析後の実体
+     */
     public <T> T parse(String rulename, String src, Object ns) {
         return (T) parser(rulename).parse(src, ns);
     }
 
+    /**
+     * 
+     * @param <T> 解析型
+     * @param rulename 解析装置付き構文の名。駆動コマンドのようなもの
+     * @param src パース対象ソース
+     * @return 解析後の実体
+     */
     public <T> T parse(String rulename, byte[] src) {
         FrontPacket pac = new StreamFrontPacket(new ByteArrayInputStream(src));
         return (T) parser(rulename).parse(pac);
     }
 
+    /**
+     * 
+     * @param <T> 解析型
+     * @param rulename 解析装置付き構文の名。駆動コマンドのようなもの
+     * @param src パース対象ソース
+     * @param ns
+     * @return 解析後の実体
+     */
     public <T> T parse(String rulename, byte[] src, Object ns) {
         FrontPacket pac = new StreamFrontPacket(new ByteArrayInputStream(src));
         return (T) parser(rulename).parse(pac, ns);

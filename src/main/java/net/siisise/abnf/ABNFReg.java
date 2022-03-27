@@ -31,7 +31,8 @@ import net.siisise.io.FrontPacket;
 import net.siisise.io.StreamFrontPacket;
 
 /**
- * ABNFの名前担当、Parserの機能もあり。 Namespace
+ * ABNFの名前担当、Parserの機能もあり。
+ * Namespace
  *
  * rule: 基本は RFC 5234 に準拠するが、一部改変したParserの対応も可能
  */
@@ -47,7 +48,7 @@ public class ABNFReg extends BNFCC {
         }
 
         @Override
-        protected <X, N> C<X> buildFind(FrontPacket pac, N ns, BNFParser<? extends X>... parsers) {
+        protected <X,N> C<X> buildFind(FrontPacket pac, N ns, BNFParser<? extends X>... parsers) {
             return reg.get(name).find(pac, ns, parsers);
         }
 
@@ -160,6 +161,7 @@ public class ABNFReg extends BNFCC {
      * @param rule name = value 改行を省略可能に改変している
      * @return rule 1行をABNFにしたもの
      */
+    @Override
     public ABNF rule(String rule) {
         ABNF abnf = bnfReg.parse(bnfReg.rule, rule + "\r\n", this);
         return rule(abnf.getName(), abnf);

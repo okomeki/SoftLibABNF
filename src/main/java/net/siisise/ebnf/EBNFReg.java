@@ -15,7 +15,6 @@
  */
 package net.siisise.ebnf;
 
-import net.siisise.bnf.BNF;
 import net.siisise.bnf.BNFCC;
 import net.siisise.ebnf.parser.EBNFISO14977;
 
@@ -34,6 +33,7 @@ public class EBNFReg extends BNFCC {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
+    @Override
     public EBNF ref(String rulename) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }

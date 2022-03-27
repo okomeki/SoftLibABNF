@@ -62,6 +62,7 @@ public abstract class AbstractEBNF extends AbstractBNF<EBNF> implements EBNF {
         return new EBNFmn(this,bnf);
     }
     
+    @Override
     protected String hex(int ch) {
         if (ch < 0x100) {
             return "%x" + Integer.toHexString(0x100 + ch).substring(1);
