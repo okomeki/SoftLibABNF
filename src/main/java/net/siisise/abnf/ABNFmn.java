@@ -16,11 +16,12 @@
 package net.siisise.abnf;
 
 import net.siisise.bnf.BNF;
-import net.siisise.io.FrontPacket;
 import net.siisise.io.Packet;
+import net.siisise.pac.ReadableBlock;
 
 /**
  * ABNFにはないがマイナス演算
+ * bの要素がaより小さいとうまくいくのかも
  */
 public class ABNFmn extends IsABNF {
 
@@ -43,22 +44,21 @@ public class ABNFmn extends IsABNF {
     }
 
     @Override
-    public <N> Packet is(FrontPacket pac, N ns) {
+    public <N> Packet is(ReadableBlock pac, N ns) {
         Packet p1 = a.is(pac, ns);
         if (p1 == null) {
             return null;
         }
         Packet p2 = b.is(p1, ns);
         if (p2 != null) {
-            pac.dbackWrite(p1.toByteArray());
-            pac.dbackWrite(p2.toByteArray());
+            pac.back(p1.size() + p2.size());
             return null;
         }
         return p1;
     }
 
     @Override
-    public Packet is(FrontPacket pac) {
+    public Packet is(ReadableBlock src) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

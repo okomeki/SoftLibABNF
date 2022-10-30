@@ -19,8 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 import net.siisise.bnf.BNF;
 import net.siisise.bnf.parser.BNFParser;
-import net.siisise.io.FrontPacket;
 import net.siisise.lang.CodePoint;
+import net.siisise.pac.ReadableBlock;
 
 /**
  *
@@ -46,7 +46,7 @@ public class EBNFor extends FindEBNF {
      * @param chlist 文字の一覧として
      */
     public EBNFor(String chlist) {
-        FrontPacket src = pac(chlist);
+        ReadableBlock src = rb(chlist);
         List<BNF> abnfs = new ArrayList<>();
         while (src.length() > 0) {
             abnfs.add(new EBNFtext(CodePoint.utf8(src)));
@@ -56,7 +56,7 @@ public class EBNFor extends FindEBNF {
     }
 
     public EBNFor(String name, String list) {
-        FrontPacket p = pac(list);
+        ReadableBlock p = rb(list);
         List<BNF> fs = new ArrayList<>();
         while (p.length() > 0) {
             fs.add(new EBNFtext(CodePoint.utf8(p)));
@@ -113,7 +113,7 @@ public class EBNFor extends FindEBNF {
     }
 
     @Override
-    public <X,N> C<X> buildFind(FrontPacket pac, N ns, BNFParser<? extends X>... parsers) {
+    public <X,N> C<X> buildFind(ReadableBlock pac, N ns, BNFParser<? extends X>... parsers) {
         BNF.C<X> ret = null;
 
         for (BNF sub : list) {
@@ -121,12 +121,9 @@ public class EBNFor extends FindEBNF {
             C<X> subret = sub.find(pac, ns, parsers);
             if (subret != null) {
                 byte[] data = subret.ret.toByteArray();
-                pac.backWrite(data);
+                pac.back(data.length);
                 if (ret == null || ret.ret.length() < data.length) {
                     subret.ret.dbackWrite(data);
-                    //if (ret != null) {
-                    //    System.out.println("+******DUUPP****+" + subret + "(" + subBuild.toString() + ")");
-                    //}
                     ret = subret;
                 }
             }
@@ -135,8 +132,7 @@ public class EBNFor extends FindEBNF {
             return null;
         }
 
-        byte[] e = new byte[(int) ret.ret.length()];
-        pac.read(e);
+        pac.skip((int)ret.ret.size());
         return ret;
     }
 }

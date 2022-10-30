@@ -15,10 +15,10 @@
  */
 package net.siisise.ebnf;
 
-import net.siisise.io.FrontPacket;
 import net.siisise.io.Packet;
 import net.siisise.io.PacketA;
 import net.siisise.lang.CodePoint;
+import net.siisise.pac.ReadableBlock;
 
 /**
  * 文字
@@ -41,19 +41,21 @@ public class EBNFrange extends IsEBNF {
     }
 
     @Override
-    public Packet is(FrontPacket pac) {
+    public Packet is(ReadableBlock pac) {
         if (pac.length() == 0) {
             return null;
         }
+        int of = pac.backSize();
         int ch = CodePoint.utf8(pac);
         if (ch < 0) {
+            pac.seek(of);
             return null;
         }
         byte[] bin8 = CodePoint.utf8(ch);
         if (ch >= min && ch <= max) {
             return new PacketA(bin8);
         }
-        pac.dbackWrite(bin8);
+        pac.seek(of);
         return null;
     }
 }

@@ -21,6 +21,7 @@ import net.siisise.bnf.BNF;
 import net.siisise.bnf.parser.BNFParser;
 import net.siisise.io.FrontPacket;
 import net.siisise.lang.CodePoint;
+import net.siisise.pac.ReadableBlock;
 
 /**
  *
@@ -65,7 +66,7 @@ public class ABNFor extends FindABNF {
         this.name = name;
     }
 
-    static String toName(BNF[] abnfs) {
+    private static String toName(BNF[] abnfs) {
         StringBuilder sb = new StringBuilder();
         //if ( list.length > 1) {
         sb.append("( ");
@@ -106,14 +107,14 @@ public class ABNFor extends FindABNF {
         ABNF[] n = new ABNF[list.length + val.length];
         System.arraycopy(list, 0, n, 0, list.length);
         System.arraycopy(val, 0, n, list.length, val.length);
-        if (name.contains("(")) {
+//        if (name.contains("(")) {
             name = toName(n);
-        }
+//        }
         list = n;
     }
 
     @Override
-    public <X,N> C<X> buildFind(FrontPacket pac, N ns, BNFParser<? extends X>... parsers) {
+    public <X,N> C<X> buildFind(ReadableBlock pac, N ns, BNFParser<? extends X>... parsers) {
         ABNF.C<X> ret = null;
 
         for (BNF sub : list) {
@@ -121,12 +122,9 @@ public class ABNFor extends FindABNF {
             C<X> subret = sub.find(pac, ns, parsers);
             if (subret != null) {
                 byte[] data = subret.ret.toByteArray();
-                pac.backWrite(data);
+                pac.back(data.length);
                 if (ret == null || ret.ret.length() < data.length) {
                     subret.ret.dbackWrite(data);
-                    //if (ret != null) {
-                    //    System.out.println("+******DUUPP****+" + subret + "(" + subBuild.toString() + ")");
-                    //}
                     ret = subret;
                 }
             }
@@ -135,8 +133,7 @@ public class ABNFor extends FindABNF {
             return null;
         }
 
-        byte[] e = new byte[(int) ret.ret.length()];
-        pac.read(e);
+        pac.skip((int) ret.ret.length());
         return ret;
     }
 }

@@ -17,7 +17,7 @@ package net.siisise.abnf;
 
 import net.siisise.bnf.BNF;
 import net.siisise.bnf.parser.BNFParser;
-import net.siisise.io.FrontPacket;
+import net.siisise.pac.ReadableBlock;
 
 /**
  * 軽量一致検索。
@@ -65,13 +65,13 @@ public class ABNFpl extends FindABNF {
      * @return サブ要素を含む解析結果
      */
     @Override
-    public <X,N> C<X> buildFind(FrontPacket pac, N ns, BNFParser<? extends X>... parsers) {
+    public <X,N> C<X> buildFind(ReadableBlock pac, N ns, BNFParser<? extends X>... parsers) {
         C<X> ret = new C<>();
         
         for (BNF sub : list) {
             C<X> subret = sub.find(pac, ns, parsers);
             if (subret == null) {
-                pac.dbackWrite(ret.ret.toByteArray());
+                pac.back(ret.ret.size());
                 return null;
             }
             mix(ret, subret);

@@ -1,11 +1,13 @@
 package net.siisise.bnf;
 
-import java.io.StringReader;
 import net.siisise.bnf.parser.BNFParser;
 import net.siisise.io.FrontPacket;
+import net.siisise.io.Input;
 import net.siisise.io.Packet;
 import net.siisise.io.PacketA;
-import net.siisise.io.StreamFrontPacket;
+import net.siisise.pac.ByteBlock;
+import net.siisise.pac.PacketBlock;
+import net.siisise.pac.ReadableBlock;
 
 /**
  * 基本実装
@@ -47,12 +49,37 @@ public abstract class AbstractBNF<B extends BNF> implements BNF<B> {
 
     @Override
     public boolean is(String val) {
-        return is(pac(val)) != null;
+        return is(rb(val)) != null;
     }
 
     @Override
     public <N> boolean is(String val, N ns) {
-        return is(pac(val), ns) != null;
+        return is(rb(val), ns) != null;
+    }
+    
+    @Override
+    public Packet is(FrontPacket pac) {
+        return is(rb(pac));
+    }
+    
+    @Override
+    public <N> Packet is(FrontPacket pac, N ns) {
+        return is(rb(pac), ns);
+    }
+
+    @Override
+    public <X> C<X> find(FrontPacket pac, BNFParser<? extends X>... parsers) {
+        return find(rb(pac), null, parsers);
+    }
+
+    @Override
+    public <X> C<X> find(ReadableBlock pac, BNFParser<? extends X>... parsers) {
+        return find(pac, null, parsers);
+    }
+
+    @Override
+    public <X,N> C<X> find(FrontPacket pac, N ns, BNFParser<? extends X>... parsers) {
+        return find(rb(pac), ns, parsers);
     }
 
     @Override
@@ -157,12 +184,34 @@ public abstract class AbstractBNF<B extends BNF> implements BNF<B> {
         return pac;
     }
     
-    public static FrontPacket fpac(String str) {
-        return new StreamFrontPacket(new StringReader(str));
+    /**
+     * 文字列を読み込み専用Blockに.
+     * @param str
+     * @return 
+     */
+    public static final ReadableBlock rb(String str) {
+        return new ByteBlock(str.getBytes(UTF8));
+    }
+    
+    public static final ReadableBlock rb(FrontPacket val) {
+        return new PacketBlock(val);
+    }
+    
+    public static String str(Input pac) {
+        return new String(pac.toByteArray(), UTF8);
     }
 
-    public static String str(FrontPacket pac) {
-        return new String(pac.toByteArray(), UTF8);
+    /**
+     * 文字列に起こす。 データは元に戻すので減らない。
+     * ABNFでは使ってないかも.
+     * @param pac 元パケット
+     * @return 文字に変えたもの
+     */
+    public static String strd(FrontPacket pac) {
+        byte[] data = pac.toByteArray();
+        String s = new String(data, UTF8);
+        pac.backWrite(data);
+        return s;
     }
 
     /**
@@ -171,11 +220,11 @@ public abstract class AbstractBNF<B extends BNF> implements BNF<B> {
      * @param pac 元パケット
      * @return 文字に変えたもの
      */
-    public static String strd(FrontPacket pac) {
+    public static String strd(ReadableBlock pac) {
         byte[] data = pac.toByteArray();
-        Packet n = new PacketA(data);
-        pac.dbackWrite(data);
-        return str(n);
+        String s = new String(data, UTF8);
+        pac.back(data.length);
+        return s;
     }
 
     /**

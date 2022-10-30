@@ -47,14 +47,20 @@ public abstract class BNFList<T, M> extends BNFBuildParser<T, M> {
     protected T build(BNF.C<M> sret, Object ns) {
         List<M> mlist = new ArrayList<>();
         for ( String sub : subName ) {
-            List<M> s = sret.get(sub);
-            if ( s != null ) {
-                mlist.addAll(s);
+            List<M> sublist = sret.get(sub);
+            if ( sublist != null ) {
+                mlist.addAll(sublist);
             }
         }
         return build(mlist, ns);
     }
 
+    /**
+     * 副ルールを抽出してリストで渡される処理 name space付きの場合
+     * @param val 抽出結果
+     * @param ns name space
+     * @return 処理結果 
+     */
     protected T build(List<M> val, Object ns) {
         return build(val);
     }

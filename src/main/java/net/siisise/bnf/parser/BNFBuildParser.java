@@ -18,9 +18,11 @@ package net.siisise.bnf.parser;
 import net.siisise.bnf.BNF;
 import net.siisise.bnf.BNFReg;
 import net.siisise.io.FrontPacket;
+import net.siisise.pac.PacketBlock;
+import net.siisise.pac.ReadableBlock;
 
 /**
- * subnsで指定した名の部分を中間型で受け取り、変換後の型で渡すだけのお仕事にするための部分実装。
+ * subrulenamesで指定した名の部分を中間型で受け取り、変換後の型で渡すだけのお仕事にするための部分実装。
  *
  * @param <T> 変換後の型
  * @param <M> 中間型
@@ -34,8 +36,8 @@ public class BNFBuildParser<T, M> extends BNFBaseParser<T> {
 
     /**
      * 自動
-     * @param rule ルールABNF
-     * @param base ABNF名前空間Reg
+     * @param rule ルールBNF
+     * @param base BNF名前空間Reg
      * @param subrulenames サブ要素
      */
     protected BNFBuildParser(BNF rule, BNFReg base, String... subrulenames) {
@@ -45,7 +47,7 @@ public class BNFBuildParser<T, M> extends BNFBaseParser<T> {
     }
 
     @Override
-    public T parse(FrontPacket pac) {
+    public T parse(ReadableBlock pac) {
         return parse(pac, null);
     }
     
@@ -56,7 +58,7 @@ public class BNFBuildParser<T, M> extends BNFBaseParser<T> {
      * @return 解析結果
      */
     @Override
-    public T parse(FrontPacket pac, Object ns) {
+    public T parse(ReadableBlock pac, Object ns) {
         if (subs == null) {
             subs = new BNFParser[subName.length];
             for (int i = 0; i < subName.length; i++) {
@@ -71,7 +73,10 @@ public class BNFBuildParser<T, M> extends BNFBaseParser<T> {
     }
 
     /**
-     * 
+     * parse処理後の処理.
+     * parse処理後
+     * ns付きまたはnsなしどちらかを実装すればいい。
+     * subName を参照してsrcからサブ要素を取り出せたりする雑な形。
      * @param src 解析対象
      * @param ns user name space 名前空間
      * @return 解析結果

@@ -1,7 +1,7 @@
 package net.siisise.bnf;
 
-import net.siisise.io.FrontPacket;
 import net.siisise.io.Packet;
+import net.siisise.pac.ReadableBlock;
 
 /**
  *
@@ -33,7 +33,7 @@ public class BNFtext extends IsBNF {
     }
 
     @Override
-    public Packet is(FrontPacket src) {
+    public Packet is(ReadableBlock src) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
@@ -41,5 +41,5 @@ public class BNFtext extends IsBNF {
     public BNF copy(BNFReg reg) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-    
+
 }

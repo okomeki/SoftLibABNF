@@ -22,6 +22,7 @@ import net.siisise.io.FrontPacket;
 import net.siisise.io.Packet;
 import net.siisise.io.PacketA;
 import net.siisise.lang.CodePoint;
+import net.siisise.pac.ReadableBlock;
 
 /**
  * 内部で使用する数値用Parser。
@@ -51,10 +52,10 @@ class NumSub extends BNFBaseParser<ABNF> {
      * @return 適度にABNF化した結果
      */
     @Override
-    public ABNF parse(FrontPacket pac) {
+    public ABNF parse(ReadableBlock pac) {
         int c = pac.read();
         if (c != a && c != b) {
-            pac.backWrite(c);
+            pac.back(1);
             return null;
         }
         int val = num(pac);
@@ -78,7 +79,7 @@ class NumSub extends BNFBaseParser<ABNF> {
         return ABNF.bin(str(data));
     }
 
-    private int num(FrontPacket pac) {
+    private int num(ReadableBlock pac) {
         FrontPacket num = nrule.is(pac);
         return Integer.parseInt(str(num), dig);
     }

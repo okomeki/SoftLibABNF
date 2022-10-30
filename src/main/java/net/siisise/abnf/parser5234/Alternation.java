@@ -17,7 +17,6 @@ package net.siisise.abnf.parser5234;
 
 import java.util.List;
 import net.siisise.abnf.ABNF;
-import net.siisise.abnf.ABNFReg;
 import net.siisise.abnf.ABNFbin;
 import net.siisise.abnf.ABNFmap;
 import net.siisise.abnf.ABNFor;

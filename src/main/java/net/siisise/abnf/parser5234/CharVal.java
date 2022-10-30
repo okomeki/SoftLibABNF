@@ -20,8 +20,8 @@ import net.siisise.abnf.ABNF;
 import net.siisise.bnf.BNF;
 import net.siisise.bnf.BNFReg;
 import net.siisise.bnf.parser.BNFBaseParser;
-import net.siisise.io.FrontPacket;
 import net.siisise.io.Packet;
+import net.siisise.pac.ReadableBlock;
 
 /**
  *
@@ -33,7 +33,7 @@ public class CharVal extends BNFBaseParser<ABNF> {
     }
 
     @Override
-    public ABNF parse(FrontPacket pac) {
+    public ABNF parse(ReadableBlock pac) {
         Packet p = rule.is(pac);
         if (p == null) {
             return null;
@@ -43,5 +43,4 @@ public class CharVal extends BNFBaseParser<ABNF> {
         byte[] d = p.toByteArray();
         return ABNF.text(new String(d, StandardCharsets.UTF_8));
     }
-
 }

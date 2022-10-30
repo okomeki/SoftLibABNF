@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.siisise</groupId>
     <artifactId>softlib-abnf</artifactId>
-    <version>1.2.0</version>
+    <version>1.2.1-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>SoftLibABNF</name>
     <description>Java ABNF parser CC</description>
@@ -45,12 +45,12 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.10.0</version>
+                <version>3.10.1</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.3.2</version>
+                <version>3.4.1</version>
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
@@ -78,7 +78,7 @@
             <plugin>
                 <groupId>org.sonatype.plugins</groupId>
                 <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.6.12</version>
+                <version>1.6.13</version>
                 <extensions>true</extensions>
                 <configuration>
                     <serverId>ossrh</serverId>
@@ -92,7 +92,7 @@
         <dependency>
             <groupId>net.siisise</groupId>
             <artifactId>softlib</artifactId>
-            <version>1.1.6</version>
+            <version>1.1.7-SNAPSHOT</version>
             <type>jar</type>
         </dependency>
         <dependency>

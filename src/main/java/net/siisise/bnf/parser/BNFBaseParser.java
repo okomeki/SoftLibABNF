@@ -19,7 +19,15 @@ import java.nio.charset.StandardCharsets;
 import net.siisise.abnf.AbstractABNF;
 import net.siisise.bnf.BNF;
 import net.siisise.io.FrontPacket;
+import net.siisise.io.Input;
+import net.siisise.pac.PacketBlock;
+import net.siisise.pac.ReadableBlock;
 
+/**
+ * AbstractBNFParserなのかもしれない.
+ * 適度な処理だけしたもの
+ * @param <T> 変換後の型
+ */
 public abstract class BNFBaseParser<T> implements BNFParser<T> {
     
     protected BNF rule;
@@ -37,14 +45,36 @@ public abstract class BNFBaseParser<T> implements BNFParser<T> {
         return rule;
     }
 
+    /**
+     *
+     * @param pac
+     * @param ns
+     * @return
+     */
+    @Override
+    public T parse(ReadableBlock pac, Object ns) {
+        return parse(pac);
+    }
+
+    /**
+     *
+     * @param pac
+     * @param ns
+     * @return
+     */
     @Override
     public T parse(FrontPacket pac, Object ns) {
-        return parse(pac);
+        return parse((ReadableBlock)new PacketBlock(pac), ns);
+    }
+
+    @Override
+    public T parse(FrontPacket pac) {
+        return parse((ReadableBlock)new PacketBlock(pac), null);
     }
 
     @Override
     public T parse(String str, Object ns) {
-        return parse(AbstractABNF.pac(str), ns);
+        return parse(AbstractABNF.rb(str), ns);
     }
 
     /**
@@ -54,16 +84,30 @@ public abstract class BNFBaseParser<T> implements BNFParser<T> {
      */
     @Override
     public T parse(String src) {
-        return parse(AbstractABNF.pac(src));
+        return parse(AbstractABNF.rb(src));
     }
-    
-    protected static String str(FrontPacket pac) {
+
+    /**
+     * バイト列をUTF-8文字列に変えるだけ。
+     * pacは処理後空になる
+     * 
+     * @param pac バイト列
+     * @return 文字列
+     */
+    protected static String str(Input pac) {
         return new String(pac.toByteArray(), StandardCharsets.UTF_8);
     }
 
-    protected static String strd(FrontPacket pac) {
+    /**
+     * バイト列をUTF-8文字列に変えるだけ。
+     * pacは処理後空にならない
+     * 
+     * @param pac バイト列
+     * @return 文字列
+     */
+    protected static String strd(ReadableBlock pac) {
         byte[] b = pac.toByteArray();
-        pac.dbackWrite(b);
+        pac.back(b.length);
         return new String(b, StandardCharsets.UTF_8);
     }
 }

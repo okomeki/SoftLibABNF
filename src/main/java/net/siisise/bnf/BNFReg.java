@@ -9,6 +9,7 @@ import net.siisise.bnf.parser.BNFPacketParser;
 import net.siisise.bnf.parser.BNFParser;
 import net.siisise.io.FrontPacket;
 import net.siisise.io.StreamFrontPacket;
+import net.siisise.pac.ReadableBlock;
 
 /**
  * ABNFのルールのままBNFに持ってきたもの
@@ -39,6 +40,11 @@ public class BNFReg {
 
         @Override
         public <X, N> C<X> buildFind(FrontPacket pac, N ns, BNFParser<? extends X>... parsers) {
+            return reg.get(name).find(pac, ns, parsers);
+        }
+
+        @Override
+        public <X, N> C<X> buildFind(ReadableBlock pac, N ns, BNFParser<? extends X>... parsers) {
             return reg.get(name).find(pac, ns, parsers);
         }
 
@@ -198,7 +204,7 @@ public class BNFReg {
      * ruleの登録。
      * ref の参照先を変えないよう書き換えたい
      *
-     * @param <B>
+     * @param <B> 型
      * @param rulename rulename
      * @param elements rule の element
      * @return rule elements にrulenameをつけたABNF
@@ -221,7 +227,7 @@ public class BNFReg {
      * 主要なところにParse結果をオブジェクトに変換する機能を埋め込むと、いろいろ楽。
      * パースされたABNFにParserを紐づけて登録する。
      *
-     * @param <B>
+     * @param <B> 型
      * @param rulename ABNFの名
      * @param parser ソースまたは子の要素を渡され対象オブジェクトに組み上げる機能
      * @param elements ruleのelements部分
@@ -238,7 +244,7 @@ public class BNFReg {
      * ABNFの解析ついでに対応するParserを埋め込む。
      * 該当する場合はparserによって対象オブジェクトに変換する機能をつけたABNFを登録する
      *
-     * @param <B>
+     * @param <B> 型
      * @param rulename ABNFの名
      * @param parser ABNFから対象オブジェクトに変換する解析装置
      * @param elements ABNF構文
@@ -251,6 +257,7 @@ public class BNFReg {
     /**
      * rule 1行のパース.
      * 最後の改行は省略可能
+     * @param <B> 型
      * @param rule name = value 改行を省略可能に改変している
      * @return rule 1行をABNFにしたもの
      */
@@ -262,7 +269,7 @@ public class BNFReg {
     /**
      * 
      * elements は ABNFの名
-     * @param <B>
+     * @param <B> 型
      * @param elements
      * @return 
      */

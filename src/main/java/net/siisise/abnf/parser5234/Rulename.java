@@ -21,6 +21,7 @@ import net.siisise.bnf.BNF;
 import net.siisise.bnf.BNFReg;
 import net.siisise.bnf.parser.BNFBaseParser;
 import net.siisise.io.FrontPacket;
+import net.siisise.pac.ReadableBlock;
 
 /**
  * ルール名.
@@ -39,7 +40,7 @@ public class Rulename extends BNFBaseParser<ABNF> {
      * @return 名前で指定されたルールへの参照
      */
     @Override
-    public ABNF parse(FrontPacket pac, Object ns) {
+    public ABNF parse(ReadableBlock pac, Object ns) {
         FrontPacket name = rule.is(pac);
         if (name == null) {
             return null;
@@ -48,8 +49,7 @@ public class Rulename extends BNFBaseParser<ABNF> {
     }
 
     @Override
-    public ABNF parse(FrontPacket pac) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public ABNF parse(ReadableBlock pac) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
-
 }

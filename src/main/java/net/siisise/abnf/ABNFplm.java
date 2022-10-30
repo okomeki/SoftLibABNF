@@ -17,9 +17,9 @@ package net.siisise.abnf;
 
 import net.siisise.bnf.BNF;
 import net.siisise.bnf.parser.BNFParser;
-import net.siisise.io.FrontPacket;
 import net.siisise.io.Packet;
 import net.siisise.io.PacketA;
+import net.siisise.pac.ReadableBlock;
 
 /**
  * 完全一致検索。
@@ -49,7 +49,7 @@ public class ABNFplm extends ABNFpl {
     }
 
     @Override
-    public <X,N> C<X> buildFind(FrontPacket pac, N ns, BNFParser<? extends X>... subps) {
+    public <X,N> C<X> buildFind(ReadableBlock pac, N ns, BNFParser<? extends X>... subps) {
         return longfind(pac, ns, list, subps);
     }
 
@@ -64,7 +64,7 @@ public class ABNFplm extends ABNFpl {
      * @param subparsers サブ要素パーサ
      * @return ざっくり戻り
      */
-    protected <X,N> C<X> longfind(FrontPacket pac, N ns, BNF[] list, BNFParser<? extends X>[] subparsers) {
+    protected <X,N> C<X> longfind(ReadableBlock pac, N ns, BNF[] list, BNFParser<? extends X>[] subparsers) {
         if (list.length == 0) {
             return new C();
         }
@@ -76,8 +76,10 @@ public class ABNFplm extends ABNFpl {
             byte[] data = new byte[flen];
             pac.read(data, 0, flen);
             frontPac.write(data, 0, flen);
+//            ReadableBlock frontPac = pac.readBlock(flen);
+
             C firstret = list[0].find(frontPac, ns, subparsers);
-            pac.dbackWrite(frontPac.toByteArray());
+            pac.back(frontPac.size());
 
             if (firstret == null || list.length == 1) { // 一致しないか最後ならここで戻り
                 return firstret;
@@ -93,8 +95,7 @@ public class ABNFplm extends ABNFpl {
                 return firstret;
             }
             // scのみ成立 破棄
-            byte[] sdata = firstret.ret.toByteArray();
-            pac.dbackWrite(sdata);
+            pac.back(flen);
             flen--;
 
         } while (flen >= 0);

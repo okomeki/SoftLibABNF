@@ -101,5 +101,5 @@ public abstract class AbstractABNF extends AbstractBNF<ABNF> implements ABNF {
     public ABNF copy(BNFReg reg) {
         return copy((ABNFReg)reg);
     }
-    
+
 }

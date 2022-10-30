@@ -22,6 +22,7 @@ import net.siisise.io.FrontPacket;
 import net.siisise.io.Packet;
 import net.siisise.io.PacketA;
 import net.siisise.lang.CodePoint;
+import net.siisise.pac.ReadableBlock;
 
 /**
  * 文字が含まれるかどうかのMapだかListだか
@@ -46,10 +47,11 @@ public class ABNFmap extends IsABNF {
     }
 
     @Override
-    public Packet is(FrontPacket pac) {
+    public Packet is(ReadableBlock pac) {
         if (pac.length() == 0) {
             return null;
         }
+        int of = pac.backSize();
         int ch = CodePoint.utf8(pac);
         if (ch < 0) {
             return null;
@@ -58,7 +60,7 @@ public class ABNFmap extends IsABNF {
         if (map.contains(ch)) {
             return new PacketA(bin8);
         }
-        pac.backWrite(bin8);
+        pac.seek(of);
         return null;
     }
 

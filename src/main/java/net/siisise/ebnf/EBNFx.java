@@ -16,7 +16,7 @@
 package net.siisise.ebnf;
 
 import net.siisise.bnf.parser.BNFParser;
-import net.siisise.io.FrontPacket;
+import net.siisise.pac.ReadableBlock;
 
 /**
  *
@@ -63,15 +63,14 @@ public class EBNFx extends FindEBNF {
     }
 
     @Override
-    public <X,N> C<X> buildFind(FrontPacket pac, N ns, BNFParser<? extends X>... names) {
+    public <X,N> C<X> buildFind(ReadableBlock pac, N ns, BNFParser<? extends X>... names) {
         C<X> ret = new C<>();
         for (int i = 0; b == -1 || i < b; i++) {
 //            System.out.println(abnf+":" + strd(ret.ret)+"%"+strd(pac));
             C sub = abnf.find(pac, ns, names);
             if (sub == null) {
                 if (i < a) {
-                    byte[] data = ret.ret.toByteArray();
-                    pac.dbackWrite(data);
+                    pac.back(ret.ret.size());
                     return null;
                 } else {
                     return ret;

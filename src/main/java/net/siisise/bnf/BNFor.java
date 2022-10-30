@@ -17,6 +17,7 @@ package net.siisise.bnf;
 
 import net.siisise.bnf.parser.BNFParser;
 import net.siisise.io.FrontPacket;
+import net.siisise.pac.ReadableBlock;
 
 /**
  * or
@@ -68,6 +69,8 @@ public class BNFor extends FindBNF {
      */
     @Override
     public <X,N> C<X> buildFind(FrontPacket pac, N ns, BNFParser<? extends X>... parsers) {
+        return buildFind(rb(pac),ns,parsers);
+        /*
         C ret = null;
 
         for (BNF sub : list) {
@@ -91,6 +94,29 @@ public class BNFor extends FindBNF {
 
         byte[] e = new byte[(int) ret.ret.length()];
         pac.read(e);
+        return ret;
+*/
+    }
+
+    @Override
+    public <X,N> C<X> buildFind(ReadableBlock pac, N ns, BNFParser<? extends X>... parsers) {
+        C ret = null;
+
+        for (BNF sub : list) {
+            C subret = sub.find(pac, ns, parsers);
+            if (subret != null) {
+                int datasize = subret.ret.size();
+                pac.back(datasize);
+                if (ret == null || ret.ret.length() < datasize) {
+                    ret = subret;
+                }
+            }
+        }
+        if (ret == null) {
+            return null;
+        }
+
+        pac.skip(ret.ret.size());
         return ret;
     }
 

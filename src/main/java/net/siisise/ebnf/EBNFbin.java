@@ -16,10 +16,10 @@
 package net.siisise.ebnf;
 
 import java.util.Arrays;
-import net.siisise.io.FrontPacket;
 import net.siisise.io.Packet;
 import net.siisise.io.PacketA;
 import net.siisise.lang.CodePoint;
+import net.siisise.pac.ReadableBlock;
 
 /**
  * ABNFと同じ
@@ -69,20 +69,16 @@ public class EBNFbin extends IsEBNF {
      * @return 一致した場合pacと同じ 一致しなければnull
      */
     @Override
-    public Packet is(FrontPacket pac) {
+    public Packet is(ReadableBlock pac) {
         if (pac.length() < 1) {
             return null;
         }
         byte[] d = new byte[data.length];
         int dlsize = pac.read(d);
-        if ( dlsize < data.length ) {
-            pac.backWrite(d,0,dlsize);
+        if ( dlsize < data.length || !Arrays.equals(data, d)) {
+            pac.back(dlsize);
             return null;
         }
-        if (Arrays.equals(data, d)) {
-            return new PacketA(d);
-        }
-        pac.dbackWrite(d);
-        return null;
+        return new PacketA(d);
     }
 }

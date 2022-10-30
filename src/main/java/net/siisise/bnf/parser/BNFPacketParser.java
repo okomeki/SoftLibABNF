@@ -16,8 +16,8 @@
 package net.siisise.bnf.parser;
 
 import net.siisise.bnf.BNF;
-import net.siisise.io.FrontPacket;
 import net.siisise.io.Packet;
+import net.siisise.pac.ReadableBlock;
 
 /**
  * Packetに分割するだけ。
@@ -31,8 +31,7 @@ public class BNFPacketParser extends BNFBaseParser<Packet> {
     }
 
     @Override
-    public Packet parse(FrontPacket pac) {
+    public Packet parse(ReadableBlock pac) {
         return rule.is(pac);
     }
-    
 }

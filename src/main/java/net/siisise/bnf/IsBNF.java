@@ -18,6 +18,7 @@ package net.siisise.bnf;
 import net.siisise.bnf.parser.BNFParser;
 import net.siisise.io.FrontPacket;
 import net.siisise.io.Packet;
+import net.siisise.pac.ReadableBlock;
 
 /**
  * isとfindをis側でなんとかする系
@@ -36,9 +37,13 @@ public abstract class IsBNF extends AbstractBNF<BNF> {
         return is(pac);
     }
     
-    
     @Override
-    public <X,N> C<X> find(FrontPacket pac, N ns, BNFParser<? extends X>... parsers) {
+    public <N> Packet is(ReadableBlock pac, N ns) {
+        return is(pac);
+    }
+
+    @Override
+    public <X,N> C<X> find(ReadableBlock pac, N ns, BNFParser<? extends X>... parsers) {
         Packet r = is(pac,ns);
         if (r == null) {
             return null;

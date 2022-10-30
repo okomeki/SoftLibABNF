@@ -26,6 +26,7 @@ import net.siisise.bnf.parser.BNFParser;
 import net.siisise.io.FrontPacket;
 import net.siisise.io.Packet;
 import net.siisise.io.PacketA;
+import net.siisise.pac.ReadableBlock;
 
 /**
  * 抽象的なBNF全般
@@ -59,7 +60,32 @@ public interface BNF<B extends BNF> {
      * @return 一致した範囲
      */
     <N> Packet is(FrontPacket src, N ns);
+
+    /**
+     * 先頭一致でパースする。
+     *
+     * @param <N>
+     * @param src source 解析対象
+     * @param ns user name space 名前空間
+     * @return 一致した範囲
+     */
+    <N> Packet is(ReadableBlock src, N ns);
+
+    /**
+     * 先頭一致でパースする。
+     * 
+     * @param src source 解析対象
+     * @return 一致した範囲
+     */
     Packet is(FrontPacket src);
+
+    /**
+     * 先頭一致でパースする。
+     * 
+     * @param src source 解析対象
+     * @return 一致した範囲
+     */
+    Packet is(ReadableBlock src);
 
     /**
      * 先頭一致でパースする。
@@ -82,6 +108,10 @@ public interface BNF<B extends BNF> {
      * @return 検索結果
      */
     <X,N> C<X> find(FrontPacket pac, N ns, BNFParser<? extends X>... parsers);
+    <X,N> C<X> find(ReadableBlock pac, N ns, BNFParser<? extends X>... parsers);
+
+    <X> C<X> find(FrontPacket pac, BNFParser<? extends X>... parsers);
+    <X> C<X> find(ReadableBlock pac, BNFParser<? extends X>... parsers);
 
     /**
      * 検索結果用構造
@@ -212,4 +242,17 @@ public interface BNF<B extends BNF> {
      * @return ABNFの複製
      */
     B copy(BNFReg reg);
+    
+    /**
+     * テキスト
+     * @param ch
+     * @return
+     */
+    static BNFtext text(char ch) {
+        return new BNFtext(ch);
+    }
+    
+    static BNFtext text(String txt) {
+        return new BNFtext(txt);
+    }
 }

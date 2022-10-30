@@ -16,8 +16,8 @@
 package net.siisise.abnf;
 
 import net.siisise.bnf.parser.BNFParser;
-import net.siisise.io.FrontPacket;
 import net.siisise.io.Packet;
+import net.siisise.pac.ReadableBlock;
 
 /**
  * findの分離
@@ -25,22 +25,30 @@ import net.siisise.io.Packet;
  */
 public abstract class FindABNF extends AbstractABNF {
 
+    /**
+     * 一致判定.
+     * @param src
+     * @return
+     */
     @Override
-    public Packet is(FrontPacket src) {
+    public Packet is(ReadableBlock src) {
         return is(src, null);
     }
     
+    /**
+     * 一致判定.
+     * @param <N> 任意のnamespace型
+     * @param src ソース
+     * @param ns namespace
+     * @return 
+     */
     @Override
-    public <N> Packet is(FrontPacket src, N ns) {
+    public <N> Packet is(ReadableBlock src, N ns) {
         C ret = find(src, ns);
         if (ret == null) {
             return null;
         }
         return ret.ret;
-    }
-    
-    public <X> C<X> find(FrontPacket pac, BNFParser<? extends X>... parsers) {
-        return find(pac, null, parsers);
     }
 
     /**
@@ -52,9 +60,8 @@ public abstract class FindABNF extends AbstractABNF {
      * @param ns name space
      * @param parsers サブ要素のパーサー
      * @return サブ要素を含む解析結果
-     */
-    @Override
-    public <X,N> C<X> find(FrontPacket pac, N ns, BNFParser<? extends X>... parsers) {
+     */    @Override
+    public <X,N> C<X> find(ReadableBlock pac, N ns, BNFParser<? extends X>... parsers) {
         BNFParser<? extends X> mp = matchParser(parsers);
         C<X> ret = buildFind(pac, ns, mp == null ? parsers : new BNFParser[0]);
         return ret != null ? subBuild(ret, ns, mp) : null;
@@ -70,5 +77,5 @@ public abstract class FindABNF extends AbstractABNF {
      * @param parsers サブ要素のパーサ
      * @return サブ要素を含む解析結果
      */
-    abstract protected <X,N> C<X> buildFind(FrontPacket pac, N ns, BNFParser<? extends X>... parsers);
+    abstract protected <X,N> C<X> buildFind(ReadableBlock pac, N ns, BNFParser<? extends X>... parsers);
 }

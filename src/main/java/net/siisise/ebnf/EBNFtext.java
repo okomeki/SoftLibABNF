@@ -15,9 +15,9 @@
  */
 package net.siisise.ebnf;
 
-import net.siisise.io.FrontPacket;
 import net.siisise.io.Packet;
 import net.siisise.io.PacketA;
+import net.siisise.pac.ReadableBlock;
 
 /**
  * casesensitiveではない方
@@ -73,14 +73,14 @@ public class EBNFtext extends IsEBNF {
     }
 
     @Override
-    public Packet is(FrontPacket pac) {
+    public Packet is(ReadableBlock pac) {
         if (pac.length() < 1) {
             return null;
         }
         byte[] d = new byte[utf8.length];
         int size = pac.read(d);
         if ( size < utf8.length ) {
-            pac.backWrite(d, 0, size);
+            pac.back(size);
             return null;
         }
         String u;
@@ -88,7 +88,7 @@ public class EBNFtext extends IsEBNF {
         if (u.equalsIgnoreCase(text)) {
             return new PacketA(d);
         }
-        pac.dbackWrite(d);
+        pac.back(d.length);
         return null;
     }
 }

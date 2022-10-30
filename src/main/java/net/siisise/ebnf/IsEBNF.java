@@ -18,6 +18,7 @@ package net.siisise.ebnf;
 import net.siisise.bnf.parser.BNFParser;
 import net.siisise.io.FrontPacket;
 import net.siisise.io.Packet;
+import net.siisise.pac.ReadableBlock;
 
 /**
  *
@@ -26,6 +27,11 @@ public abstract class IsEBNF extends AbstractEBNF {
     
     @Override
     public <N> Packet is(FrontPacket pac, N ns) {
+        return is(rb(pac), ns);
+    }
+
+    @Override
+    public <N> Packet is(ReadableBlock pac, N ns) {
         return is(pac);
     }
 
@@ -46,4 +52,21 @@ public abstract class IsEBNF extends AbstractEBNF {
         return subBuild(new C(r), ns, matchParser(parsers));
     }
    
+    /**
+     * sub要素のない場合の軽い対応
+     * @param <X> パラメータっぽい型
+     * @param <N>
+     * @param pac 解析データ
+     * @param ns name space
+     * @param parsers サブ要素のparser
+     * @return 処理結果
+     */
+    @Override
+    public <X,N> C<X> find(ReadableBlock pac, N ns, BNFParser<? extends X>... parsers) {
+        Packet r = is(pac, ns);
+        if (r == null) {
+            return null;
+        }
+        return subBuild(new C(r), ns, matchParser(parsers));
+    }
 }

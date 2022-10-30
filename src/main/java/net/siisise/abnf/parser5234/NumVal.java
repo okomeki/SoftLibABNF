@@ -16,7 +16,6 @@
 package net.siisise.abnf.parser5234;
 
 import net.siisise.abnf.ABNF;
-import net.siisise.abnf.ABNFReg;
 import net.siisise.bnf.BNF;
 import net.siisise.bnf.BNFReg;
 import net.siisise.bnf.parser.BNFSelect;

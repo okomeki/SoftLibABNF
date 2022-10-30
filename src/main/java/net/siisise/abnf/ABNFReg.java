@@ -29,6 +29,7 @@ import net.siisise.bnf.parser.BNFPacketParser;
 import net.siisise.bnf.parser.BNFParser;
 import net.siisise.io.FrontPacket;
 import net.siisise.io.StreamFrontPacket;
+import net.siisise.pac.ReadableBlock;
 
 /**
  * ABNFの名前担当、Parserの機能もあり。
@@ -48,7 +49,7 @@ public class ABNFReg extends BNFCC {
         }
 
         @Override
-        protected <X,N> C<X> buildFind(FrontPacket pac, N ns, BNFParser<? extends X>... parsers) {
+        protected <X,N> C<X> buildFind(ReadableBlock pac, N ns, BNFParser<? extends X>... parsers) {
             return reg.get(name).find(pac, ns, parsers);
         }
 
