@@ -18,7 +18,6 @@ package net.siisise.abnf;
 import java.util.ArrayList;
 import java.util.List;
 import net.siisise.bnf.BNF;
-import net.siisise.io.FrontPacket;
 import net.siisise.io.Packet;
 import net.siisise.io.PacketA;
 import net.siisise.lang.CodePoint;
@@ -37,7 +36,7 @@ public class ABNFmap extends IsABNF {
     }
 
     public ABNFmap(String val) {
-        FrontPacket pac = pac(val);
+        ReadableBlock pac = ReadableBlock.wrap(val);
         while (pac.size() > 0) {
             int ch = CodePoint.utf8(pac);
             if (!map.contains(ch)) {

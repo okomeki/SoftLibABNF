@@ -63,26 +63,6 @@ public class BNFx extends FindBNF {
     }
 
     @Override
-    public <X,N> C<X> buildFind(FrontPacket pac, N ns, BNFParser<? extends X>... names) {
-        C<X> ret = new C<>();
-        for (int i = 0; b == -1 || i < b; i++) {
-//            System.out.println(abnf+":" + strd(ret.ret)+"%"+strd(pac));
-            C sub = bnf.find(pac, ns, names);
-            if (sub == null) {
-                if (i < a) {
-                    byte[] data = ret.ret.toByteArray();
-                    pac.dbackWrite(data);
-                    return null;
-                } else {
-                    return ret;
-                }
-            }
-            mix(ret, sub);
-        }
-        return ret;
-    }
-
-    @Override
     public <X,N> C<X> buildFind(ReadableBlock pac, N ns, BNFParser<? extends X>... names) {
         C<X> ret = new C<>();
         for (int i = 0; b == -1 || i < b; i++) {

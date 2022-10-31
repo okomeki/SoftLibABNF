@@ -16,7 +16,6 @@
 package net.siisise.abnf;
 
 import net.siisise.bnf.parser.BNFParser;
-import net.siisise.io.FrontPacket;
 import net.siisise.io.Packet;
 import net.siisise.pac.ReadableBlock;
 
@@ -26,11 +25,6 @@ import net.siisise.pac.ReadableBlock;
  */
 public abstract class IsABNF extends AbstractABNF {
     
-    @Override
-    public <N> Packet is(FrontPacket pac, N ns) {
-        return is(pac);
-    }
-
     @Override
     public <N> Packet is(ReadableBlock pac, N ns) {
         return is(pac);

@@ -20,7 +20,6 @@ import net.siisise.pac.ReadableBlock;
 
 /**
  *
- * @author okome
  */
 public class EBNFx extends FindEBNF {
 

@@ -39,11 +39,6 @@ public class BNFReg {
         }
 
         @Override
-        public <X, N> C<X> buildFind(FrontPacket pac, N ns, BNFParser<? extends X>... parsers) {
-            return reg.get(name).find(pac, ns, parsers);
-        }
-
-        @Override
         public <X, N> C<X> buildFind(ReadableBlock pac, N ns, BNFParser<? extends X>... parsers) {
             return reg.get(name).find(pac, ns, parsers);
         }
@@ -151,8 +146,7 @@ public class BNFReg {
      * @return 解析後の実体
      */
     public <T> T parse(String rulename, byte[] src) {
-        FrontPacket pac = new StreamFrontPacket(new ByteArrayInputStream(src));
-        return (T) parser(rulename).parse(pac);
+        return (T) parser(rulename).parse(ReadableBlock.wrap(src));
     }
 
     /**
@@ -164,8 +158,7 @@ public class BNFReg {
      * @return 解析後の実体
      */
     public <T> T parse(String rulename, byte[] src, Object ns) {
-        FrontPacket pac = new StreamFrontPacket(new ByteArrayInputStream(src));
-        return (T) parser(rulename).parse(pac, ns);
+        return (T) parser(rulename).parse(ReadableBlock.wrap(src), ns);
     }
 
     /**

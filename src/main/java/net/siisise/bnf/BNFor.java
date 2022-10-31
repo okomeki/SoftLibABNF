@@ -16,7 +16,6 @@
 package net.siisise.bnf;
 
 import net.siisise.bnf.parser.BNFParser;
-import net.siisise.io.FrontPacket;
 import net.siisise.pac.ReadableBlock;
 
 /**
@@ -26,14 +25,14 @@ public class BNFor extends FindBNF {
 
     private final BNF[] list;
 
-    public BNFor(BNF... abnfs) {
-        list = abnfs;
-        name = toName(abnfs);
+    public BNFor(BNF... bnfs) {
+        list = bnfs;
+        name = toName(bnfs);
     }
 
-    public BNFor(String n, BNF... abnfs) {
+    public BNFor(String n, BNF... bnfs) {
         name = n;
-        list = abnfs;
+        list = bnfs;
     }
 
     static String toName(BNF[] abnfs) {
@@ -67,37 +66,6 @@ public class BNFor extends FindBNF {
      * @param parsers サブ要素パーサ
      * @return 解析結果
      */
-    @Override
-    public <X,N> C<X> buildFind(FrontPacket pac, N ns, BNFParser<? extends X>... parsers) {
-        return buildFind(rb(pac),ns,parsers);
-        /*
-        C ret = null;
-
-        for (BNF sub : list) {
-
-            C subret = sub.find(pac, ns, parsers);
-            if (subret != null) {
-                byte[] data = subret.ret.toByteArray();
-                pac.backWrite(data);
-                if (ret == null || ret.ret.length() < data.length) {
-                    subret.ret.backWrite(data);
-//                    if (ret != null) {
-//                        System.out.println("+******DUUPP****+" + subret + "(" + sub.toString() + ")");
-//                    }
-                    ret = subret;
-                }
-            }
-        }
-        if (ret == null) {
-            return null;
-        }
-
-        byte[] e = new byte[(int) ret.ret.length()];
-        pac.read(e);
-        return ret;
-*/
-    }
-
     @Override
     public <X,N> C<X> buildFind(ReadableBlock pac, N ns, BNFParser<? extends X>... parsers) {
         C ret = null;

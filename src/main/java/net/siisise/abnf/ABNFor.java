@@ -47,7 +47,7 @@ public class ABNFor extends FindABNF {
      * @param chlist 文字の一覧として
      */
     public ABNFor(String chlist) {
-        FrontPacket src = pac(chlist);
+        ReadableBlock src = ReadableBlock.wrap(chlist);
         List<ABNF> abnfs = new ArrayList<>();
         while (src.length() > 0) {
             abnfs.add(new ABNFtext(CodePoint.utf8(src)));
@@ -57,12 +57,7 @@ public class ABNFor extends FindABNF {
     }
 
     public ABNFor(String name, String list) {
-        FrontPacket p = pac(list);
-        List<ABNF> fs = new ArrayList<>();
-        while (p.length() > 0) {
-            fs.add(new ABNFtext(CodePoint.utf8(p)));
-        }
-        this.list = fs.toArray(new ABNF[0]);
+        this(list);
         this.name = name;
     }
 

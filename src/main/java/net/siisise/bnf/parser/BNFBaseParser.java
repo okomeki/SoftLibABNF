@@ -64,12 +64,12 @@ public abstract class BNFBaseParser<T> implements BNFParser<T> {
      */
     @Override
     public T parse(FrontPacket pac, Object ns) {
-        return parse((ReadableBlock)new PacketBlock(pac), ns);
+        return parse(ReadableBlock.wrap(pac), ns);
     }
 
     @Override
     public T parse(FrontPacket pac) {
-        return parse((ReadableBlock)new PacketBlock(pac), null);
+        return parse(ReadableBlock.wrap(pac), null);
     }
 
     @Override

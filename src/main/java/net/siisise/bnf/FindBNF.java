@@ -16,7 +16,6 @@
 package net.siisise.bnf;
 
 import net.siisise.bnf.parser.BNFParser;
-import net.siisise.io.FrontPacket;
 import net.siisise.io.Packet;
 import net.siisise.pac.ReadableBlock;
 
@@ -48,17 +47,10 @@ public abstract class FindBNF extends AbstractBNF<BNF> {
      * @return 一致部分
      */
     @Override
-    public Packet is(FrontPacket src) {
-        return is(rb(src), null);
-    }
-    
-    @Override
     public Packet is(ReadableBlock src) {
         return is(src, null);
     }
     
-    protected abstract <X,N> C<X> buildFind(FrontPacket pac, N ns, BNFParser<? extends X>... parsers);
-
     /**
      *
      * @param <X> 戻り型参考

@@ -5,8 +5,6 @@ import net.siisise.io.FrontPacket;
 import net.siisise.io.Input;
 import net.siisise.io.Packet;
 import net.siisise.io.PacketA;
-import net.siisise.pac.ByteBlock;
-import net.siisise.pac.PacketBlock;
 import net.siisise.pac.ReadableBlock;
 
 /**
@@ -67,36 +65,63 @@ public abstract class AbstractBNF<B extends BNF> implements BNF<B> {
         return is(rb(pac), ns);
     }
 
+    /**
+     * sub要素のない場合の軽い対応
+     * @param <X> パラメータっぽい型
+     * @param pac 解析データ
+     * @param parsers サブ要素のparser
+     * @return 処理結果
+     */
     @Override
     public <X> C<X> find(FrontPacket pac, BNFParser<? extends X>... parsers) {
         return find(rb(pac), null, parsers);
     }
 
+    /**
+     * sub要素のない場合の軽い対応
+     * @param <X> パラメータっぽい型
+     * @param pac 解析データ
+     * @param parsers サブ要素のparser
+     * @return 処理結果
+     */
     @Override
     public <X> C<X> find(ReadableBlock pac, BNFParser<? extends X>... parsers) {
         return find(pac, null, parsers);
     }
 
+    /**
+     * sub要素のない場合の軽い対応
+     * @param <X> パラメータっぽい型
+     * @param pac 解析データ
+     * @param ns name space
+     * @param parsers サブ要素のparser
+     * @return 処理結果
+     */
     @Override
     public <X,N> C<X> find(FrontPacket pac, N ns, BNFParser<? extends X>... parsers) {
         return find(rb(pac), ns, parsers);
     }
 
     @Override
-    public boolean eq(FrontPacket val) {
-        Packet r = is(val);
-        if (val.length() == 0) {
+    public boolean eq(ReadableBlock v) {
+        FrontPacket r = is(v);
+        if (v.length() == 0) {
             return true;
         }
         if (r != null) {
-            val.dbackWrite(r.toByteArray());
+            v.back(r.size());
         }
         return false;
     }
 
     @Override
+    public boolean eq(FrontPacket val) {
+        return eq(rb(val));
+    }
+
+    @Override
     public boolean eq(String val) {
-        return eq(pac(val));
+        return eq(rb(val));
     }
 
     /**
@@ -190,11 +215,11 @@ public abstract class AbstractBNF<B extends BNF> implements BNF<B> {
      * @return 
      */
     public static final ReadableBlock rb(String str) {
-        return new ByteBlock(str.getBytes(UTF8));
+        return ReadableBlock.wrap(str);
     }
     
-    public static final ReadableBlock rb(FrontPacket val) {
-        return new PacketBlock(val);
+    public static final ReadableBlock rb(FrontPacket p) {
+        return ReadableBlock.wrap(p);
     }
     
     public static String str(Input pac) {

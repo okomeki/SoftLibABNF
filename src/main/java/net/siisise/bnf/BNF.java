@@ -163,6 +163,7 @@ public interface BNF<B extends BNF> {
      * @param pac 比較対象データ
      * @return 判定結果
      */
+    boolean eq(ReadableBlock pac);
     boolean eq(FrontPacket pac);
 
     /**

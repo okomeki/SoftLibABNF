@@ -17,8 +17,6 @@ package net.siisise.abnf;
 
 import net.siisise.bnf.BNF;
 import net.siisise.bnf.parser.BNFParser;
-import net.siisise.io.Packet;
-import net.siisise.io.PacketA;
 import net.siisise.pac.ReadableBlock;
 
 /**
@@ -50,7 +48,7 @@ public class ABNFplm extends ABNFpl {
 
     @Override
     public <X,N> C<X> buildFind(ReadableBlock pac, N ns, BNFParser<? extends X>... subps) {
-        return longfind(pac, ns, list, subps);
+        return longfind(pac, ns, 0, subps);
     }
 
     /**
@@ -60,35 +58,30 @@ public class ABNFplm extends ABNFpl {
      * @param <N> name space type 名前空間型
      * @param pac source 解析対象
      * @param ns user name space
-     * @param list サブ要素
+     * @param start
      * @param subparsers サブ要素パーサ
      * @return ざっくり戻り
      */
-    protected <X,N> C<X> longfind(ReadableBlock pac, N ns, BNF[] list, BNFParser<? extends X>[] subparsers) {
-        if (list.length == 0) {
+    protected <X,N> C<X> longfind(ReadableBlock pac, N ns, int start, BNFParser<? extends X>[] subparsers) {
+        if (list.length == start) {
             return new C();
         }
         int flen = pac.size();
         
         do {
             // 1つめ 指定サイズまでに制限する
-            Packet frontPac = new PacketA();
-            byte[] data = new byte[flen];
-            pac.read(data, 0, flen);
-            frontPac.write(data, 0, flen);
-//            ReadableBlock frontPac = pac.readBlock(flen);
+            // 減らしながら全体が一致する箇所を探る
+            ReadableBlock frontPac = pac.readBlock(flen);
 
-            C firstret = list[0].find(frontPac, ns, subparsers);
+            C firstret = list[start].find(frontPac, ns, subparsers);
             pac.back(frontPac.size());
 
-            if (firstret == null || list.length == 1) { // 一致しないか最後ならここで戻り
+            if (firstret == null || list.length - start == 1) { // 一致しないか最後ならここで戻り
                 return firstret;
             }
             flen = firstret.ret.size();
             // 2つめ以降
-            BNF[] slist = new BNF[list.length - 1];
-            System.arraycopy(list, 1, slist, 0, slist.length);
-            C nextret = longfind(pac, ns, slist, subparsers);
+            C nextret = longfind(pac, ns, start + 1, subparsers);
             if (nextret != null) {
                 // firstret と nextret 両方成立
                 mix(firstret, nextret);

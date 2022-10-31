@@ -16,9 +16,6 @@
 package net.siisise.bnf;
 
 import net.siisise.bnf.parser.BNFParser;
-import net.siisise.io.FrontPacket;
-import net.siisise.io.Packet;
-import net.siisise.io.PacketA;
 import net.siisise.pac.ReadableBlock;
 
 /**
@@ -52,90 +49,30 @@ public class BNFplu extends BNFplm {
      * @param <N> user name space type 名前空間型
      * @param pac source 解析対象
      * @param ns user name space 名前空間
-     * @param list サブ要素
+     * @param start
      * @param subparsers サブ要素パーサ
      * @return ざっくりまとめ
      */
     @Override
-    protected <X,N> C<X> longfind(FrontPacket pac, N ns, BNF[] list, BNFParser<? extends X>[] subparsers) {
-        return longfind(rb(pac),ns, list, subparsers);
-        /*
-        if (list.length == 0) {
+    protected <X,N> C<X> longfind(ReadableBlock pac, N ns, int start, BNFParser<? extends X>[] subparsers) {
+        if (list.length == start) {
             return new C();
         }
         int flen = pac.size();
 
         do {
             // 1つめ 指定サイズまでに制限する
-            Packet frontPac = new PacketA();
-            byte[] data = new byte[flen];
-            pac.read(data, 0, flen);
-            frontPac.write(data, 0, flen);
-            C<X> firstret = list[0].find(frontPac, ns, subparsers);
-            pac.dbackWrite(frontPac.toByteArray());
+            ReadableBlock frontPac = pac.readBlock(flen);
 
-            if (firstret == null || list.length == 1) { // 一致しないか最後ならここで戻り
-                return firstret;
-            }
-            flen = firstret.ret.size();
-            // 2つめ以降
-            BNF[] slist = new BNF[list.length - 1];
-            System.arraycopy(list, 1, slist, 0, slist.length);
-            C nextret = longfind(pac, ns, slist, subparsers);
-            if (nextret != null) {
-                // firstret と nextret 両方成立
-                mix(firstret, nextret);
-                return firstret;
-            }
-            // scのみ成立 破棄
-            byte[] sdata = firstret.ret.toByteArray();
-            pac.dbackWrite(sdata);
-            // ToDo: utf-8で1文字戻る版にしてみた
-            flen--;
-            while (flen >= 0 && (sdata[flen] & 0xc0) == 0x80) {
-                flen--;
-            }
-
-        } while (flen >= 0);
-        return null;
-        */
-    }
-
-    /**
-     * 詳細検索
-     *
-     * @param <X> 適度な戻り型
-     * @param <N> user name space type 名前空間型
-     * @param pac source 解析対象
-     * @param ns user name space 名前空間
-     * @param list サブ要素
-     * @param subparsers サブ要素パーサ
-     * @return ざっくりまとめ
-     */
-    @Override
-    protected <X,N> C<X> longfind(ReadableBlock pac, N ns, BNF[] list, BNFParser<? extends X>[] subparsers) {
-        if (list.length == 0) {
-            return new C();
-        }
-        int flen = pac.size();
-
-        do {
-            // 1つめ 指定サイズまでに制限する
-            Packet frontPac = new PacketA();
-            byte[] data = new byte[flen];
-            pac.read(data, 0, flen);
-            frontPac.write(data, 0, flen);
-            C<X> firstret = list[0].find(frontPac, ns, subparsers);
+            C<X> firstret = list[start].find(frontPac, ns, subparsers);
             pac.back(frontPac.size());
 
-            if (firstret == null || list.length == 1) { // 一致しないか最後ならここで戻り
+            if (firstret == null || list.length - start == 1) { // 一致しないか最後ならここで戻り
                 return firstret;
             }
             flen = firstret.ret.size();
             // 2つめ以降
-            BNF[] slist = new BNF[list.length - 1];
-            System.arraycopy(list, 1, slist, 0, slist.length);
-            C nextret = longfind(pac, ns, slist, subparsers);
+            C nextret = longfind(pac, ns, start + 1, subparsers);
             if (nextret != null) {
                 // firstret と nextret 両方成立
                 mix(firstret, nextret);
