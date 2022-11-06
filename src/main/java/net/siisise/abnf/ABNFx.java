@@ -15,8 +15,8 @@
  */
 package net.siisise.abnf;
 
+import net.siisise.block.ReadableBlock;
 import net.siisise.bnf.parser.BNFParser;
-import net.siisise.pac.ReadableBlock;
 
 /**
  * ループの結果は最長だけでなく、各長さで判定したいこともあり

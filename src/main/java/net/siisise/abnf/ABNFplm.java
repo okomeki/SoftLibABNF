@@ -15,9 +15,9 @@
  */
 package net.siisise.abnf;
 
+import net.siisise.block.ReadableBlock;
 import net.siisise.bnf.BNF;
 import net.siisise.bnf.parser.BNFParser;
-import net.siisise.pac.ReadableBlock;
 
 /**
  * 完全一致検索。
@@ -74,7 +74,7 @@ public class ABNFplm extends ABNFpl {
             ReadableBlock frontPac = pac.readBlock(flen);
 
             C firstret = list[start].find(frontPac, ns, subparsers);
-            pac.back(frontPac.size());
+            pac.back(frontPac.length());
 
             if (firstret == null || list.length - start == 1) { // 一致しないか最後ならここで戻り
                 return firstret;

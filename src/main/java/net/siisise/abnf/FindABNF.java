@@ -15,9 +15,9 @@
  */
 package net.siisise.abnf;
 
+import net.siisise.block.ReadableBlock;
 import net.siisise.bnf.parser.BNFParser;
 import net.siisise.io.Packet;
-import net.siisise.pac.ReadableBlock;
 
 /**
  * findの分離

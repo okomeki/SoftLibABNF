@@ -15,11 +15,9 @@
  */
 package net.siisise.bnf.parser;
 
+import net.siisise.block.ReadableBlock;
 import net.siisise.bnf.BNF;
 import net.siisise.bnf.BNFReg;
-import net.siisise.io.FrontPacket;
-import net.siisise.pac.PacketBlock;
-import net.siisise.pac.ReadableBlock;
 
 /**
  * subrulenamesで指定した名の部分を中間型で受け取り、変換後の型で渡すだけのお仕事にするための部分実装。

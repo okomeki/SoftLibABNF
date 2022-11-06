@@ -16,12 +16,10 @@
 package net.siisise.bnf.parser;
 
 import java.nio.charset.StandardCharsets;
-import net.siisise.abnf.AbstractABNF;
+import net.siisise.block.ReadableBlock;
 import net.siisise.bnf.BNF;
 import net.siisise.io.FrontPacket;
 import net.siisise.io.Input;
-import net.siisise.pac.PacketBlock;
-import net.siisise.pac.ReadableBlock;
 
 /**
  * AbstractBNFParserなのかもしれない.
@@ -74,7 +72,7 @@ public abstract class BNFBaseParser<T> implements BNFParser<T> {
 
     @Override
     public T parse(String str, Object ns) {
-        return parse(AbstractABNF.rb(str), ns);
+        return parse(ReadableBlock.wrap(str), ns);
     }
 
     /**
@@ -84,7 +82,7 @@ public abstract class BNFBaseParser<T> implements BNFParser<T> {
      */
     @Override
     public T parse(String src) {
-        return parse(AbstractABNF.rb(src));
+        return parse(ReadableBlock.wrap(src));
     }
 
     /**

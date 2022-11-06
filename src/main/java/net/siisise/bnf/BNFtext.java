@@ -1,7 +1,7 @@
 package net.siisise.bnf;
 
+import net.siisise.block.ReadableBlock;
 import net.siisise.io.Packet;
-import net.siisise.pac.ReadableBlock;
 
 /**
  *

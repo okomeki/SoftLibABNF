@@ -1,8 +1,8 @@
 package net.siisise.bnf.parser;
 
+import net.siisise.block.ReadableBlock;
 import net.siisise.bnf.BNF;
 import net.siisise.io.FrontPacket;
-import net.siisise.pac.ReadableBlock;
 
 /**
  * BNF Parserの基本型。

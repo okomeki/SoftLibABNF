@@ -16,13 +16,13 @@
 package net.siisise.abnf.parser5234;
 
 import net.siisise.abnf.ABNF;
+import net.siisise.block.ReadableBlock;
 import net.siisise.bnf.BNF;
 import net.siisise.bnf.parser.BNFBaseParser;
 import net.siisise.io.FrontPacket;
 import net.siisise.io.Packet;
 import net.siisise.io.PacketA;
 import net.siisise.lang.CodePoint;
-import net.siisise.pac.ReadableBlock;
 
 /**
  * 内部で使用する数値用Parser。

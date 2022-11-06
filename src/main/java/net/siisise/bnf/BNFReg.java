@@ -1,15 +1,13 @@
 package net.siisise.bnf;
 
-import java.io.ByteArrayInputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
+import net.siisise.block.ReadableBlock;
 import net.siisise.bnf.parser.BNFPacketParser;
 import net.siisise.bnf.parser.BNFParser;
 import net.siisise.io.FrontPacket;
-import net.siisise.io.StreamFrontPacket;
-import net.siisise.pac.ReadableBlock;
 
 /**
  * ABNFのルールのままBNFに持ってきたもの

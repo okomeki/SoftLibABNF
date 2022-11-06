@@ -15,8 +15,8 @@
  */
 package net.siisise.bnf;
 
+import net.siisise.block.ReadableBlock;
 import net.siisise.bnf.parser.BNFParser;
-import net.siisise.pac.ReadableBlock;
 
 /**
  * or
@@ -73,7 +73,7 @@ public class BNFor extends FindBNF {
         for (BNF sub : list) {
             C subret = sub.find(pac, ns, parsers);
             if (subret != null) {
-                int datasize = subret.ret.size();
+                long datasize = subret.ret.length();
                 pac.back(datasize);
                 if (ret == null || ret.ret.length() < datasize) {
                     ret = subret;
@@ -84,7 +84,7 @@ public class BNFor extends FindBNF {
             return null;
         }
 
-        pac.skip(ret.ret.size());
+        pac.skip(ret.ret.length());
         return ret;
     }
 

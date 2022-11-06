@@ -52,6 +52,9 @@ public class Alternation extends BNFList<ABNF, ABNF> {
             ABNF bnf1 = list.get(i);
             if ( bnf1 instanceof ABNFbin ) {
                 int ch1 = ((ABNFbin)bnf1).ch();
+                if ( ch1 < 0 ) {
+                    break;
+                }
                 int chn = ch1;
                 int j = i;
                 while ( (j + 1 < list.size()) ) {

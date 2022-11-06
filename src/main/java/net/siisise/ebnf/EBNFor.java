@@ -20,7 +20,7 @@ import java.util.List;
 import net.siisise.bnf.BNF;
 import net.siisise.bnf.parser.BNFParser;
 import net.siisise.lang.CodePoint;
-import net.siisise.pac.ReadableBlock;
+import net.siisise.block.ReadableBlock;
 
 /**
  *
@@ -120,10 +120,9 @@ public class EBNFor extends FindEBNF {
 
             C<X> subret = sub.find(pac, ns, parsers);
             if (subret != null) {
-                byte[] data = subret.ret.toByteArray();
-                pac.back(data.length);
-                if (ret == null || ret.ret.length() < data.length) {
-                    subret.ret.dbackWrite(data);
+                long datasize = subret.ret.length();
+                pac.back(datasize);
+                if (ret == null || ret.ret.length() < datasize) {
                     ret = subret;
                 }
             }
@@ -132,7 +131,7 @@ public class EBNFor extends FindEBNF {
             return null;
         }
 
-        pac.skip((int)ret.ret.size());
+        pac.skip(ret.ret.length());
         return ret;
     }
 }

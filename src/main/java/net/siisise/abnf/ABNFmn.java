@@ -15,9 +15,9 @@
  */
 package net.siisise.abnf;
 
+import net.siisise.block.ReadableBlock;
 import net.siisise.bnf.BNF;
 import net.siisise.io.Packet;
-import net.siisise.pac.ReadableBlock;
 
 /**
  * ABNFにはないがマイナス演算
@@ -59,6 +59,6 @@ public class ABNFmn extends IsABNF {
 
     @Override
     public Packet is(ReadableBlock src) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

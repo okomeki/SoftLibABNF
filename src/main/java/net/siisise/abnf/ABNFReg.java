@@ -22,6 +22,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.List;
 import net.siisise.abnf.parser5234.ABNF5234;
+import net.siisise.block.ReadableBlock;
 import net.siisise.bnf.BNF;
 import net.siisise.bnf.BNFCC;
 import net.siisise.bnf.BNFReg;
@@ -29,7 +30,6 @@ import net.siisise.bnf.parser.BNFPacketParser;
 import net.siisise.bnf.parser.BNFParser;
 import net.siisise.io.FrontPacket;
 import net.siisise.io.StreamFrontPacket;
-import net.siisise.pac.ReadableBlock;
 
 /**
  * ABNFの名前担当、Parserの機能もあり。

@@ -17,11 +17,10 @@ package net.siisise.abnf;
 
 import java.util.ArrayList;
 import java.util.List;
+import net.siisise.block.ReadableBlock;
 import net.siisise.bnf.BNF;
 import net.siisise.bnf.parser.BNFParser;
-import net.siisise.io.FrontPacket;
 import net.siisise.lang.CodePoint;
-import net.siisise.pac.ReadableBlock;
 
 /**
  *
@@ -116,10 +115,9 @@ public class ABNFor extends FindABNF {
 
             C<X> subret = sub.find(pac, ns, parsers);
             if (subret != null) {
-                byte[] data = subret.ret.toByteArray();
-                pac.back(data.length);
-                if (ret == null || ret.ret.length() < data.length) {
-                    subret.ret.dbackWrite(data);
+                long len = subret.ret.length();
+                pac.back(len);
+                if (ret == null || ret.ret.length() < len) {
                     ret = subret;
                 }
             }
@@ -128,7 +126,7 @@ public class ABNFor extends FindABNF {
             return null;
         }
 
-        pac.skip((int) ret.ret.length());
+        pac.skip(ret.ret.length());
         return ret;
     }
 }

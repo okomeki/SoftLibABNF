@@ -15,10 +15,10 @@
  */
 package net.siisise.abnf;
 
+import net.siisise.block.ReadableBlock;
 import net.siisise.io.Packet;
 import net.siisise.io.PacketA;
 import net.siisise.lang.CodePoint;
-import net.siisise.pac.ReadableBlock;
 
 /**
  * 文字

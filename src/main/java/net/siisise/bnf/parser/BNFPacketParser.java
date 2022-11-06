@@ -15,9 +15,9 @@
  */
 package net.siisise.bnf.parser;
 
+import net.siisise.block.ReadableBlock;
 import net.siisise.bnf.BNF;
 import net.siisise.io.Packet;
-import net.siisise.pac.ReadableBlock;
 
 /**
  * Packetに分割するだけ。

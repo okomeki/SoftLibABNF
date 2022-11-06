@@ -19,7 +19,7 @@ import java.util.Arrays;
 import net.siisise.io.Packet;
 import net.siisise.io.PacketA;
 import net.siisise.lang.CodePoint;
-import net.siisise.pac.ReadableBlock;
+import net.siisise.block.ReadableBlock;
 
 /**
  * ABNFと同じ

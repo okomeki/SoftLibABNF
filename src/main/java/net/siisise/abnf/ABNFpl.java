@@ -15,9 +15,9 @@
  */
 package net.siisise.abnf;
 
+import net.siisise.block.ReadableBlock;
 import net.siisise.bnf.BNF;
 import net.siisise.bnf.parser.BNFParser;
-import net.siisise.pac.ReadableBlock;
 
 /**
  * 軽量一致検索。
@@ -71,7 +71,7 @@ public class ABNFpl extends FindABNF {
         for (BNF sub : list) {
             C<X> subret = sub.find(pac, ns, parsers);
             if (subret == null) {
-                pac.back(ret.ret.size());
+                pac.back(ret.ret.length());
                 return null;
             }
             mix(ret, subret);

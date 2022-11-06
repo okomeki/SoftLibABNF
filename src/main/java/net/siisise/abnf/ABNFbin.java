@@ -16,10 +16,11 @@
 package net.siisise.abnf;
 
 import java.util.Arrays;
+import net.siisise.block.ByteBlock;
+import net.siisise.block.ReadableBlock;
 import net.siisise.io.Packet;
 import net.siisise.io.PacketA;
 import net.siisise.lang.CodePoint;
-import net.siisise.pac.ReadableBlock;
 
 /**
  * バイナリ表現。
@@ -91,9 +92,8 @@ public class ABNFbin extends IsABNF {
      * @return 1文字以外 -1
      */
     public int ch() {
-        PacketA pac = new PacketA();
-        pac.write(data);
-        int ch = CodePoint.utf8(pac);
+        ByteBlock pac = new ByteBlock(data);
+        int ch = CodePoint.utf8((ReadableBlock)pac);
         return pac.size() == 0 ? ch : -1;
     }
 }

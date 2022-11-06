@@ -17,7 +17,7 @@ package net.siisise.ebnf;
 
 import net.siisise.bnf.BNF;
 import net.siisise.io.Packet;
-import net.siisise.pac.ReadableBlock;
+import net.siisise.block.ReadableBlock;
 
 /**
  *

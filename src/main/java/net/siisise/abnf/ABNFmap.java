@@ -17,11 +17,11 @@ package net.siisise.abnf;
 
 import java.util.ArrayList;
 import java.util.List;
+import net.siisise.block.ReadableBlock;
 import net.siisise.bnf.BNF;
 import net.siisise.io.Packet;
 import net.siisise.io.PacketA;
 import net.siisise.lang.CodePoint;
-import net.siisise.pac.ReadableBlock;
 
 /**
  * 文字が含まれるかどうかのMapだかListだか
@@ -79,15 +79,15 @@ public class ABNFmap extends IsABNF {
     public ABNF or(BNF... abnf) {
         List<Integer> tmap = new ArrayList<>();
         List<BNF> xabnf = new ArrayList<>();
-        boolean n = true;
+        boolean n = false;
         for (BNF a : abnf) {
-            if (n && a instanceof ABNFbin) {
-                int ach = ((ABNFbin) a).ch();
-                if (ach >= 0 && !map.contains(ach)) {
-                    tmap.add(((ABNFbin) a).ch());
+            int ach;
+            if (n && a instanceof ABNFbin && (ach = ((ABNFbin) a).ch()) >= 0) {
+                if (!map.contains(ach)) {
+                    tmap.add(ach);
+                    n = true;
                 }
             } else {
-                n = false;
                 xabnf.add(a);
             }
         }
@@ -98,7 +98,7 @@ public class ABNFmap extends IsABNF {
             if (xabnf.isEmpty()) {
                 return nm;
             }
-            xabnf.add(0, nm);
+            xabnf.add(nm);
             return new ABNFor(xabnf.toArray(new BNF[0]));
         }
         return super.or(abnf);

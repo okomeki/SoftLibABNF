@@ -1,11 +1,11 @@
 package net.siisise.bnf;
 
+import net.siisise.block.ReadableBlock;
 import net.siisise.bnf.parser.BNFParser;
 import net.siisise.io.FrontPacket;
 import net.siisise.io.Input;
 import net.siisise.io.Packet;
 import net.siisise.io.PacketA;
-import net.siisise.pac.ReadableBlock;
 
 /**
  * 基本実装
