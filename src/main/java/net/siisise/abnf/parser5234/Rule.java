@@ -45,7 +45,7 @@ public class Rule extends BNFBuildParser<ABNF, Object> {
         String defined = (String) ret.get("defined-as").get(0);
         ABNF elements = (ABNF) ret.get("elements").get(0);
 
-        if (defined.equals("=/")) {
+        if (defined.indexOf('/') >= 0) { // =/
             ABNF rule = ((ABNFReg)ns).href(rulename);
             if (rule instanceof ABNFReg.ABNFRef) {
                 throw new java.lang.UnsupportedOperationException();
@@ -55,7 +55,7 @@ public class Rule extends BNFBuildParser<ABNF, Object> {
             }
             ((ABNFor) rule).add(elements);
             return rule;
-        } else {
+        } else { // =
             return elements.name(rulename);
         }
     }
