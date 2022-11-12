@@ -16,9 +16,9 @@
 package net.siisise.bnf.parser;
 
 import java.util.List;
+import net.siisise.block.ReadableBlock;
 import net.siisise.bnf.BNF;
 import net.siisise.bnf.BNFReg;
-import net.siisise.io.FrontPacket;
 
 /**
  * 一致するものを選択する (分岐).
@@ -45,10 +45,10 @@ public class BNFSelect<T> extends BNFBuildParser<T, T> {
                 return r.get(0);
             }
         }
-        return other(src.ret, ns);
+        return other(src.sub, ns);
     }
     
-    protected <N> T other(FrontPacket src, N ns) {
+    protected <N> T other(ReadableBlock src, N ns) {
         return other(src);
     }
 
@@ -57,7 +57,7 @@ public class BNFSelect<T> extends BNFBuildParser<T, T> {
      * @param src source 解析対象
      * @return 処理結果
      */
-    protected T other(FrontPacket src) {
+    protected T other(ReadableBlock src) {
         return null;
     }
 

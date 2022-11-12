@@ -196,6 +196,9 @@ public class ABNFReg extends BNFCC {
      */
     public List<ABNF> rulelist(String rulelist) {
         List<ABNF> list = bnfReg.parse(bnfReg.rulelist, rulelist, this);
+        if (list == null) {
+            return null;
+        }
         list.forEach((abnf) -> {
             reg.put(abnf.getName(), abnf);
         });
@@ -253,7 +256,7 @@ public class ABNFReg extends BNFCC {
         for (int i = 0; i < subrulenames.length; i++) {
             cll[i] = parser(subrulenames[i]);
         }
-        return rule.find(pac, cll);
+        return rule.find(ReadableBlock.wrap(pac), cll);
     }
 
     /**
@@ -274,20 +277,7 @@ public class ABNFReg extends BNFCC {
             Constructor<? extends BNFParser> cnst;
             cnst = (Constructor<? extends BNFParser<T>>) rulep.getConstructor(BNF.class, BNFReg.class);
             return cnst.newInstance(rule, this);
-        } catch (NoSuchMethodException ex) {
-/*
-            try {
-                Constructor<? extends BNFParser> cnst;
-                cnst = (Constructor<? extends BNFParser<T>>) rulep.getConstructor(BNF.class, BNFReg.class);
-                return cnst.newInstance(rule, this);
-            } catch (NoSuchMethodException | InstantiationException | IllegalAccessException
-                | IllegalArgumentException | InvocationTargetException ex2) {
-                throw new java.lang.UnsupportedOperationException(ex2);
-            }
-*/
-            throw new java.lang.UnsupportedOperationException(ex);
-        } catch (SecurityException | InstantiationException | IllegalAccessException
-                | IllegalArgumentException | InvocationTargetException ex) {
+        } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             throw new java.lang.UnsupportedOperationException(ex);
         }
     }

@@ -31,8 +31,8 @@ public class Rulelist extends BNFList<List<ABNF>, ABNF> {
     }
 
     @Override
-    protected List<ABNF> build(List<ABNF> val) {
-        return val;
+    protected List<ABNF> build(List<ABNF> list) {
+        return list;
     }
 
 }

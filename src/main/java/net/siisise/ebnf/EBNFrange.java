@@ -15,8 +15,6 @@
  */
 package net.siisise.ebnf;
 
-import net.siisise.io.Packet;
-import net.siisise.io.PacketA;
 import net.siisise.lang.CodePoint;
 import net.siisise.block.ReadableBlock;
 
@@ -41,11 +39,11 @@ public class EBNFrange extends IsEBNF {
     }
 
     @Override
-    public Packet is(ReadableBlock pac) {
+    public ReadableBlock is(ReadableBlock pac) {
         if (pac.length() == 0) {
             return null;
         }
-        int of = pac.backSize();
+        long of = pac.backLength();
         int ch = CodePoint.utf8(pac);
         if (ch < 0) {
             pac.seek(of);
@@ -53,7 +51,7 @@ public class EBNFrange extends IsEBNF {
         }
         byte[] bin8 = CodePoint.utf8(ch);
         if (ch >= min && ch <= max) {
-            return new PacketA(bin8);
+            return ReadableBlock.wrap(bin8);
         }
         pac.seek(of);
         return null;

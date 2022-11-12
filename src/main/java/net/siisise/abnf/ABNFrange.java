@@ -16,8 +16,6 @@
 package net.siisise.abnf;
 
 import net.siisise.block.ReadableBlock;
-import net.siisise.io.Packet;
-import net.siisise.io.PacketA;
 import net.siisise.lang.CodePoint;
 
 /**
@@ -41,20 +39,20 @@ public class ABNFrange extends IsABNF {
     }
 
     @Override
-    public Packet is(ReadableBlock pac) {
-        if (pac.length() == 0) {
+    public ReadableBlock is(ReadableBlock rb) {
+        if (rb.length() == 0) {
             return null;
         }
-        int of = pac.backSize();
-        int ch = CodePoint.utf8(pac);
+        long of = rb.backLength();
+        int ch = CodePoint.utf8(rb);
         if (ch < 0) {
             return null;
         }
-        byte[] bin8 = CodePoint.utf8(ch);
         if (ch >= min && ch <= max) {
-            return new PacketA(bin8);
+            byte[] bin8 = CodePoint.utf8(ch);
+            return ReadableBlock.wrap(bin8);
         }
-        pac.seek(of);
+        rb.seek(of);
         return null;
     }
 }

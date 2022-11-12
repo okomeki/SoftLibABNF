@@ -56,21 +56,26 @@ public class BNFplu extends BNFplm {
     @Override
     protected <X,N> C<X> longfind(ReadableBlock pac, N ns, int start, BNFParser<? extends X>[] subparsers) {
         if (list.length == start) {
-            return new C();
+            return new C(pac).end(pac);
         }
-        int flen = pac.size();
+        long frontMax = pac.length();
+        long op = pac.backLength();
 
         do {
             // 1つめ 指定サイズまでに制限する
-            ReadableBlock frontPac = pac.readBlock(flen);
+            ReadableBlock frontPac = pac.readBlock(frontMax);
 
             C<X> firstret = list[start].find(frontPac, ns, subparsers);
-            pac.back(frontPac.size());
-
-            if (firstret == null || list.length - start == 1) { // 一致しないか最後ならここで戻り
+            pac.back(frontPac.length());
+            if ( firstret == null ) {
+                return null;
+            }
+            
+            firstret.st = op;
+            if (list.length - start == 1) { // 一致しないか最後ならここで戻り
                 return firstret;
             }
-            flen = firstret.ret.size();
+            frontMax = pac.backLength() - op;
             // 2つめ以降
             C nextret = longfind(pac, ns, start + 1, subparsers);
             if (nextret != null) {
@@ -79,15 +84,15 @@ public class BNFplu extends BNFplm {
                 return firstret;
             }
             // scのみ成立 破棄
-            byte[] sdata = firstret.ret.toByteArray();
-            pac.back(sdata.length);
+            pac.seek(op);
+            firstret.sub.seek(firstret.sub.length());
             // ToDo: utf-8で1文字戻る版にしてみた
-            flen--;
-            while (flen >= 0 && (sdata[flen] & 0xc0) == 0x80) {
-                flen--;
+            frontMax--;
+            while (frontMax >= 0 && (firstret.sub.backRead() & 0xc0) == 0x80) {
+                frontMax--;
             }
 
-        } while (flen >= 0);
+        } while (frontMax >= 0);
         return null;
     }
 }

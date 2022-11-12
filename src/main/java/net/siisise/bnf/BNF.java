@@ -69,7 +69,7 @@ public interface BNF<B extends BNF> {
      * @param ns user name space 名前空間
      * @return 一致した範囲
      */
-    <N> Packet is(ReadableBlock src, N ns);
+    <N> ReadableBlock is(ReadableBlock src, N ns);
 
     /**
      * 先頭一致でパースする。
@@ -85,7 +85,7 @@ public interface BNF<B extends BNF> {
      * @param src source 解析対象
      * @return 一致した範囲
      */
-    Packet is(ReadableBlock src);
+    ReadableBlock is(ReadableBlock src);
 
     /**
      * 先頭一致でパースする。
@@ -122,15 +122,27 @@ public interface BNF<B extends BNF> {
         /**
          * メインの戻り値
          */
-        public final Packet ret;
+        public ReadableBlock ret;
+        /**
+         * ret と同じ
+         */
+        public ReadableBlock sub;
+        public long st;
+        public long end;
         public final Map<String, List<X>> subs = new HashMap<>();
 
         public C() {
-            ret = new PacketA();
+            ret = ReadableBlock.wrap(new byte[0]);
         }
 
-        public C(Packet pac) {
-            ret = pac;
+        public C(ReadableBlock pac) {
+            st = pac.backLength();
+        }
+
+        public C<X> end(ReadableBlock pac) {
+            end = pac.backLength();
+            ret = sub = pac.sub(st, end - st);
+            return this;
         }
 
         public void add(String name, X r) {

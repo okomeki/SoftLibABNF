@@ -20,7 +20,6 @@ import net.siisise.block.ReadableBlock;
 import net.siisise.bnf.BNF;
 import net.siisise.bnf.BNFReg;
 import net.siisise.bnf.parser.BNFBaseParser;
-import net.siisise.io.Packet;
 
 /**
  * コメント的なもの
@@ -34,7 +33,7 @@ public class ProseVal extends BNFBaseParser<ABNF> {
 
     @Override
     public ABNF parse(ReadableBlock pac) {
-        Packet p = rule.is(pac);
+        ReadableBlock p = rule.is(pac);
         if ( p == null ) {
             return null;
         }

@@ -16,8 +16,6 @@
 package net.siisise.abnf;
 
 import net.siisise.block.ReadableBlock;
-import net.siisise.io.Packet;
-import net.siisise.io.PacketA;
 
 /**
  * casesensitiveではない方
@@ -78,7 +76,7 @@ public class ABNFtext extends IsABNF {
      * @return 一致した結果
      */
     @Override
-    public Packet is(ReadableBlock pac) {
+    public ReadableBlock is(ReadableBlock pac) {
         if (pac.length() < 1) {
             return null;
         }
@@ -91,7 +89,7 @@ public class ABNFtext extends IsABNF {
         String u;
         u = new String(d, UTF8);
         if (u.equalsIgnoreCase(text)) {
-            return new PacketA(d);
+            return ReadableBlock.wrap(d);
         }
         pac.back(size);
         return null;

@@ -21,26 +21,28 @@ import net.siisise.block.ReadableBlock;
 import net.siisise.bnf.BNF;
 import net.siisise.bnf.BNFReg;
 import net.siisise.bnf.parser.BNFBaseParser;
-import net.siisise.io.Packet;
 
 /**
- *
+ * 文字.
  */
 public class CharVal extends BNFBaseParser<ABNF> {
 
+    /**
+     * 文字
+     * @param rule 文字のルール
+     * @param base つかわない
+     */
     public CharVal(BNF rule, BNFReg base) {
         super(rule);
     }
 
     @Override
     public ABNF parse(ReadableBlock pac) {
-        Packet p = rule.is(pac);
-        if (p == null) {
+        ReadableBlock quoted = rule.is(pac);
+        if (quoted == null) {
             return null;
         }
-        p.backRead();
-        p.read();
-        byte[] d = p.toByteArray();
-        return ABNF.text(new String(d, StandardCharsets.UTF_8));
+        ReadableBlock plane = quoted.sub(1,quoted.length() - 2);
+        return ABNF.text(new String(plane.toByteArray(), StandardCharsets.UTF_8));
     }
 }

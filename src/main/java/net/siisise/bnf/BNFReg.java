@@ -175,6 +175,22 @@ public class BNFReg {
         return (T) parser(rulename).parse(pac, ns);
     }
 
+    /**
+     * ユーザ側のParser(JSONなど)を駆動する。 BASEのみで参照先がないなど
+     *
+     * @param <T> 解析型
+     * @param rulename 解析装置付き構文の名。駆動コマンドのようなもの
+     * @param pac パース対象ソース
+     * @return 解析後の実体
+     */
+    public <T> T parse(String rulename, ReadableBlock pac) {
+        return (T) parser(rulename).parse(pac);
+    }
+
+    public <T> T parse(String rulename, ReadableBlock pac, Object ns) {
+        return (T) parser(rulename).parse(pac, ns);
+    }
+
     public <T> BNFParser<T> parser(String rulename) {
         BNF rule = reg.get(rulename);
         Class<? extends BNFParser> rulep = CL.get(rulename);

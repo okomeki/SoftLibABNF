@@ -56,7 +56,7 @@ public class ABNFpl extends FindABNF {
     }
 
     /**
-     * 
+     * 単純に積む.
      * @param <X> 返却予定の型
      * @param <N> user name space type ユーザ名前空間型
      * @param pac 解析対象
@@ -66,16 +66,16 @@ public class ABNFpl extends FindABNF {
      */
     @Override
     public <X,N> C<X> buildFind(ReadableBlock pac, N ns, BNFParser<? extends X>... parsers) {
-        C<X> ret = new C<>();
+        C<X> ret = new C<>(pac);
         
         for (BNF sub : list) {
             C<X> subret = sub.find(pac, ns, parsers);
             if (subret == null) {
-                pac.back(ret.ret.length());
+                pac.seek(ret.st);
                 return null;
             }
             mix(ret, subret);
         }
-        return ret;
+        return ret.end(pac);
     }
 }

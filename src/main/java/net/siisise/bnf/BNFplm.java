@@ -60,33 +60,38 @@ public class BNFplm extends BNFpl {
      */
     protected <X,N> C<X> longfind(ReadableBlock pac, N ns, int start, BNFParser<? extends X>[] subparsers) {
         if (list.length == start) {
-            return new C();
+            return new C(pac).end(pac);
         }
-        int flen = pac.size();
-        
+        long frontMax = pac.length();
+        long of = pac.backLength();
+
         do {
             // 1つめ 指定サイズまでに制限する
-            ReadableBlock frontPac = pac.readBlock(flen);
+            ReadableBlock frontPac = pac.readBlock(frontMax);
 
-            C firstret = list[start].find(frontPac, ns, subparsers);
-            pac.back(frontPac.size());
-
-            if (firstret == null || list.length - start == 1) { // 一致しないか最後ならここで戻り
+            C<X> firstret = list[start].find(frontPac, ns, subparsers);
+            pac.back(frontPac.length());
+            if ( firstret == null ) {
+                return null;
+            }
+            firstret.st = of;
+            firstret.end(pac);
+            if (list.length - start == 1) { // 一致しないか最後ならここで戻り
                 return firstret;
             }
-            flen = firstret.ret.size();
+            frontMax = pac.backLength() - of;
             // 2つめ以降
-            C nextret = longfind(pac, ns, start + 1, subparsers);
+            C<X> nextret = longfind(pac, ns, start + 1, subparsers);
             if (nextret != null) {
                 // firstret と nextret 両方成立
                 mix(firstret, nextret);
                 return firstret;
             }
             // scのみ成立 破棄
-            pac.back(firstret.ret.size());
-            flen--;
+            pac.seek(of);
+            frontMax--;
 
-        } while (flen >= 0);
+        } while (frontMax >= 0);
         return null;
     }
 }

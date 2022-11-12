@@ -19,7 +19,6 @@ import net.siisise.abnf.ABNF;
 import net.siisise.block.ReadableBlock;
 import net.siisise.bnf.BNF;
 import net.siisise.bnf.parser.BNFBaseParser;
-import net.siisise.io.FrontPacket;
 import net.siisise.io.Packet;
 import net.siisise.io.PacketA;
 import net.siisise.lang.CodePoint;
@@ -58,20 +57,20 @@ class NumSub extends BNFBaseParser<ABNF> {
             pac.back(1);
             return null;
         }
-        int val = num(pac);
+        int v = num(pac);
 
-        FrontPacket r = hf.is(pac);
+        ReadableBlock r = hf.is(pac);
         if (r != null) {
             int max = num(pac);
-            return ABNF.range(val, max);
+            return ABNF.range(v, max);
         }
 
         r = dot.is(pac);
         if (r == null) {
-            return ABNF.bin(val);
+            return ABNF.bin(v);
         }
         Packet data = new PacketA();
-        data.write(CodePoint.utf8(val));
+        data.write(CodePoint.utf8(v));
         do {
             data.write(CodePoint.utf8(num(pac)));
             r = dot.is(pac);
@@ -80,7 +79,7 @@ class NumSub extends BNFBaseParser<ABNF> {
     }
 
     private int num(ReadableBlock pac) {
-        FrontPacket num = nrule.is(pac);
+        ReadableBlock num = nrule.is(pac);
         return Integer.parseInt(str(num), dig);
     }
 }

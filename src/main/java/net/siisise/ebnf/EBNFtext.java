@@ -73,7 +73,7 @@ public class EBNFtext extends IsEBNF {
     }
 
     @Override
-    public Packet is(ReadableBlock pac) {
+    public ReadableBlock is(ReadableBlock pac) {
         if (pac.length() < 1) {
             return null;
         }
@@ -86,7 +86,7 @@ public class EBNFtext extends IsEBNF {
         String u;
         u = new String(d, UTF8);
         if (u.equalsIgnoreCase(text)) {
-            return new PacketA(d);
+            return ReadableBlock.wrap(d);
         }
         pac.back(d.length);
         return null;

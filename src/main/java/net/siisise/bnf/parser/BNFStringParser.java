@@ -30,12 +30,12 @@ public class BNFStringParser extends BNFBuildParser<String,ABNF> {
 
     /**
      * find専用なのでなにもしていない
-     * @param val 解析結果
+     * @param str 解析結果
      * @return 構築結果
      */
     @Override
-    public String build(ABNF.C val) {
-        return str(val.ret);
+    public String build(ABNF.C str) {
+        return str(str.sub);
     }
     
 }

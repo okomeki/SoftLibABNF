@@ -45,29 +45,29 @@ public class BNFBuildParser<T, M> extends BNFBaseParser<T> {
     }
 
     @Override
-    public T parse(ReadableBlock pac) {
-        return parse(pac, null);
+    public T parse(ReadableBlock rb) {
+        return parse(rb, null);
     }
     
     /**
      * 対象であるかの判定と要素抽出をする
-     * @param pac 解析対象
+     * @param rb 解析対象
      * @param ns user name space ユーザ名前空間
      * @return 解析結果
      */
     @Override
-    public T parse(ReadableBlock pac, Object ns) {
+    public T parse(ReadableBlock rb, Object ns) {
         if (subs == null) {
             subs = new BNFParser[subName.length];
             for (int i = 0; i < subName.length; i++) {
                 subs[i] = base.parser(subName[i]);
             }
         }
-        BNF.C<M> val = rule.find(pac, ns, subs);
-        if (val == null) {
+        BNF.C<M> re = rule.find(rb, ns, subs);
+        if (re == null) {
             return null;
         }
-        return build(val, ns);
+        return build(re, ns);
     }
 
     /**

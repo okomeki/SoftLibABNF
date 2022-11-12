@@ -21,7 +21,6 @@ import net.siisise.block.ReadableBlock;
 import net.siisise.bnf.BNF;
 import net.siisise.bnf.BNFReg;
 import net.siisise.bnf.parser.BNFBaseParser;
-import net.siisise.io.FrontPacket;
 
 /**
  * ルール名.
@@ -41,7 +40,7 @@ public class Rulename extends BNFBaseParser<ABNF> {
      */
     @Override
     public ABNF parse(ReadableBlock pac, Object ns) {
-        FrontPacket name = rule.is(pac);
+        ReadableBlock name = rule.is(pac);
         if (name == null) {
             return null;
         }

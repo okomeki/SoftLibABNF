@@ -47,12 +47,12 @@ public class BNFpl extends FindBNF {
      */
     @Override
     public <X,N> C<X> buildFind(ReadableBlock pac, N ns, BNFParser<? extends X>... parsers) {
-        C<X> ret = new C<>();
+        C<X> ret = new C<>(pac);
         
         for (BNF sub : list) {
             C<X> subret = sub.find(pac, ns, parsers);
             if (subret == null) {
-                pac.back(ret.ret.size());
+                pac.back(pac.backLength() - ret.st);
                 return null;
             }
             mix(ret, subret);

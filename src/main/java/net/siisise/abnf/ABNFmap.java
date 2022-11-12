@@ -46,7 +46,7 @@ public class ABNFmap extends IsABNF {
     }
 
     @Override
-    public Packet is(ReadableBlock pac) {
+    public ReadableBlock is(ReadableBlock pac) {
         if (pac.length() == 0) {
             return null;
         }
@@ -57,7 +57,7 @@ public class ABNFmap extends IsABNF {
         }
         byte[] bin8 = CodePoint.utf8(ch);
         if (map.contains(ch)) {
-            return new PacketA(bin8);
+            return ReadableBlock.wrap(bin8);
         }
         pac.seek(of);
         return null;

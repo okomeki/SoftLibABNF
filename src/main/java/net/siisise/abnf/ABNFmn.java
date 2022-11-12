@@ -44,21 +44,17 @@ public class ABNFmn extends IsABNF {
     }
 
     @Override
-    public <N> Packet is(ReadableBlock pac, N ns) {
-        Packet p1 = a.is(pac, ns);
-        if (p1 == null) {
-            return null;
-        }
-        Packet p2 = b.is(p1, ns);
+    public <N> ReadableBlock is(ReadableBlock pac, N ns) {
+        ReadableBlock p2 = b.is(pac, ns);
         if (p2 != null) {
-            pac.back(p1.size() + p2.size());
+            pac.back(p2.length());
             return null;
         }
-        return p1;
+        return a.is(pac, ns);
     }
 
     @Override
-    public Packet is(ReadableBlock src) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public ReadableBlock is(ReadableBlock src) {
+        return is(src, null);
     }
 }

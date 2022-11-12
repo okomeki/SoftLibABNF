@@ -52,7 +52,7 @@ public class ABNFplm extends ABNFpl {
     }
 
     /**
-     * 詳細検索
+     * puls用 最長一致詳細検索.
      *
      * @param <X> 戻り型例
      * @param <N> name space type 名前空間型
@@ -64,22 +64,28 @@ public class ABNFplm extends ABNFpl {
      */
     protected <X,N> C<X> longfind(ReadableBlock pac, N ns, int start, BNFParser<? extends X>[] subparsers) {
         if (list.length == start) {
-            return new C();
+            return new C(pac);
         }
-        int flen = pac.size();
-        
+        // start番目の最大長 (候補) 全体が一致するまで縮めていく
+        long frontMax = pac.length();
+        long op = pac.backLength();
         do {
             // 1つめ 指定サイズまでに制限する
             // 減らしながら全体が一致する箇所を探る
-            ReadableBlock frontPac = pac.readBlock(flen);
+            ReadableBlock frontPac = pac.readBlock(frontMax);
 
             C firstret = list[start].find(frontPac, ns, subparsers);
-            pac.back(frontPac.length());
-
-            if (firstret == null || list.length - start == 1) { // 一致しないか最後ならここで戻り
+            pac.back(frontPac.length()); // 残りをpacのpositionに戻す
+            if ( firstret == null ) {
+                return null;
+            }
+            
+            firstret.st = op;
+            //firstret.end(pac);
+            if ( list.length - start == 1) { // 一致しないか最後ならここで戻り
                 return firstret;
             }
-            flen = firstret.ret.size();
+            frontMax = pac.backLength() - op; // 単独の最大なので切り詰める
             // 2つめ以降
             C nextret = longfind(pac, ns, start + 1, subparsers);
             if (nextret != null) {
@@ -88,10 +94,10 @@ public class ABNFplm extends ABNFpl {
                 return firstret;
             }
             // scのみ成立 破棄
-            pac.back(flen);
-            flen--;
+            pac.seek(op);
+            frontMax--;
 
-        } while (flen >= 0);
+        } while (frontMax >= 0);
         return null;
     }
 }

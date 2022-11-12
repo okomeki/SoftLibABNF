@@ -1,7 +1,6 @@
 package net.siisise.bnf;
 
 import net.siisise.block.ReadableBlock;
-import net.siisise.io.Packet;
 
 /**
  *
@@ -32,14 +31,33 @@ public class BNFtext extends IsBNF {
         utf8 = text.getBytes(UTF8);
     }
 
+    /**
+     *
+     * @param pac
+     * @return 一致した結果
+     */
     @Override
-    public Packet is(ReadableBlock src) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public ReadableBlock is(ReadableBlock pac) {
+        if (pac.length() < 1) {
+            return null;
+        }
+        byte[] d = new byte[utf8.length];
+        int size = pac.read(d);
+        if ( size < utf8.length ) {
+            pac.back(size);
+            return null;
+        }
+        String u;
+        u = new String(d, UTF8);
+        if (u.equalsIgnoreCase(text)) {
+            return ReadableBlock.wrap(d);
+        }
+        pac.back(size);
+        return null;
     }
 
     @Override
     public BNF copy(BNFReg reg) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return new BNFtext(text);
     }
-
 }

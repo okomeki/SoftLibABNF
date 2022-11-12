@@ -36,6 +36,12 @@ public abstract class AbstractBNF<B extends BNF> implements BNF<B> {
         return (B) new BNFor(name, this); // ?
     }
 
+    /**
+     * 
+     * @param <X>
+     * @param parsers
+     * @return 一致するもの しないときはnull
+     */
     protected <X> BNFParser<? extends X> matchParser(BNFParser<? extends X>[] parsers) {
         for (BNFParser ps : parsers) {
             if (name.equals(ps.getBNF().getName())) {
@@ -57,12 +63,12 @@ public abstract class AbstractBNF<B extends BNF> implements BNF<B> {
     
     @Override
     public Packet is(FrontPacket pac) {
-        return is(rb(pac));
+        return pac(is(rb(pac)));
     }
     
     @Override
     public <N> Packet is(FrontPacket pac, N ns) {
-        return is(rb(pac), ns);
+        return pac(is(rb(pac), ns));
     }
 
     /**
@@ -104,12 +110,12 @@ public abstract class AbstractBNF<B extends BNF> implements BNF<B> {
 
     @Override
     public boolean eq(ReadableBlock v) {
-        FrontPacket r = is(v);
+        ReadableBlock r = is(v);
         if (v.length() == 0) {
             return true;
         }
         if (r != null) {
-            v.back(r.size());
+            v.back(r.length());
         }
         return false;
     }
@@ -222,6 +228,12 @@ public abstract class AbstractBNF<B extends BNF> implements BNF<B> {
         return ReadableBlock.wrap(p);
     }
     
+    public static final Packet pac(ReadableBlock rb) {
+        Packet pac = new PacketA();
+        pac.write(rb);
+        return pac;
+    }
+    
     public static String str(Input pac) {
         return new String(pac.toByteArray(), UTF8);
     }
@@ -265,9 +277,9 @@ public abstract class AbstractBNF<B extends BNF> implements BNF<B> {
     protected <X,N> C<X> subBuild(C<X> cret, N ns, BNFParser<? extends X> parser) {
         if (parser != null) {
             cret.subs.clear();
-            byte[] data = cret.ret.toByteArray();
-            cret.ret.backWrite(data);
-            cret.add(name, parser.parse(new PacketA(data), ns));
+            long o = cret.sub.backLength();
+            cret.add(name, parser.parse(cret.sub, ns));
+            cret.sub.seek(o);
         }
         return cret;
     }
@@ -279,9 +291,8 @@ public abstract class AbstractBNF<B extends BNF> implements BNF<B> {
      * @param sub 結果2
      */
     protected static <X> void mix(C<X> ret, C<X> sub) {
-        ret.ret.write(sub.ret.toByteArray());
-        sub.subs.forEach((key,val) -> {
-            val.forEach((v) -> {
+        sub.subs.forEach((key,vlist) -> {
+            vlist.forEach((v) -> {
                 ret.add(key, v);
             });
         });

@@ -63,16 +63,16 @@ public class BNFx extends FindBNF {
 
     @Override
     public <X,N> C<X> buildFind(ReadableBlock pac, N ns, BNFParser<? extends X>... names) {
-        C<X> ret = new C<>();
+        C<X> ret = new C<>(pac);
         for (int i = 0; b == -1 || i < b; i++) {
 //            System.out.println(abnf+":" + strd(ret.ret)+"%"+strd(pac));
             C sub = bnf.find(pac, ns, names);
             if (sub == null) {
                 if (i < a) {
-                    pac.back(ret.ret.size());
+                    pac.back(pac.backLength() - ret.st);
                     return null;
                 } else {
-                    return ret;
+                    return ret.end(pac);
                 }
             }
             mix(ret, sub);

@@ -69,7 +69,7 @@ public class EBNFbin extends IsEBNF {
      * @return 一致した場合pacと同じ 一致しなければnull
      */
     @Override
-    public Packet is(ReadableBlock pac) {
+    public ReadableBlock is(ReadableBlock pac) {
         if (pac.length() < 1) {
             return null;
         }
@@ -79,6 +79,6 @@ public class EBNFbin extends IsEBNF {
             pac.back(dlsize);
             return null;
         }
-        return new PacketA(d);
+        return ReadableBlock.wrap(d);
     }
 }

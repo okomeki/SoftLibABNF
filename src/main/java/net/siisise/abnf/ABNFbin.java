@@ -42,17 +42,17 @@ public class ABNFbin extends IsABNF {
 
     /**
      * ascii ?
-     * @param val 
+     * @param str 
      */
-    ABNFbin(String val) {
+    ABNFbin(String str) {
         StringBuilder sb = new StringBuilder(50);
-        sb.append(hex(val.charAt(0)));
-        for (int i = 1; i < val.length(); i++) {
+        sb.append(hex(str.charAt(0)));
+        for (int i = 1; i < str.length(); i++) {
             sb.append(".");
-            sb.append(hex(val.charAt(i)).substring(2));
+            sb.append(hex(str.charAt(i)).substring(2));
         }
         name = sb.toString();
-        data = val.getBytes(UTF8);
+        data = str.getBytes(UTF8);
     }
 
     /**
@@ -72,28 +72,26 @@ public class ABNFbin extends IsABNF {
      * @return 一致した場合pacと同じ 一致しなければnull
      */
     @Override
-    public Packet is(ReadableBlock pac) {
+    public ReadableBlock is(ReadableBlock pac) {
         if (pac.length() < 1) {
             return null;
         }
         byte[] d = new byte[data.length];
         int dlsize = pac.read(d);
         if ( dlsize == data.length && Arrays.equals(data, d)) {
-            PacketA p = new PacketA();
-            p.dwrite(d);
-            return p;
+            return ReadableBlock.wrap(d);
         }
         pac.back(dlsize);
         return null;
     }
-    
+
     /**
      * 1文字の場合のみ
      * @return 1文字以外 -1
      */
     public int ch() {
-        ByteBlock pac = new ByteBlock(data);
-        int ch = CodePoint.utf8((ReadableBlock)pac);
+        ReadableBlock pac = new ByteBlock(data);
+        int ch = CodePoint.utf8(pac);
         return pac.size() == 0 ? ch : -1;
     }
 }

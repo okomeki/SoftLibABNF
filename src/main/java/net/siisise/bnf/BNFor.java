@@ -69,22 +69,22 @@ public class BNFor extends FindBNF {
     @Override
     public <X,N> C<X> buildFind(ReadableBlock pac, N ns, BNFParser<? extends X>... parsers) {
         C ret = null;
-
+        long bp = pac.backLength();
+        long o = bp;
         for (BNF sub : list) {
             C subret = sub.find(pac, ns, parsers);
             if (subret != null) {
-                long datasize = subret.ret.length();
-                pac.back(datasize);
-                if (ret == null || ret.ret.length() < datasize) {
+                long len = subret.sub.length();
+                if (ret == null || ret.sub.length() < len) {
                     ret = subret;
+                    o = bp + len; // pac.backLength();
                 }
+                pac.seek(bp);
             }
         }
-        if (ret == null) {
-            return null;
+        if (ret != null) {
+            pac.seek(o);
         }
-
-        pac.skip(ret.ret.length());
         return ret;
     }
 

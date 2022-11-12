@@ -16,6 +16,7 @@
 package net.siisise.bnf.parser;
 
 import net.siisise.block.ReadableBlock;
+import net.siisise.bnf.AbstractBNF;
 import net.siisise.bnf.BNF;
 import net.siisise.io.Packet;
 
@@ -32,6 +33,6 @@ public class BNFPacketParser extends BNFBaseParser<Packet> {
 
     @Override
     public Packet parse(ReadableBlock pac) {
-        return rule.is(pac);
+        return AbstractBNF.pac(rule.is(pac));
     }
 }

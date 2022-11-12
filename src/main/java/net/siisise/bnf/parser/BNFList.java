@@ -57,18 +57,18 @@ public abstract class BNFList<T, M> extends BNFBuildParser<T, M> {
 
     /**
      * 副ルールを抽出してリストで渡される処理 name space付きの場合
-     * @param val 抽出結果
+     * @param list 抽出結果
      * @param ns name space
      * @return 処理結果 
      */
-    protected T build(List<M> val, Object ns) {
-        return build(val);
+    protected T build(List<M> list, Object ns) {
+        return build(list);
     }
 
     /**
      * 構築過程
-     * @param val nullなし 並び順はsubcn順の中で並び順になるので注意
+     * @param list nullなし 並び順はsubcn順の中で並び順になるので注意
      * @return 処理結果
      */
-    protected abstract T build(List<M> val);
+    protected abstract T build(List<M> list);
 }

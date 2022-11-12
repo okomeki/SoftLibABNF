@@ -23,7 +23,7 @@ import net.siisise.bnf.parser.BNFParser;
 import net.siisise.lang.CodePoint;
 
 /**
- *
+ * 最長一致
  */
 public class ABNFor extends FindABNF {
 
@@ -110,23 +110,22 @@ public class ABNFor extends FindABNF {
     @Override
     public <X,N> C<X> buildFind(ReadableBlock pac, N ns, BNFParser<? extends X>... parsers) {
         ABNF.C<X> ret = null;
-
+        long bp = pac.backLength();
+        long o = bp;
         for (BNF sub : list) {
-
             C<X> subret = sub.find(pac, ns, parsers);
             if (subret != null) {
-                long len = subret.ret.length();
-                pac.back(len);
-                if (ret == null || ret.ret.length() < len) {
+                long len = subret.sub.length();
+                if (ret == null || ret.sub.length() < len) {
                     ret = subret;
+                    o = bp + len; // pac.backLength();
                 }
+                pac.seek(bp);
             }
         }
-        if (ret == null) {
-            return null;
+        if (ret != null) {
+            pac.seek(o);
         }
-
-        pac.skip(ret.ret.length());
         return ret;
     }
 }

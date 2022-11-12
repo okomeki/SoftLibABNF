@@ -16,7 +16,6 @@
 package net.siisise.ebnf;
 
 import net.siisise.bnf.parser.BNFParser;
-import net.siisise.io.Packet;
 import net.siisise.block.ReadableBlock;
 
 /**
@@ -25,7 +24,7 @@ import net.siisise.block.ReadableBlock;
 public abstract class IsEBNF extends AbstractEBNF {
     
     @Override
-    public <N> Packet is(ReadableBlock pac, N ns) {
+    public <N> ReadableBlock is(ReadableBlock pac, N ns) {
         return is(pac);
     }
    
@@ -40,10 +39,12 @@ public abstract class IsEBNF extends AbstractEBNF {
      */
     @Override
     public <X,N> C<X> find(ReadableBlock pac, N ns, BNFParser<? extends X>... parsers) {
-        Packet r = is(pac, ns);
+        C n = new C(pac);
+        ReadableBlock r = is(pac, ns);
         if (r == null) {
             return null;
         }
-        return subBuild(new C(r), ns, matchParser(parsers));
+        n.end(pac);
+        return subBuild(n, ns, matchParser(parsers));
     }
 }
