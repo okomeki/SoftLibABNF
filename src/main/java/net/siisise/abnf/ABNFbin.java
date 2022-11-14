@@ -18,8 +18,6 @@ package net.siisise.abnf;
 import java.util.Arrays;
 import net.siisise.block.ByteBlock;
 import net.siisise.block.ReadableBlock;
-import net.siisise.io.Packet;
-import net.siisise.io.PacketA;
 import net.siisise.lang.CodePoint;
 
 /**
@@ -87,11 +85,11 @@ public class ABNFbin extends IsABNF {
 
     /**
      * 1文字の場合のみ
-     * @return 1文字以外 -1
+     * @return 1文字:コード 1文字以外:-1
      */
     public int ch() {
-        ReadableBlock pac = new ByteBlock(data);
-        int ch = CodePoint.utf8(pac);
-        return pac.size() == 0 ? ch : -1;
+        ReadableBlock src = new ByteBlock(data);
+        int ch = CodePoint.utf8(src); // 1文字デコード
+        return src.length() == 0 ? ch : -1;
     }
 }
