@@ -196,12 +196,11 @@ public class ABNFReg extends BNFCC {
      */
     public List<ABNF> rulelist(String rulelist) {
         List<ABNF> list = bnfReg.parse(bnfReg.rulelist, rulelist, this);
-        if (list == null) {
-            return null;
+        if (list != null) {
+            list.forEach((abnf) -> {
+                reg.put(abnf.getName(), abnf);
+            });
         }
-        list.forEach((abnf) -> {
-            reg.put(abnf.getName(), abnf);
-        });
         return list;
     }
 
@@ -214,12 +213,28 @@ public class ABNFReg extends BNFCC {
      */
     public List<ABNF> rulelist(FrontPacket rulelist) {
         List<ABNF> list = bnfReg.parse("rulelist", rulelist, this);
-        if (list == null) {
-            return null;
+        if (list != null) {
+            list.forEach((abnf) -> {
+                reg.put(abnf.getName(), abnf);
+            });
         }
-        list.forEach((abnf) -> {
-            reg.put(abnf.getName(), abnf);
-        });
+        return list;
+    }
+
+    /**
+     * rulelistの読み込みと登録。
+     * RFC 5234の場合、文字コードUTF-8、改行コード CR LF のみ有効です。
+     *
+     * @param rulelist 元になるストリーム、Packet
+     * @return rule の List
+     */
+    public List<ABNF> rulelist(ReadableBlock rulelist) {
+        List<ABNF> list = bnfReg.parse("rulelist", rulelist, this);
+        if (list != null) {
+            list.forEach((abnf) -> {
+                reg.put(abnf.getName(), abnf);
+            });
+        }
         return list;
     }
 

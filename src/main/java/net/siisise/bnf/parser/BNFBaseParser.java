@@ -44,10 +44,10 @@ public abstract class BNFBaseParser<T> implements BNFParser<T> {
     }
 
     /**
-     *
-     * @param pac
-     * @param ns
-     * @return
+     * パース
+     * @param pac ソース
+     * @param ns name space
+     * @return パース結果
      */
     @Override
     public T parse(ReadableBlock pac, Object ns) {
@@ -55,10 +55,11 @@ public abstract class BNFBaseParser<T> implements BNFParser<T> {
     }
 
     /**
-     *
-     * @param pac
-     * @param ns
-     * @return
+     * パース.
+     * ソースからは解析できた分だけ減る
+     * @param pac ソース
+     * @param ns 名前空間 name space
+     * @return パース結果
      */
     @Override
     public T parse(FrontPacket pac, Object ns) {

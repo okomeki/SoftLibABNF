@@ -76,6 +76,6 @@ public class ABNFpl extends FindABNF {
             }
             mix(ret, subret);
         }
-        return ret.end(pac);
+        return ret;
     }
 }

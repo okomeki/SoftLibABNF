@@ -26,7 +26,6 @@ import net.siisise.block.ReadableBlock;
 import net.siisise.bnf.parser.BNFParser;
 import net.siisise.io.FrontPacket;
 import net.siisise.io.Packet;
-import net.siisise.io.PacketA;
 
 /**
  * 抽象的なBNF全般
@@ -114,8 +113,9 @@ public interface BNF<B extends BNF> {
     <X> C<X> find(ReadableBlock pac, BNFParser<? extends X>... parsers);
 
     /**
-     * 検索結果用構造
-     * あと1回書き直したい
+     * 検索結果用構造.
+     * あと1回書き直したい.
+     * end()で閉じるとsubが使える
      * @param <X> データ型
      */
     public static class C<X> {
@@ -124,7 +124,7 @@ public interface BNF<B extends BNF> {
          */
         public ReadableBlock ret;
         /**
-         * ret と同じ
+         * ret と同じ (仮)
          */
         public ReadableBlock sub;
         public long st;
