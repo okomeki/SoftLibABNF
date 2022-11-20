@@ -26,14 +26,13 @@ public abstract class FindBNF extends AbstractBNF<BNF> {
 
     /**
      * 単純な比較をfind で処理する.
-     * @param <N> user name space type
      * @param src source 解析対象
      * @param ns user name space 未使用時はnull可能
      * @return 一致した場合
      */
     @Override
-    public <N> ReadableBlock is(ReadableBlock src, N ns) {
-        C ret = find(src,ns);
+    public ReadableBlock is(ReadableBlock src, Object ns) {
+        Match ret = find(src,ns);
         if (ret == null) {
             return null;
         }
@@ -53,16 +52,15 @@ public abstract class FindBNF extends AbstractBNF<BNF> {
     /**
      *
      * @param <X> 戻り型参考
-     * @param <N> user name space type 名前空間型
      * @param pac source 解析対象
      * @param ns user name space ユーザ名前空間
      * @param parsers sub parsers サブ要素パーサ群
      * @return 解析結果
      */
     @Override
-    public <X,N> C<X> find(ReadableBlock pac, N ns, BNFParser<? extends X>... parsers) {
+    public <X> Match<X> find(ReadableBlock pac, Object ns, BNFParser<? extends X>... parsers) {
         BNFParser<? extends X> mp = matchParser(parsers);
-        C<X> ret = buildFind(pac, ns, mp == null ? parsers : new BNFParser[0]);
+        Match<X> ret = buildFind(pac, ns, mp == null ? parsers : new BNFParser[0]);
         if ( ret == null ) {
             return null;
         }
@@ -70,5 +68,5 @@ public abstract class FindBNF extends AbstractBNF<BNF> {
         return subBuild(ret, ns, mp);
     }
 
-    protected abstract <X,N> C<X> buildFind(ReadableBlock pac, N ns, BNFParser<? extends X>... parsers);
+    protected abstract <X> Match<X> buildFind(ReadableBlock pac, Object ns, BNFParser<? extends X>... parsers);
 }

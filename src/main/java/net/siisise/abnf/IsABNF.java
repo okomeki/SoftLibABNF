@@ -25,22 +25,21 @@ import net.siisise.bnf.parser.BNFParser;
 public abstract class IsABNF extends AbstractABNF {
     
     @Override
-    public <N> ReadableBlock is(ReadableBlock pac, N ns) {
+    public ReadableBlock is(ReadableBlock pac, Object ns) {
         return is(pac);
     }
     
     /**
      * sub要素のない場合の軽い対応
      * @param <X> パラメータっぽい型
-     * @param <N>
      * @param pac 解析データ
      * @param ns name space
      * @param parsers サブ要素のparser
      * @return 処理結果
      */
     @Override
-    public <X,N> C<X> find(ReadableBlock pac, N ns, BNFParser<? extends X>... parsers) {
-        C<X> n = new C(pac);
+    public <X> Match<X> find(ReadableBlock pac, Object ns, BNFParser<? extends X>... parsers) {
+        Match<X> n = new Match(pac);
         ReadableBlock r = is(pac, ns);
         if (r == null) {
             return null;

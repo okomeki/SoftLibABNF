@@ -67,7 +67,7 @@ public class ABNFtext extends IsABNF {
      * @return 1文字毎にor分割したABNF
      */
     public static ABNF list(String chlist) {
-        return new ABNFor(chlist);
+        return new ABNFor1(chlist);
     }
 
     /**

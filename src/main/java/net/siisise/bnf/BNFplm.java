@@ -43,7 +43,7 @@ public class BNFplm extends BNFpl {
     }
 
     @Override
-    public <X,N> C<X> buildFind(ReadableBlock pac, N ns, BNFParser<? extends X>... subps) {
+    public <X> Match<X> buildFind(ReadableBlock pac, Object ns, BNFParser<? extends X>... subps) {
         return longfind(pac, ns, 0, subps);
     }
 
@@ -51,16 +51,15 @@ public class BNFplm extends BNFpl {
      * 詳細検索
      *
      * @param <X> 戻り型例
-     * @param <N> name space type 名前空間型
      * @param pac source 解析対象
      * @param ns user name space
      * @param start
      * @param subparsers サブ要素パーサ
      * @return ざっくり戻り
      */
-    protected <X,N> C<X> longfind(ReadableBlock pac, N ns, int start, BNFParser<? extends X>[] subparsers) {
+    protected <X> Match<X> longfind(ReadableBlock pac, Object ns, int start, BNFParser<? extends X>[] subparsers) {
         if (list.length == start) {
-            return new C(pac).end(pac);
+            return new Match(pac).end(pac);
         }
         long frontMax = pac.length();
         long of = pac.backLength();
@@ -69,7 +68,7 @@ public class BNFplm extends BNFpl {
             // 1つめ 指定サイズまでに制限する
             ReadableBlock frontPac = pac.readBlock(frontMax);
 
-            C<X> firstret = list[start].find(frontPac, ns, subparsers);
+            Match<X> firstret = list[start].find(frontPac, ns, subparsers);
             pac.back(frontPac.length());
             if ( firstret == null ) {
                 return null;
@@ -81,7 +80,7 @@ public class BNFplm extends BNFpl {
             }
             frontMax = pac.backLength() - of;
             // 2つめ以降
-            C<X> nextret = longfind(pac, ns, start + 1, subparsers);
+            Match<X> nextret = longfind(pac, ns, start + 1, subparsers);
             if (nextret != null) {
                 // firstret と nextret 両方成立
                 mix(firstret, nextret);

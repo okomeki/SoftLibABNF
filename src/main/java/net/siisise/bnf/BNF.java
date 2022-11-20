@@ -53,22 +53,20 @@ public interface BNF<B extends BNF> {
     /**
      * 先頭一致でパースする。
      * findとどちらかの実装が必要、片方は省略可能
-     * @param <N> user name space type 名前空間型
      * @param src source 解析対象
      * @param ns user name space 名前空間
      * @return 一致した範囲
      */
-    <N> Packet is(FrontPacket src, N ns);
+    Packet is(FrontPacket src, Object ns);
 
     /**
      * 先頭一致でパースする。
      *
-     * @param <N>
      * @param src source 解析対象
      * @param ns user name space 名前空間
      * @return 一致した範囲
      */
-    <N> ReadableBlock is(ReadableBlock src, N ns);
+    ReadableBlock is(ReadableBlock src, Object ns);
 
     /**
      * 先頭一致でパースする。
@@ -89,59 +87,51 @@ public interface BNF<B extends BNF> {
     /**
      * 先頭一致でパースする。
      * 
-     * @param <N> user name space type
      * @param val 比較文字列
      * @param ns user name space
      * @return 一致ありなし
      */
-    <N> boolean is(String val, N ns);
+    boolean is(String val, Object ns);
     boolean is(String val);
 
     /**
      * サブ要素含んで抽出するパーサな機能.
      * @param <X> 返し型
-     * @param <N> user name space type
      * @param pac 元データ
      * @param ns user name space
      * @param parsers おまけで検索するサブ要素
      * @return 検索結果
      */
-    <X,N> C<X> find(FrontPacket pac, N ns, BNFParser<? extends X>... parsers);
-    <X,N> C<X> find(ReadableBlock pac, N ns, BNFParser<? extends X>... parsers);
+    <X> Match<X> find(FrontPacket pac, Object ns, BNFParser<? extends X>... parsers);
+    <X> Match<X> find(ReadableBlock pac, Object ns, BNFParser<? extends X>... parsers);
 
-    <X> C<X> find(FrontPacket pac, BNFParser<? extends X>... parsers);
-    <X> C<X> find(ReadableBlock pac, BNFParser<? extends X>... parsers);
+    <X> Match<X> find(FrontPacket pac, BNFParser<? extends X>... parsers);
+    <X> Match<X> find(ReadableBlock pac, BNFParser<? extends X>... parsers);
 
     /**
      * 検索結果用構造.
+     * Matcher っぽいらしいのでそういう名にする
      * あと1回書き直したい.
      * end()で閉じるとsubが使える
      * @param <X> データ型
      */
-    public static class C<X> {
+    public static class Match<X> {
         /**
          * メインの戻り値
          */
-        public ReadableBlock ret;
-        /**
-         * ret と同じ (仮)
-         */
         public ReadableBlock sub;
+        /**
+         * position のメモ あとでsubを作るときに使う
+         */
         public long st;
-        public long end;
         public final Map<String, List<X>> subs = new HashMap<>();
 
-        public C() {
-            ret = ReadableBlock.wrap(new byte[0]);
+        public Match(ReadableBlock rb) {
+            st = rb.backLength();
         }
 
-        public C(ReadableBlock pac) {
-            st = pac.backLength();
-        }
-
-        public C<X> end(ReadableBlock pac) {
-            end = pac.backLength();
-            ret = sub = pac.sub(st, end - st);
+        public Match<X> end(ReadableBlock rb) {
+            sub = rb.sub(st, rb.backLength() - st);
             return this;
         }
 
@@ -212,10 +202,19 @@ public interface BNF<B extends BNF> {
      * Alternation に翻訳される ABNF / 的な構文の生成装置。
      * 最大一致で検索されるので誤読もある。
      *
-     * @param val 接続したいABNF構文の列挙
+     * @param vals 接続したいABNF構文の列挙
      * @return Alternationに結合されたABNF構文
      */
-    B or(BNF... val);
+    B or(BNF... vals);
+
+    /**
+     * Alternation に翻訳される ABNF / 的な構文の生成装置。
+     * 初期一致で高速化を計ってみる。
+     * 
+     * @param vals 候補
+     * @return 最初に一致するものを返すBNF
+     */
+    B or1(BNF... vals);
 
     /**
      * min*maxXXX.
@@ -258,8 +257,8 @@ public interface BNF<B extends BNF> {
     
     /**
      * テキスト
-     * @param ch
-     * @return
+     * @param ch 文字
+     * @return 文字用BNF
      */
     static BNFtext text(char ch) {
         return new BNFtext(ch);

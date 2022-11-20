@@ -37,9 +37,9 @@ public abstract class AbstractBNF<B extends BNF> implements BNF<B> {
     }
 
     /**
-     * 
-     * @param <X>
-     * @param parsers
+     * name に 一致する parser を選ぶ.
+     * @param <X> Parserの戻り型
+     * @param parsers parser候補
      * @return 一致するもの しないときはnull
      */
     protected <X> BNFParser<? extends X> matchParser(BNFParser<? extends X>[] parsers) {
@@ -57,7 +57,7 @@ public abstract class AbstractBNF<B extends BNF> implements BNF<B> {
     }
 
     @Override
-    public <N> boolean is(String val, N ns) {
+    public boolean is(String val, Object ns) {
         return is(rb(val), ns) != null;
     }
     
@@ -67,7 +67,7 @@ public abstract class AbstractBNF<B extends BNF> implements BNF<B> {
     }
     
     @Override
-    public <N> Packet is(FrontPacket pac, N ns) {
+    public Packet is(FrontPacket pac, Object ns) {
         return pac(is(rb(pac), ns));
     }
 
@@ -79,7 +79,7 @@ public abstract class AbstractBNF<B extends BNF> implements BNF<B> {
      * @return 処理結果
      */
     @Override
-    public <X> C<X> find(FrontPacket pac, BNFParser<? extends X>... parsers) {
+    public <X> Match<X> find(FrontPacket pac, BNFParser<? extends X>... parsers) {
         return find(rb(pac), null, parsers);
     }
 
@@ -91,7 +91,7 @@ public abstract class AbstractBNF<B extends BNF> implements BNF<B> {
      * @return 処理結果
      */
     @Override
-    public <X> C<X> find(ReadableBlock pac, BNFParser<? extends X>... parsers) {
+    public <X> Match<X> find(ReadableBlock pac, BNFParser<? extends X>... parsers) {
         return find(pac, null, parsers);
     }
 
@@ -104,7 +104,7 @@ public abstract class AbstractBNF<B extends BNF> implements BNF<B> {
      * @return 処理結果
      */
     @Override
-    public <X,N> C<X> find(FrontPacket pac, N ns, BNFParser<? extends X>... parsers) {
+    public <X> Match<X> find(FrontPacket pac, Object ns, BNFParser<? extends X>... parsers) {
         return find(rb(pac), ns, parsers);
     }
 
@@ -166,28 +166,45 @@ public abstract class AbstractBNF<B extends BNF> implements BNF<B> {
 
     /**
      * Unicode単位で比較する若干速いのかもしれない版 plm
-     * @param val plus する ABNF列
+     * @param vals plus する ABNF列
      * @return unicodeで比較されるABNF処理
      */
     @Override
-    public B plu(BNF... val) {
-        if (val.length == 0) {
+    public B plu(BNF... vals) {
+        if (vals.length == 0) {
             return (B) this;
         }
-        BNF[] list = new BNF[val.length + 1];
+        BNF[] list = new BNF[vals.length + 1];
         list[0] = this;
-        System.arraycopy(val, 0, list, 1, val.length);
+        System.arraycopy(vals, 0, list, 1, vals.length);
         return (B) new BNFplu(list);
     }
 
+    /**
+     * 最長一致系
+     * @param vals 候補BNF
+     * @return 候補から最長一致を出すBNF
+     */
     @Override
-    public B or(BNF... val) {
-        BNF[] list = new BNF[val.length + 1];
+    public B or(BNF... vals) {
+        BNF[] list = new BNF[vals.length + 1];
         list[0] = this;
-        System.arraycopy(val, 0, list, 1, val.length);
+        System.arraycopy(vals, 0, list, 1, vals.length);
         return (B) new BNFor(list);
     }
 
+    /**
+     * 初一致を返す処理系
+     * @param vals 候補
+     * @return thisと候補で最初に一致したものを返すBNF
+     */
+    @Override
+    public B or1(BNF... vals) {
+        BNF[] list = new BNF[vals.length + 1];
+        list[0] = this;
+        System.arraycopy(vals, 0, list, 1, vals.length);
+        return (B) new BNFor1(list);
+    }
 
     @Override
     public B x(int min, int max) {
@@ -217,8 +234,8 @@ public abstract class AbstractBNF<B extends BNF> implements BNF<B> {
     
     /**
      * 文字列を読み込み専用Blockに.
-     * @param str
-     * @return 
+     * @param str 元文字列
+     * @return ReadableBlockに変換された文字列のバイト列
      */
     public static final ReadableBlock rb(String str) {
         return ReadableBlock.wrap(str);
@@ -268,13 +285,12 @@ public abstract class AbstractBNF<B extends BNF> implements BNF<B> {
      * 名前が該当すればそれ以下を削除して詰め直す
      *
      * @param <X> 戻りの型
-     * @param <N> name space の型
      * @param cret 戻り
      * @param ns name space
      * @param parser 一致するものだけ必要
      * @return 戻りからさらにparserを通したものを追加したもの
      */
-    protected <X,N> C<X> subBuild(C<X> cret, N ns, BNFParser<? extends X> parser) {
+    protected <X> Match<X> subBuild(Match<X> cret, Object ns, BNFParser<? extends X> parser) {
         if (parser != null) {
             cret.subs.clear();
             long o = cret.sub.backLength();
@@ -290,7 +306,7 @@ public abstract class AbstractBNF<B extends BNF> implements BNF<B> {
      * @param ret 結果1
      * @param sub 結果2
      */
-    protected static <X> void mix(C<X> ret, C<X> sub) {
+    protected static <X> void mix(Match<X> ret, Match<X> sub) {
         sub.subs.forEach((key,vlist) -> {
             vlist.forEach((v) -> {
                 ret.add(key, v);

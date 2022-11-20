@@ -25,9 +25,9 @@ import net.siisise.bnf.parser.BNFParser;
 public abstract class FindABNF extends AbstractABNF {
 
     /**
-     * 一致判定.
-     * @param src
-     * @return
+     * 前方一致判定.
+     * @param src 解析ソース
+     * @return 一致範囲
      */
     @Override
     public ReadableBlock is(ReadableBlock src) {
@@ -35,15 +35,14 @@ public abstract class FindABNF extends AbstractABNF {
     }
     
     /**
-     * 一致判定.
-     * @param <N> 任意のnamespace型
+     * 前方一致判定.
      * @param src ソース
-     * @param ns namespace
-     * @return 
+     * @param ns name space
+     * @return 一致した範囲
      */
     @Override
-    public <N> ReadableBlock is(ReadableBlock src, N ns) {
-        C ret = find(src, ns);
+    public ReadableBlock is(ReadableBlock src, Object ns) {
+        Match ret = find(src, ns);
         if (ret == null) {
             return null;
         }
@@ -54,16 +53,15 @@ public abstract class FindABNF extends AbstractABNF {
      * 詰め方の工夫をするターン
      *
      * @param <X> 戻り型
-     * @param <N> name space type
      * @param rb 解析対象
      * @param ns name space
      * @param parsers サブ要素のパーサー
      * @return サブ要素を含む解析結果
      */
     @Override
-    public <X,N> C<X> find(ReadableBlock rb, N ns, BNFParser<? extends X>... parsers) {
-        BNFParser<? extends X> mp = matchParser(parsers);
-        C<X> ret = buildFind(rb, ns, mp == null ? parsers : new BNFParser[0]);
+    public <X> Match<X> find(ReadableBlock rb, Object ns, BNFParser<? extends X>... parsers) {
+         BNFParser<? extends X> mp = matchParser(parsers);
+        Match<X> ret = buildFind(rb, ns, mp == null ? parsers : new BNFParser[0]);
         if ( ret == null ) {
             return null;
         }
@@ -75,11 +73,10 @@ public abstract class FindABNF extends AbstractABNF {
      * find本体
      *
      * @param <X> 戻り型
-     * @param <N> user name space type 名前空間型
      * @param pac データ
      * @param ns user name space ユーザ名前空間
      * @param parsers サブ要素のパーサ
      * @return サブ要素を含む解析結果
      */
-    abstract protected <X,N> C<X> buildFind(ReadableBlock pac, N ns, BNFParser<? extends X>... parsers);
+    abstract protected <X> Match<X> buildFind(ReadableBlock pac, Object ns, BNFParser<? extends X>... parsers);
 }

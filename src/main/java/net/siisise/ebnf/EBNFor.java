@@ -113,14 +113,14 @@ public class EBNFor extends FindEBNF {
     }
 
     @Override
-    public <X,N> C<X> buildFind(ReadableBlock pac, N ns, BNFParser<? extends X>... parsers) {
-        BNF.C<X> ret = null;
+    public <X> Match<X> buildFind(ReadableBlock pac, Object ns, BNFParser<? extends X>... parsers) {
+        BNF.Match<X> ret = null;
         long bp = pac.backLength();
         long o = bp;
 
         for (BNF sub : list) {
 
-            C<X> subret = sub.find(pac, ns, parsers);
+            Match<X> subret = sub.find(pac, ns, parsers);
             if (subret != null) {
                 long datasize = subret.sub.length();
                 if (ret == null || ret.sub.length() < datasize) {

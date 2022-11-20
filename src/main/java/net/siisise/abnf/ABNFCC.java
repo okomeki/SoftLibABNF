@@ -21,7 +21,7 @@ import net.siisise.bnf.BNFReg;
 /**
  * CC は parse担当.
  * BNFReg と BNFCCに役割分担をする
- * 
+ * 自己定義があるので分割できないかもしれない. 
  */
 public class ABNFCC extends ABNFReg {
     

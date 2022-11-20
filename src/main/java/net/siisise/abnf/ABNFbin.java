@@ -77,7 +77,7 @@ public class ABNFbin extends IsABNF {
         byte[] d = new byte[data.length];
         int dlsize = pac.read(d);
         if ( dlsize == data.length && Arrays.equals(data, d)) {
-            return ReadableBlock.wrap(d);
+            return pac.sub(pac.backLength() - data.length, data.length);
         }
         pac.back(dlsize);
         return null;

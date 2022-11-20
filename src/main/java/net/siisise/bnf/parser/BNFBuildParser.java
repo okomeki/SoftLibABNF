@@ -63,7 +63,7 @@ public class BNFBuildParser<T, M> extends BNFBaseParser<T> {
                 subs[i] = base.parser(subName[i]);
             }
         }
-        BNF.C<M> re = rule.find(rb, ns, subs);
+        BNF.Match<M> re = rule.find(rb, ns, subs);
         if (re == null) {
             return null;
         }
@@ -79,11 +79,11 @@ public class BNFBuildParser<T, M> extends BNFBaseParser<T> {
      * @param ns user name space 名前空間
      * @return 解析結果
      */
-    protected T build(BNF.C<M> src, Object ns) {
+    protected T build(BNF.Match<M> src, Object ns) {
         return build(src);
     }
 
-    protected T build(BNF.C<M> src) {
+    protected T build(BNF.Match<M> src) {
         throw new java.lang.UnsupportedOperationException();
     }
 }

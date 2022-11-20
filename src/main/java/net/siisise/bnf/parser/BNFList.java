@@ -44,7 +44,7 @@ public abstract class BNFList<T, M> extends BNFBuildParser<T, M> {
      * @return 処理結果
      */
     @Override
-    protected T build(BNF.C<M> sret, Object ns) {
+    protected T build(BNF.Match<M> sret, Object ns) {
         List<M> mlist = new ArrayList<>();
         for ( String sub : subName ) {
             List<M> sublist = sret.get(sub);

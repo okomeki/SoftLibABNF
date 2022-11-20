@@ -37,7 +37,7 @@ public class BNFReg {
         }
 
         @Override
-        public <X, N> C<X> buildFind(ReadableBlock pac, N ns, BNFParser<? extends X>... parsers) {
+        public <X> Match<X> buildFind(ReadableBlock pac, Object ns, BNFParser<? extends X>... parsers) {
             return reg.get(name).find(pac, ns, parsers);
         }
 
@@ -125,11 +125,11 @@ public class BNFReg {
     }
 
     /**
-     * 
+     * rulename のABNFでparseするとT型の結果に.
      * @param <T> 解析型
      * @param rulename 解析装置付き構文の名。駆動コマンドのようなもの
      * @param src パース対象ソース
-     * @param ns
+     * @param ns 名前空間
      * @return 解析後の実体
      */
     public <T> T parse(String rulename, String src, Object ns) {
@@ -152,7 +152,7 @@ public class BNFReg {
      * @param <T> 解析型
      * @param rulename 解析装置付き構文の名。駆動コマンドのようなもの
      * @param src パース対象ソース
-     * @param ns
+     * @param ns 名前空間
      * @return 解析後の実体
      */
     public <T> T parse(String rulename, byte[] src, Object ns) {
@@ -262,6 +262,17 @@ public class BNFReg {
     }
 
     /**
+     * element を作る. 名前は持っていないことがある.
+     * elements は ABNFの名
+     * @param <B> 型
+     * @param elements bnf系の = から右
+     * @return element に変換されたABNF
+     */
+    public <B extends BNF<B>> B elements(String elements) {
+        return bnfReg.parse(bnfReg.elements, elements, this);
+    }
+
+    /**
      * rule 1行のパース.
      * 最後の改行は省略可能
      * @param <B> 型
@@ -271,16 +282,5 @@ public class BNFReg {
     public <B extends BNF<B>> B rule(String rule) {
         B bnf = bnfReg.parse(bnfReg.rule, rule + "\r\n", this);
         return rule(bnf.getName(), bnf);
-    }
-
-    /**
-     * 
-     * elements は ABNFの名
-     * @param <B> 型
-     * @param elements
-     * @return 
-     */
-    public <B extends BNF<B>> B elements(String elements) {
-        return bnfReg.parse(bnfReg.elements, elements, this);
     }
 }

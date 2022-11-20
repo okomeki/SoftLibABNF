@@ -40,7 +40,7 @@ public class Rule extends BNFBuildParser<ABNF, Object> {
      * @return 解析結果
      */
     @Override
-    protected ABNF build(BNF.C<Object> ret, Object ns) {
+    protected ABNF build(BNF.Match<Object> ret, Object ns) {
         String rulename = ((ABNF) ret.get("rulename").get(0)).getName();
         String defined = (String) ret.get("defined-as").get(0);
         ABNF elements = (ABNF) ret.get("elements").get(0);

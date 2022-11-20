@@ -19,11 +19,11 @@ import net.siisise.block.ReadableBlock;
 import net.siisise.bnf.parser.BNFParser;
 
 /**
- * or
+ * or 慎重に最長一致検索するので低速になりがち.
  */
 public class BNFor extends FindBNF {
 
-    private final BNF[] list;
+    protected final BNF[] list;
 
     public BNFor(BNF... bnfs) {
         list = bnfs;
@@ -60,32 +60,20 @@ public class BNFor extends FindBNF {
     /**
      *
      * @param <X> return object type
-     * @param <N> user name space type
      * @param pac データ
      * @param ns user name space
      * @param parsers サブ要素パーサ
      * @return 解析結果
      */
     @Override
-    public <X,N> C<X> buildFind(ReadableBlock pac, N ns, BNFParser<? extends X>... parsers) {
-        C ret = null;
-        long bp = pac.backLength();
-        long o = bp;
+    protected <X> Match<X> buildFind(ReadableBlock pac, Object ns, BNFParser<? extends X>... parsers) {
         for (BNF sub : list) {
-            C subret = sub.find(pac, ns, parsers);
+            Match<X> subret = sub.find(pac, ns, parsers);
             if (subret != null) {
-                long len = subret.sub.length();
-                if (ret == null || ret.sub.length() < len) {
-                    ret = subret;
-                    o = bp + len; // pac.backLength();
-                }
-                pac.seek(bp);
+                return subret;
             }
         }
-        if (ret != null) {
-            pac.seek(o);
-        }
-        return ret;
+        return null;
     }
 
     @Override

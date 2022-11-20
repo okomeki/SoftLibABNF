@@ -25,6 +25,16 @@ public class BNFCC extends BNFReg {
     protected final String rulename;
     public final String elements;
 
+    /**
+     * BNF Parser系を定義する場合に利用する
+     * 
+     * @param up 前提とする定義など継承もと, 参照先とか include元とか
+     * @param cc ruleの解析に使うBNFの実装
+     * @param rulelist rulelist として使用する BNF name
+     * @param rule rule BNF name
+     * @param rulename rulename BNF name
+     * @param elements elements BNF name
+     */
     protected BNFCC(BNFReg up, BNFCC cc, String rulelist, String rule, String rulename, String elements) {
         super(up, cc);
         this.rulelist = rulelist;
@@ -32,7 +42,7 @@ public class BNFCC extends BNFReg {
         this.rulename = rulename;
         this.elements = elements;
     }
-    
+
     boolean isRulename(String name) {
         return reg.get(rulename).eq(name);
     }

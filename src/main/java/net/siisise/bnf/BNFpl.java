@@ -39,18 +39,17 @@ public class BNFpl extends FindBNF {
     /**
      * 
      * @param <X> 返却予定の型
-     * @param <N> user name space type ユーザ名前空間型
      * @param pac 解析対象
      * @param ns user name space
      * @param parsers サブ解析装置
      * @return サブ要素を含む解析結果
      */
     @Override
-    public <X,N> C<X> buildFind(ReadableBlock pac, N ns, BNFParser<? extends X>... parsers) {
-        C<X> ret = new C<>(pac);
+    public <X> Match<X> buildFind(ReadableBlock pac, Object ns, BNFParser<? extends X>... parsers) {
+        Match<X> ret = new Match<>(pac);
         
         for (BNF sub : list) {
-            C<X> subret = sub.find(pac, ns, parsers);
+            Match<X> subret = sub.find(pac, ns, parsers);
             if (subret == null) {
                 pac.back(pac.backLength() - ret.st);
                 return null;

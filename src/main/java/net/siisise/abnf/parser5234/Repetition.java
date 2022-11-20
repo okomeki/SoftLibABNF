@@ -42,7 +42,7 @@ public class Repetition extends BNFBuildParser<ABNF, Object> {
      * @return リピートなABNF
      */
     @Override
-    protected ABNF build(BNF.C<Object> ret) {
+    protected ABNF build(BNF.Match<Object> ret) {
         List<Object> rep = ret.get("repeat");
         ABNF ele = (ABNF) ret.get("element").get(0);
 

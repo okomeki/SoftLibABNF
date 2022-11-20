@@ -62,11 +62,11 @@ public class BNFx extends FindBNF {
     }
 
     @Override
-    public <X,N> C<X> buildFind(ReadableBlock pac, N ns, BNFParser<? extends X>... names) {
-        C<X> ret = new C<>(pac);
+    public <X> Match<X> buildFind(ReadableBlock pac, Object ns, BNFParser<? extends X>... names) {
+        Match<X> ret = new Match<>(pac);
         for (int i = 0; b == -1 || i < b; i++) {
 //            System.out.println(abnf+":" + strd(ret.ret)+"%"+strd(pac));
-            C sub = bnf.find(pac, ns, names);
+            Match sub = bnf.find(pac, ns, names);
             if (sub == null) {
                 if (i < a) {
                     pac.back(pac.backLength() - ret.st);

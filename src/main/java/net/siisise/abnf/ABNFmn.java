@@ -17,7 +17,6 @@ package net.siisise.abnf;
 
 import net.siisise.block.ReadableBlock;
 import net.siisise.bnf.BNF;
-import net.siisise.io.Packet;
 
 /**
  * ABNFにはないがマイナス演算
@@ -44,7 +43,7 @@ public class ABNFmn extends IsABNF {
     }
 
     @Override
-    public <N> ReadableBlock is(ReadableBlock pac, N ns) {
+    public ReadableBlock is(ReadableBlock pac, Object ns) {
         ReadableBlock p2 = b.is(pac, ns);
         if (p2 != null) {
             pac.back(p2.length());

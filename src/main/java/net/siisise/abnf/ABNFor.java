@@ -16,7 +16,10 @@
 package net.siisise.abnf;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import net.siisise.block.ByteBlock;
 import net.siisise.block.ReadableBlock;
 import net.siisise.bnf.BNF;
 import net.siisise.bnf.parser.BNFParser;
@@ -27,7 +30,12 @@ import net.siisise.lang.CodePoint;
  */
 public class ABNFor extends FindABNF {
 
-    private BNF[] list;
+    protected BNF[] list;
+    
+    // or1用
+    protected ABNFor() {
+        
+    }
 
     public ABNFor(BNF... abnfs) {
         list = abnfs;
@@ -42,32 +50,35 @@ public class ABNFor extends FindABNF {
     /**
      * text として
      * ABNFmap 推奨
-     *
+     * @deprecated ABNFor1 が最適かもしれない
      * @param chlist 文字の一覧として
      */
     public ABNFor(String chlist) {
+        this(null, chlist);
+    }
+
+    public ABNFor(String name, String chlist) {
         ReadableBlock src = ReadableBlock.wrap(chlist);
         List<ABNF> abnfs = new ArrayList<>();
         while (src.length() > 0) {
             abnfs.add(new ABNFtext(CodePoint.utf8(src)));
         }
         list = abnfs.toArray(new ABNF[abnfs.size()]);
-        name = toName(list);
+        if ( name == null ) {
+            this.name = toName(list);
+        } else {
+            this.name = name;
+        }
     }
 
-    public ABNFor(String name, String list) {
-        this(list);
-        this.name = name;
-    }
-
-    private static String toName(BNF[] abnfs) {
+    static String toName(BNF[] abnfs) {
         StringBuilder sb = new StringBuilder();
         //if ( list.length > 1) {
         sb.append("( ");
         //}
         for (BNF v : abnfs) {
             String n = v.getName();
-            if (v instanceof ABNFor && n.startsWith("( ") && n.endsWith(" )")) {
+            if ((v instanceof ABNFor) && n.startsWith("( ") && n.endsWith(" )")) {
                 n = n.substring(2, n.length() - 2);
                 sb.append(n);
             } else {
@@ -107,13 +118,25 @@ public class ABNFor extends FindABNF {
         list = n;
     }
 
+    /**
+     * 最長一致検索.
+     * 候補から最長のものを返す.
+     * @param <X> 戻り型
+     * @param pac データ
+     * @param ns 名前空間
+     * @param parsers sub parser
+     * @return 最長の結果.
+     */
     @Override
-    public <X,N> C<X> buildFind(ReadableBlock pac, N ns, BNFParser<? extends X>... parsers) {
-        ABNF.C<X> ret = null;
+    public <X> Match<X> buildFind(ReadableBlock pac, Object ns, BNFParser<? extends X>... parsers) {
+        if ( pac instanceof ByteBlock ) {
+            return byteFind((ByteBlock)pac, ns, parsers);
+        }
+        ABNF.Match<X> ret = null;
         long bp = pac.backLength();
         long o = bp;
         for (BNF sub : list) {
-            C<X> subret = sub.find(pac, ns, parsers);
+            Match<X> subret = sub.find(pac, ns, parsers);
             if (subret != null) {
                 long len = subret.sub.length();
                 if (ret == null || ret.sub.length() < len) {
@@ -126,6 +149,30 @@ public class ABNFor extends FindABNF {
         if (ret != null) {
             pac.seek(o);
         }
+        return ret;
+    }
+    
+    /**
+     * pos を複数用意した並列版
+     * @param <X>
+     * @param <N>
+     * @param src
+     * @param ns 名前空間
+     * @param parsers
+     * @return 
+     */
+    <X> Match<X> byteFind(ByteBlock src, Object ns, BNFParser<? extends X>... parsers) {
+        long bp = src.backLength();
+        long sl = src.length();
+        List<BNF> bnfList = Arrays.asList(list);
+        List<Match> sub = bnfList.parallelStream().map(b -> b.find((ReadableBlock)src.sub(bp, sl),ns,parsers))
+                .filter(x -> x != null).collect(Collectors.toList());
+        if ( sub.isEmpty() ) {
+            return null;
+        }
+        Match<X> ret = sub.stream().max((a,b) -> (int)(a.sub.length() - b.sub.length())).get();
+        ret.st = bp;
+        src.skip(ret.sub.length());
         return ret;
     }
 }

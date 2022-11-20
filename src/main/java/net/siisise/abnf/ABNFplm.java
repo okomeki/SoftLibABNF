@@ -47,24 +47,24 @@ public class ABNFplm extends ABNFpl {
     }
 
     @Override
-    public <X,N> C<X> buildFind(ReadableBlock pac, N ns, BNFParser<? extends X>... subps) {
+    public <X> Match<X> buildFind(ReadableBlock pac, Object ns, BNFParser<? extends X>... subps) {
         return longfind(pac, ns, 0, subps);
     }
 
     /**
      * puls用 最長一致詳細検索.
+     * buildFindからまたは自己で呼び出す想定
      *
      * @param <X> 戻り型例
-     * @param <N> name space type 名前空間型
      * @param pac source 解析対象
      * @param ns user name space
-     * @param start
+     * @param start listの開始位置 (内部用)
      * @param subparsers サブ要素パーサ
      * @return ざっくり戻り
      */
-    protected <X,N> C<X> longfind(ReadableBlock pac, N ns, int start, BNFParser<? extends X>[] subparsers) {
+    protected <X> Match<X> longfind(ReadableBlock pac, Object ns, int start, BNFParser<? extends X>[] subparsers) {
         if (list.length == start) {
-            return new C(pac);
+            return new Match(pac);
         }
         // start番目の最大長 (候補) 全体が一致するまで縮めていく
         long frontMax = pac.length();
@@ -74,20 +74,19 @@ public class ABNFplm extends ABNFpl {
             // 減らしながら全体が一致する箇所を探る
             ReadableBlock frontPac = pac.readBlock(frontMax);
 
-            C firstret = list[start].find(frontPac, ns, subparsers);
+            Match<X> firstret = list[start].find(frontPac, ns, subparsers);
             pac.back(frontPac.length()); // 残りをpacのpositionに戻す
             if ( firstret == null ) {
                 return null;
             }
             
-            firstret.st = op;
-            //firstret.end(pac);
+            firstret.st = op; // pac用に開始位置の調整
             if ( list.length - start == 1) { // 一致しないか最後ならここで戻り
                 return firstret;
             }
             frontMax = pac.backLength() - op; // 単独の最大なので切り詰める
             // 2つめ以降
-            C nextret = longfind(pac, ns, start + 1, subparsers);
+            Match nextret = longfind(pac, ns, start + 1, subparsers);
             if (nextret != null) {
                 // firstret と nextret 両方成立
                 mix(firstret, nextret);

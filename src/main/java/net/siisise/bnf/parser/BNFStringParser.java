@@ -34,7 +34,7 @@ public class BNFStringParser extends BNFBuildParser<String,ABNF> {
      * @return 構築結果
      */
     @Override
-    public String build(ABNF.C str) {
+    public String build(ABNF.Match str) {
         return str(str.sub);
     }
     

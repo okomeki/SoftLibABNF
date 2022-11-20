@@ -42,7 +42,7 @@ public class EBNFmn extends IsEBNF {
     }
 
     @Override
-    public <N> ReadableBlock is(ReadableBlock pac, N ns) {
+    public ReadableBlock is(ReadableBlock pac, Object ns) {
         ReadableBlock p2 = b.is(pac, ns);
         if (p2 != null) {
             pac.back(p2.length());

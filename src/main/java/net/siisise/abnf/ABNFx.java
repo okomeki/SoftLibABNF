@@ -63,17 +63,17 @@ public class ABNFx extends FindABNF {
     }
 
     @Override
-    public <X,N> C<X> buildFind(ReadableBlock pac, N ns, BNFParser<? extends X>... names) {
-        C<X> ret = new C<>(pac);
+    public <X> Match<X> buildFind(ReadableBlock pac, Object ns, BNFParser<? extends X>... names) {
+        Match<X> ret = new Match<>(pac);
         for (int i = 0; b == -1 || i < b; i++) {
-            C sub = abnf.find(pac, ns, names);
+            Match sub = abnf.find(pac, ns, names);
             if (sub == null) {
                 if (i < a) {
                     ret.end(pac);
                     pac.back(pac.backLength() - ret.st);
                     return null;
                 } else {
-                    return ret.end(pac);
+                    return ret;
                 }
             }
             mix(ret, sub);

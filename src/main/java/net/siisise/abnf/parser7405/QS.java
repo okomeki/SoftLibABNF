@@ -27,7 +27,7 @@ public class QS extends BNFBuildParser<String,Packet> {
     }
 
     @Override
-    protected String build(BNF.C<Packet> src) {
+    protected String build(BNF.Match<Packet> src) {
         return str(src.sub.sub(1, src.sub.length() - 2));
     }
     

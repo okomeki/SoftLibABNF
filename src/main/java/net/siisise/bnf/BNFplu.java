@@ -46,7 +46,6 @@ public class BNFplu extends BNFplm {
      * 詳細検索
      *
      * @param <X> 適度な戻り型
-     * @param <N> user name space type 名前空間型
      * @param pac source 解析対象
      * @param ns user name space 名前空間
      * @param start
@@ -54,9 +53,9 @@ public class BNFplu extends BNFplm {
      * @return ざっくりまとめ
      */
     @Override
-    protected <X,N> C<X> longfind(ReadableBlock pac, N ns, int start, BNFParser<? extends X>[] subparsers) {
+    protected <X> Match<X> longfind(ReadableBlock pac, Object ns, int start, BNFParser<? extends X>[] subparsers) {
         if (list.length == start) {
-            return new C(pac).end(pac);
+            return new Match(pac).end(pac);
         }
         long frontMax = pac.length();
         long op = pac.backLength();
@@ -65,7 +64,7 @@ public class BNFplu extends BNFplm {
             // 1つめ 指定サイズまでに制限する
             ReadableBlock frontPac = pac.readBlock(frontMax);
 
-            C<X> firstret = list[start].find(frontPac, ns, subparsers);
+            Match<X> firstret = list[start].find(frontPac, ns, subparsers);
             pac.back(frontPac.length());
             if ( firstret == null ) {
                 return null;
@@ -77,7 +76,7 @@ public class BNFplu extends BNFplm {
             }
             frontMax = pac.backLength() - op;
             // 2つめ以降
-            C nextret = longfind(pac, ns, start + 1, subparsers);
+            Match nextret = longfind(pac, ns, start + 1, subparsers);
             if (nextret != null) {
                 // firstret と nextret 両方成立
                 mix(firstret, nextret);

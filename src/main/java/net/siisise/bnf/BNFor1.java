@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Siisise Net.
+ * Copyright 2022 okome.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,30 +19,33 @@ import net.siisise.block.ReadableBlock;
 import net.siisise.bnf.parser.BNFParser;
 
 /**
- * isとfindをis側でなんとかする系
+ * 最初一致型
  */
-public abstract class IsBNF extends AbstractBNF<BNF> {
+public class BNFor1 extends BNFor {
 
-    /**
-     * 前方一致判定.
-     * ns は捨ててもいいかな.
-     * @param pac data packet
-     * @param ns name space
-     * @return match part
-     */
-    @Override
-    public ReadableBlock is(ReadableBlock pac, Object ns) {
-        return is(pac);
+    BNFor1(BNF[] list) {
+        super(list);
     }
 
     @Override
-    public <X> Match<X> find(ReadableBlock pac, Object ns, BNFParser<? extends X>... parsers) {
-        Match n = new Match(pac);
-        ReadableBlock r = is(pac, ns);
-        if (r == null) {
-            return null;
+    protected <X> Match<X> buildFind(ReadableBlock pac, Object ns, BNFParser<? extends X>... parsers) {
+        for ( BNF sub : list ) {
+            Match<X> ret = sub.find(pac, ns, parsers);
+            if ( ret != null ) {
+                return ret;
+            }
         }
-        n.end(pac);
-        return subBuild(n, ns, matchParser(parsers));
+        return null;
     }
+
+    @Override
+    public BNF copy(BNFReg reg) {
+        BNF[] l = new BNF[list.length];
+
+        for (int i = 0; i < list.length; i++) {
+            l[i] = list[i].copy(reg);
+        }
+        return new BNFor1(l);
+    }
+    
 }

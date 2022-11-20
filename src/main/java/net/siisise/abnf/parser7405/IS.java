@@ -27,7 +27,7 @@ public class IS extends BNFBuildParser<ABNF, String> {
     }
 
     @Override
-    protected ABNF build(BNF.C<String> src) {
+    protected ABNF build(BNF.Match<String> src) {
         return ABNF.text(src.get("quoted-string").get(0));
     }
 

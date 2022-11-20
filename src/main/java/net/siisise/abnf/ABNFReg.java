@@ -49,7 +49,7 @@ public class ABNFReg extends BNFCC {
         }
 
         @Override
-        protected <X,N> C<X> buildFind(ReadableBlock pac, N ns, BNFParser<? extends X>... parsers) {
+        protected <X> Match<X> buildFind(ReadableBlock pac, Object ns, BNFParser<? extends X>... parsers) {
             return reg.get(name).find(pac, ns, parsers);
         }
 
@@ -66,53 +66,58 @@ public class ABNFReg extends BNFCC {
 
     }
 
+    /**
+     * 標準のABNF Parserを構築.
+     */
     public ABNFReg() {
         this((BNFReg) null, ABNF5234.REG);
     }
 
     /**
      * 名前空間作成. いろいろ未定 up の定義を複製する HTTP7230では拡張の実験をしている
-     *
+     * BNF Parserは作れない.
      * @param up 前提とする定義など継承もと
-     * @param bnfParser ruleをparseするParserの種類 ABNF5234.REG,RFC 7405, RFC
+     * @param ruleParser ruleをparseするParserの種類 ABNF5234.REG,RFC 7405, RFC
      * 7230など微妙に違うとき。利用しないときのみ省略したい
      */
-    public ABNFReg(BNFReg up, BNFCC bnfParser) {
-        super(up, bnfParser, null, null, null, null);
+    public ABNFReg(BNFReg up, BNFCC ruleParser) {
+        super(up, ruleParser, null, null, null, null);
     }
 
     /**
      * BNF Parser系を定義する場合に利用する
+     * BNF parser 以外は rulelist, rule, rulename, elements が不要
      *
-     * @param up
-     * @param bnfParser
-     * @param rulelist rulelist BNF name
+     * @param up 前提とする定義など継承もと, 参照先とか include元とか
+     * @param ruleParser ruleの解析に使うBNFの実装
+     * @param rulelist rulelist として使用する BNF name
      * @param rule rule BNF name
      * @param rulename rulename BNF name
      * @param elements elements BNF name
      */
-    public ABNFReg(BNFReg up, BNFCC bnfParser, String rulelist, String rule, String rulename, String elements) {
-        super(up, bnfParser, rulelist, rule, rulename, elements);
+    public ABNFReg(BNFReg up, BNFCC ruleParser, String rulelist, String rule, String rulename, String elements) {
+        super(up, ruleParser, rulelist, rule, rulename, elements);
     }
 
     /**
      * 名前空間作成.
      *
-     * @param up 前提とする定義など継承もと
+     * @param up 前提とする定義など継承もと, 参照先とか include元とか
      */
     public ABNFReg(BNFReg up) {
         this(up, ABNF5234.REG);
     }
 
     /**
+     * ファイルに定義を書いておけばプログラム不要説(パーサは必要)。
      *
-     * @param url
-     * @param up
-     * @param exParser
+     * @param url ABNF定義ファイルのURL
+     * @param up 前提とする定義など継承もと, 参照先とか include元とか
+     * @param ruleParser ruleをparseするParserの種類 ABNF5234.REG,RFC 7405, RFC
      * @throws IOException
      */
-    public ABNFReg(URL url, BNFReg up, BNFCC exParser) throws IOException {
-        this(up, exParser);
+    public ABNFReg(URL url, BNFReg up, BNFCC ruleParser) throws IOException {
+        this(up, ruleParser);
         rulelist(url);
     }
 
@@ -121,7 +126,7 @@ public class ABNFReg extends BNFCC {
      * ファイルではなくURLで渡すと幅が広がる
      *
      * @param url ABNF定義ファイルのURL
-     * @param up 前提とする定義など継承もと
+     * @param up 前提とする定義など継承もと, 参照先とか include元とか
      * @throws IOException 入力エラー全般
      */
     public ABNFReg(URL url, BNFReg up) throws IOException {
@@ -181,6 +186,11 @@ public class ABNFReg extends BNFCC {
         return rule(rulename, elements(elements));
     }
 
+    /**
+     * elements の parse.
+     * @param elements 名前のないelements
+     * @return 名前のないelements
+     */
     @Override
     public ABNF elements(String elements) {
         return (ABNF) bnfReg.parse(bnfReg.elements, elements, this);
@@ -264,7 +274,7 @@ public class ABNFReg extends BNFCC {
      * @param subrulenames サブ要素rulename
      * @return 仮型
      */
-    public ABNF.C find(FrontPacket pac, String rulename, String... subrulenames) {
+    public ABNF.Match find(FrontPacket pac, String rulename, String... subrulenames) {
         ABNF rule = href(rulename);
 
         BNFParser[] cll = new BNFParser[subrulenames.length];

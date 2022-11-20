@@ -53,7 +53,7 @@ public interface ABNF extends BNF<ABNF> {
      * @return 文字のor繋ぎABNF構文
      */
     static ABNF list(String chlist) {
-        return new ABNFor(chlist);
+        return new ABNFor1(chlist);
     }
 
     /**

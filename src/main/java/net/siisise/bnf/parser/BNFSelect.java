@@ -38,7 +38,7 @@ public class BNFSelect<T> extends BNFBuildParser<T, T> {
      * @return 処理結果
      */
     @Override
-    protected T build(BNF.C<T> src, Object ns) {
+    protected T build(BNF.Match<T> src, Object ns) {
         for (String sub : subName) {
             List<T> r = src.get(sub);
             if (r != null) {

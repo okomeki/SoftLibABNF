@@ -49,8 +49,7 @@ public class ABNFrange extends IsABNF {
             return null;
         }
         if (ch >= min && ch <= max) {
-            byte[] bin8 = CodePoint.utf8(ch);
-            return ReadableBlock.wrap(bin8);
+            return rb.sub(of, rb.backLength() - of);
         }
         rb.seek(of);
         return null;
