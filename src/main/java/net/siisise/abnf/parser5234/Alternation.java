@@ -39,14 +39,13 @@ public class Alternation extends BNFList<ABNF, ABNF> {
         if (list.size() == 1) {
             return list.get(0);
         }
+    //    ABNF map = new ABNFmap();
+    //    return map.or(list.toArray(new BNF[list.size()]));
+    
         shortMap(list);
         return new ABNFor(list.toArray(new ABNF[list.size()]));
     }
 
-    /**
-     * まとめて速くなればいいなくらいの処理.
-     * @param list 
-     */
     private void shortMap(List<ABNF> list) {
         for ( int i = 0; i < list.size() - 1; i++ ) {
             ABNF bnf1 = list.get(i);

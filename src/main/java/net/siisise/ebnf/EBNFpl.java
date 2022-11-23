@@ -18,6 +18,7 @@ package net.siisise.ebnf;
 import net.siisise.bnf.BNF;
 import net.siisise.bnf.parser.BNFParser;
 import net.siisise.block.ReadableBlock;
+import net.siisise.bnf.BNFReg;
 
 /**
  *
@@ -43,7 +44,7 @@ public class EBNFpl extends FindEBNF {
      * @return 複製
      */
     @Override
-    public EBNFpl copy(EBNFReg reg) {
+    public EBNFpl copy(BNFReg<EBNF> reg) {
         BNF[] cplist = new BNF[list.length];
 
         for (int i = 0; i < list.length; i++) {

@@ -17,7 +17,6 @@ package net.siisise.abnf;
 
 import net.siisise.bnf.AbstractBNF;
 import net.siisise.bnf.BNF;
-import net.siisise.bnf.BNFReg;
 
 /**
  * 簡単なプレ実装
@@ -26,7 +25,7 @@ public abstract class AbstractABNF extends AbstractBNF<ABNF> implements ABNF {
 
     @Override
     public ABNF name(String name) {
-        return new ABNFor(name, this); // ?
+        return new ABNFrule(name, this);
     }
 
     /**
@@ -78,7 +77,7 @@ public abstract class AbstractABNF extends AbstractBNF<ABNF> implements ABNF {
         System.arraycopy(val, 0, list, 1, val.length);
         return new ABNFplu(list);
     }
-    
+
     @Override
     public ABNF mn(BNF val) {
         return new ABNFmn(this, val);
@@ -105,9 +104,10 @@ public abstract class AbstractABNF extends AbstractBNF<ABNF> implements ABNF {
         return new ABNFx(min, max, this);
     }
 
+/*
     @Override
-    public ABNF copy(BNFReg reg) {
+    public ABNF copy(BNFReg<ABNF> reg) {
         return copy((ABNFReg)reg);
     }
-
+*/
 }

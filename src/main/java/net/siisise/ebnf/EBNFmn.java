@@ -17,9 +17,10 @@ package net.siisise.ebnf;
 
 import net.siisise.bnf.BNF;
 import net.siisise.block.ReadableBlock;
+import net.siisise.bnf.BNFReg;
 
 /**
- *
+ * 引き算
  */
 public class EBNFmn extends IsEBNF {
 
@@ -37,7 +38,7 @@ public class EBNFmn extends IsEBNF {
      * @return 複製
      */
     @Override
-    public EBNFmn copy(EBNFReg reg) {
+    public EBNFmn copy(BNFReg<EBNF> reg) {
         return new EBNFmn(a.copy(reg), b.copy(reg));
     }
 

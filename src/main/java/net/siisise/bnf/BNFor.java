@@ -21,7 +21,7 @@ import net.siisise.bnf.parser.BNFParser;
 /**
  * or 慎重に最長一致検索するので低速になりがち.
  */
-public class BNFor extends FindBNF {
+public class BNFor extends FindBNF<BNF> {
 
     protected final BNF[] list;
 

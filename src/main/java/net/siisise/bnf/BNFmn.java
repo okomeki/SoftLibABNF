@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Siisise Net.
+ * Copyright 2022 okome.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.siisise.abnf;
+package net.siisise.bnf;
 
 import net.siisise.block.ReadableBlock;
-import net.siisise.bnf.BNF;
-import net.siisise.bnf.BNFReg;
 
 /**
- * ABNFにはないがマイナス演算
- * bの要素がaより小さいとうまくいくのかも
+ * 引き算
  */
-public class ABNFmn extends IsABNF {
+public class BNFmn extends IsBNF<BNF> {
 
     private final BNF a;
     private final BNF b;
 
-    ABNFmn(BNF a, BNF b) {
+    BNFmn(BNF a, BNF b) {
         this.a = a;
         this.b = b;
     }
@@ -39,8 +36,8 @@ public class ABNFmn extends IsABNF {
      * @return 複製
      */
     @Override
-    public ABNFmn copy(BNFReg<ABNF> reg) {
-        return new ABNFmn(a.copy(reg), b.copy(reg));
+    public BNFmn copy(BNFReg reg) {
+        return new BNFmn(a.copy(reg), b.copy(reg));
     }
 
     @Override

@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 import net.siisise.block.ByteBlock;
 import net.siisise.block.ReadableBlock;
 import net.siisise.bnf.BNF;
+import net.siisise.bnf.BNFReg;
 import net.siisise.bnf.parser.BNFParser;
 import net.siisise.lang.CodePoint;
 
@@ -42,7 +43,12 @@ public class ABNFor extends FindABNF {
         name = toName(abnfs);
     }
 
-    public ABNFor(String n, BNF... abnfs) {
+    /**
+     * copy用ぐらいかな
+     * @param n name
+     * @param abnfs 要素
+     */
+    ABNFor(String n, BNF... abnfs) {
         name = n;
         list = abnfs;
     }
@@ -99,7 +105,7 @@ public class ABNFor extends FindABNF {
      * @return 複製
      */
     @Override
-    public ABNFor copy(ABNFReg reg) {
+    public ABNFor copy(BNFReg<ABNF> reg) {
         BNF[] l = new BNF[list.length];
 
         for (int i = 0; i < list.length; i++) {

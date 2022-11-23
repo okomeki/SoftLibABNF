@@ -16,6 +16,7 @@
 package net.siisise.abnf;
 
 import net.siisise.bnf.BNF;
+import net.siisise.bnf.BNFReg;
 
 /**
  * RFC 5234.
@@ -90,20 +91,11 @@ public interface ABNF extends BNF<ABNF> {
     }
 
     /**
-     * マイナス演算
-     * ABNFにはないので仮
-     *
-     * @deprecated 未定
-     * @param val 引かれるABNF
-     * @return 引き算できるABNF
-     */
-    ABNF mn(BNF val);
-
-    /**
      * 複製可能な構造を推奨(ループがあると複製は難しい)
      *
      * @param reg 複製先
      * @return ABNFの複製
      */
-    ABNF copy(ABNFReg reg);
+    @Override
+    ABNF copy(BNFReg<ABNF> reg);
 }

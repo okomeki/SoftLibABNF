@@ -21,7 +21,7 @@ import net.siisise.bnf.parser.BNFParser;
 /**
  *
  */
-public class BNFx extends FindBNF {
+public class BNFx extends FindBNF<BNF> {
 
     // a 初期値: 0
     // b 初期値: -1

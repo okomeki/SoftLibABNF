@@ -13,49 +13,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.siisise.ebnf;
+package net.siisise.bnf;
 
-import net.siisise.lang.CodePoint;
 import net.siisise.block.ReadableBlock;
-import net.siisise.bnf.BNFReg;
+import net.siisise.lang.CodePoint;
 
 /**
- * 文字
- * EBNFにはないかも
+ *
  */
-public class EBNFrange extends IsEBNF {
-
+public class BNFrange extends IsBNF<BNF> {
     private final int min;
     private final int max;
 
-    public EBNFrange(int min, int max) {
+    public BNFrange(int min, int max) {
         this.min = min;
         this.max = max;
-        name = hex(min) + "-" + hex(max).substring(2); // ABNF風
+        name = hex(min) + "-" + hex(max).substring(2);
     }
 
     @Override
-    public EBNFrange copy(BNFReg<EBNF> reg) {
-        return new EBNFrange(min, max);
+    public BNFrange copy(BNFReg<BNF> reg) {
+        return new BNFrange(min, max);
     }
 
     @Override
-    public ReadableBlock is(ReadableBlock pac) {
-        if (pac.length() == 0) {
+    public ReadableBlock is(ReadableBlock rb) {
+        if (rb.length() == 0) {
             return null;
         }
-        long of = pac.backLength();
-        int ch = CodePoint.utf8(pac);
+        long of = rb.backLength();
+        int ch = CodePoint.utf8(rb);
         if (ch < 0) {
-            pac.seek(of);
             return null;
         }
-        byte[] bin8 = CodePoint.utf8(ch);
         if (ch >= min && ch <= max) {
-            return ReadableBlock.wrap(bin8);
+            return rb.sub(of, rb.backLength() - of);
         }
-        pac.seek(of);
+        rb.seek(of);
         return null;
     }
-}
 
+}

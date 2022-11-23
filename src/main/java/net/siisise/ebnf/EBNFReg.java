@@ -21,7 +21,7 @@ import net.siisise.ebnf.parser.EBNFISO14977;
 /**
  *
  */
-public class EBNFReg extends BNFCC {
+public class EBNFReg extends BNFCC<EBNF> {
     
     public EBNFReg() {
         super(null, EBNFISO14977.REG, "syntax","syntax-rule","meta-identifier","definitions-list");

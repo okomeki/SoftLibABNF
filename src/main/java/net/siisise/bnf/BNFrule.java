@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Siisise Net.
+ * Copyright 2022 okome.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,34 +13,46 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.siisise.abnf;
+package net.siisise.bnf;
 
 import net.siisise.block.ReadableBlock;
 import net.siisise.bnf.parser.BNFParser;
 
 /**
- * findの分離
- * サブ要素を持たない方
+ * 名前専用にする
+ * @param <B> 適度にBNF固定
  */
-public abstract class IsABNF extends AbstractABNF {
+public class BNFrule<B extends BNF> extends AbstractBNF<B> {
     
-    @Override
-    public ReadableBlock is(ReadableBlock pac, Object ns) {
-        return is(pac);
+    B bnf;
+    
+    BNFrule(String name, B elements) {
+        this.name = name;
+        bnf = elements;
     }
-    
-    /**
-     * sub要素のない場合の軽い対応
-     * @param <X> パラメータっぽい型
-     * @param pac 解析データ
-     * @param ns name space
-     * @param parsers サブ要素のparser
-     * @return 処理結果
-     */
+
+    @Override
+    public ReadableBlock is(ReadableBlock src, Object ns) {
+        return bnf.is(src,ns);
+    }
+
+    @Override
+    public ReadableBlock is(ReadableBlock src) {
+        return bnf.is(src);
+    }
+
     @Override
     public <X> Match<X> find(ReadableBlock pac, Object ns, BNFParser<? extends X>... parsers) {
-        Match<X> ret = new Match(pac);
-        ret.sub = is(pac, ns);
-        return (ret.sub == null) ? null : ret;
+        BNFParser mp = matchParser(parsers);
+        Match<X> mc = bnf.find(pac, ns, parsers);
+        if ( mc != null ) {
+            subBuild(mc,ns,mp);
+        }
+        return mc;
+    }
+
+    @Override
+    public B copy(BNFReg reg) {
+        return (B)new BNFrule(name, bnf.copy(reg));
     }
 }

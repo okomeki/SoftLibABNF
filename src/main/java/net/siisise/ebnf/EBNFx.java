@@ -17,6 +17,7 @@ package net.siisise.ebnf;
 
 import net.siisise.bnf.parser.BNFParser;
 import net.siisise.block.ReadableBlock;
+import net.siisise.bnf.BNFReg;
 
 /**
  *
@@ -57,7 +58,7 @@ public class EBNFx extends FindEBNF {
     }
 
     @Override
-    public EBNFx copy(EBNFReg reg) {
+    public EBNFx copy(BNFReg<EBNF> reg) {
         return new EBNFx(a, b, (AbstractEBNF) abnf.copy(reg));
     }
 

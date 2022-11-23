@@ -37,33 +37,42 @@ import net.siisise.io.StreamFrontPacket;
  *
  * rule: 基本は RFC 5234 に準拠するが、一部改変したParserの対応も可能
  */
-public class ABNFReg extends BNFCC {
+public class ABNFReg extends BNFCC<ABNF> {
 
     /**
      * 名前の参照を先に済ませる
      */
-    public class ABNFRef extends FindABNF {
+    public class ABNFRef extends AbstractABNF {
 
         ABNFRef(String rulename) {
             this.name = rulename;
         }
 
         @Override
-        protected <X> Match<X> buildFind(ReadableBlock pac, Object ns, BNFParser<? extends X>... parsers) {
+        public ReadableBlock is(ReadableBlock src) {
+            return reg.get(name).is(src);
+        }
+        
+        @Override
+        public ReadableBlock is(ReadableBlock src, Object ns) {
+            return reg.get(name).is(src, ns);
+        }
+
+        @Override
+        public <X> Match<X> find(ReadableBlock pac, Object ns, BNFParser<? extends X>... parsers) {
             return reg.get(name).find(pac, ns, parsers);
         }
 
         /**
-         * 複製する.
+         * 参照だけ複製する.
          *
          * @param reg 複製先
          * @return 複製
          */
         @Override
-        public ABNF copy(ABNFReg reg) {
+        public ABNF copy(BNFReg<ABNF> reg) {
             return reg.ref(name);
         }
-
     }
 
     /**

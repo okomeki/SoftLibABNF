@@ -18,6 +18,7 @@ package net.siisise.abnf.parser5234;
 import net.siisise.abnf.ABNF;
 import net.siisise.abnf.ABNFReg;
 import net.siisise.abnf.ABNFor;
+import net.siisise.abnf.ABNFrule;
 import net.siisise.bnf.BNF;
 import net.siisise.bnf.BNFReg;
 import net.siisise.bnf.parser.BNFBuildParser;
@@ -51,7 +52,7 @@ public class Rule extends BNFBuildParser<ABNF, Object> {
                 throw new java.lang.UnsupportedOperationException();
             }
             if (!(rule instanceof ABNFor)) {
-                rule = new ABNFor(rulename, rule);
+                rule = new ABNFrule(rulename, rule);
             }
             ((ABNFor) rule).add(elements);
             return rule;

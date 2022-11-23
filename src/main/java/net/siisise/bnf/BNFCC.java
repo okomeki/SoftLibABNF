@@ -15,10 +15,13 @@
  */
 package net.siisise.bnf;
 
+import net.siisise.bnf.parser5234.ABNF5234;
+
 /**
  * REGとCCの分離実験
+ * @param <B>
  */
-public class BNFCC extends BNFReg {
+public class BNFCC<B extends BNF> extends BNFReg<B> {
     
     public final String rulelist;
     public final String rule;
@@ -35,7 +38,7 @@ public class BNFCC extends BNFReg {
      * @param rulename rulename BNF name
      * @param elements elements BNF name
      */
-    protected BNFCC(BNFReg up, BNFCC cc, String rulelist, String rule, String rulename, String elements) {
+    protected BNFCC(BNFReg<B> up, BNFCC<B> cc, String rulelist, String rule, String rulename, String elements) {
         super(up, cc);
         this.rulelist = rulelist;
         this.rule = rule;
@@ -45,5 +48,20 @@ public class BNFCC extends BNFReg {
 
     boolean isRulename(String name) {
         return reg.get(rulename).eq(name);
+    }
+
+    public static BNFCC<BNF> abnf(BNFReg<BNF> up) {
+        return abnf(up, ABNF5234.REG);
+    }
+
+    /**
+     * ABNF用
+     * @param <E> BNFが無難
+     * @param up 
+     * @param cc ABNF5234.REG など
+     * @return ABNFが使えるよ
+     */
+    public static <E extends BNF> BNFCC<E> abnf(BNFReg<E> up, BNFCC<E> cc) {
+        return new BNFCC<>(up, cc, "rulelist", "rule", "rulename", "elements");
     }
 }

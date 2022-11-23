@@ -16,10 +16,9 @@
 package net.siisise.ebnf;
 
 import java.util.Arrays;
-import net.siisise.io.Packet;
-import net.siisise.io.PacketA;
 import net.siisise.lang.CodePoint;
 import net.siisise.block.ReadableBlock;
+import net.siisise.bnf.BNFReg;
 
 /**
  * ABNFと同じ
@@ -59,7 +58,7 @@ public class EBNFbin extends IsEBNF {
      * @return 複製
      */
     @Override
-    public EBNFbin copy(EBNFReg reg) {
+    public EBNFbin copy(BNFReg<EBNF> reg) {
         return new EBNFbin(new String(data, UTF8));
     }
 

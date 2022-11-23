@@ -33,7 +33,7 @@ public abstract class AbstractBNF<B extends BNF> implements BNF<B> {
 
     @Override
     public B name(String name) {
-        return (B) new BNFor(name, this); // ?
+        return (B) new BNFrule(name, this);
     }
 
     /**
@@ -109,25 +109,25 @@ public abstract class AbstractBNF<B extends BNF> implements BNF<B> {
     }
 
     @Override
-    public boolean eq(ReadableBlock v) {
-        ReadableBlock r = is(v);
-        if (v.length() == 0) {
+    public boolean eq(ReadableBlock src) {
+        ReadableBlock r = is(src);
+        if (r != null && src.length() == 0) {
             return true;
         }
         if (r != null) {
-            v.back(r.length());
+            src.back(r.length());
         }
         return false;
     }
 
     @Override
-    public boolean eq(FrontPacket val) {
-        return eq(rb(val));
+    public boolean eq(FrontPacket src) {
+        return eq(rb(src));
     }
 
     @Override
-    public boolean eq(String val) {
-        return eq(rb(val));
+    public boolean eq(String src) {
+        return eq(rb(src));
     }
 
     /**
@@ -210,6 +210,10 @@ public abstract class AbstractBNF<B extends BNF> implements BNF<B> {
     public B x(int min, int max) {
         return (B) new BNFx(min, max, this);
     }
+    
+    public B x(int num) {
+        return x(num,num);
+    }
 
     @Override
     public B x() {
@@ -224,6 +228,11 @@ public abstract class AbstractBNF<B extends BNF> implements BNF<B> {
     @Override
     public B c() {
         return x(0, 1);
+    }
+
+    @Override
+    public B mn(BNF val) {
+        return (B)new BNFmn(this, val);
     }
 
     public static FrontPacket pac(String str) {

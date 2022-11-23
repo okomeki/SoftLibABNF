@@ -20,8 +20,9 @@ import net.siisise.bnf.parser.BNFParser;
 
 /**
  * isとfindをis側でなんとかする系
+ * @param <B>
  */
-public abstract class IsBNF extends AbstractBNF<BNF> {
+public abstract class IsBNF<B extends BNF> extends AbstractBNF<B> {
 
     /**
      * 前方一致判定.
@@ -37,12 +38,8 @@ public abstract class IsBNF extends AbstractBNF<BNF> {
 
     @Override
     public <X> Match<X> find(ReadableBlock pac, Object ns, BNFParser<? extends X>... parsers) {
-        Match n = new Match(pac);
-        ReadableBlock r = is(pac, ns);
-        if (r == null) {
-            return null;
-        }
-        n.end(pac);
-        return subBuild(n, ns, matchParser(parsers));
+        Match<X> mc = new Match(pac);
+        mc.sub = is(pac, ns);
+        return (mc.sub == null) ? null : mc;
     }
 }

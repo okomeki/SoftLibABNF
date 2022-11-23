@@ -1,6 +1,7 @@
 package net.siisise.ebnf;
 
 import net.siisise.bnf.BNF;
+import net.siisise.bnf.BNFReg;
 
 /**
  * ISO 14977 くらいの標準で?
@@ -30,7 +31,8 @@ public interface EBNF extends BNF<EBNF> {
      * @param reg 複製先
      * @return ABNFの複製
      */
-    EBNF copy(EBNFReg reg);
+    @Override
+    EBNF copy(BNFReg<EBNF> reg);
 
     public EBNF mn(EBNF bnf);
 

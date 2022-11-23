@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Siisise Net.
+ * Copyright 2022 okome.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.siisise.abnf;
+package net.siisise.bnf;
 
 import java.util.Arrays;
-import net.siisise.block.ByteBlock;
 import net.siisise.block.ReadableBlock;
-import net.siisise.bnf.BNFReg;
 import net.siisise.lang.CodePoint;
 
 /**
- * バイナリ表現。
- * 一文字に限らずかもしれない
+ *
  */
-public class ABNFbin extends IsABNF {
+public class BNFbin extends IsBNF<BNF> {
 
     private final byte[] data;
 
-    ABNFbin(int ch) { // " a-z A-Z, 0x80以降 を%表記、それ以外を文字表記
+    BNFbin(int ch) { // " a-z A-Z, 0x80以降 を%表記、それ以外を文字表記
         if (ch >= 0x20 && ((ch != 0x22 && ch < 0x41) || (ch > 0x5a && ch < 0x61) || (ch > 0x7a && ch < 0x7f))) {
             name = "\"" + (char) ch + "\"";
         } else {
@@ -43,7 +40,7 @@ public class ABNFbin extends IsABNF {
      * ascii ?
      * @param str 
      */
-    ABNFbin(String str) {
+    BNFbin(String str) {
         StringBuilder sb = new StringBuilder(50);
         sb.append(hex(str.charAt(0)));
         for (int i = 1; i < str.length(); i++) {
@@ -60,8 +57,8 @@ public class ABNFbin extends IsABNF {
      * @return 複製
      */
     @Override
-    public ABNFbin copy(BNFReg<ABNF> reg) {
-        return new ABNFbin(new String(data, UTF8));
+    public BNFbin copy(BNFReg<BNF> reg) {
+        return new BNFbin(new String(data, UTF8));
     }
 
     /**
@@ -89,8 +86,9 @@ public class ABNFbin extends IsABNF {
      * @return 1文字:コード 1文字以外:-1
      */
     public int ch() {
-        ReadableBlock src = new ByteBlock(data);
+        ReadableBlock src = ReadableBlock.wrap(data);
         int ch = CodePoint.utf8(src); // 1文字デコード
         return src.length() == 0 ? ch : -1;
     }
+
 }

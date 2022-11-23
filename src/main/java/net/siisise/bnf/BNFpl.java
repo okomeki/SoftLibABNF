@@ -21,7 +21,7 @@ import net.siisise.bnf.parser.BNFParser;
 /**
  *
  */
-public class BNFpl extends FindBNF {
+public class BNFpl extends FindBNF<BNF> {
 
     protected final BNF[] list;
 

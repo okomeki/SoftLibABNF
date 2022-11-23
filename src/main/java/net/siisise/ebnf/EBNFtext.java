@@ -15,9 +15,8 @@
  */
 package net.siisise.ebnf;
 
-import net.siisise.io.Packet;
-import net.siisise.io.PacketA;
 import net.siisise.block.ReadableBlock;
+import net.siisise.bnf.BNFReg;
 
 /**
  * casesensitiveではない方
@@ -56,7 +55,7 @@ public class EBNFtext extends IsEBNF {
      * @return 複製
      */
     @Override
-    public EBNFtext copy(EBNFReg reg) {
+    public EBNFtext copy(BNFReg<EBNF> reg) {
         return new EBNFtext(text);
     }
 

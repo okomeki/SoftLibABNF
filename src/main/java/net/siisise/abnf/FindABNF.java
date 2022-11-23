@@ -50,7 +50,8 @@ public abstract class FindABNF extends AbstractABNF {
     }
 
     /**
-     * 詰め方の工夫をするターン
+     * 詰め方の工夫をするターン.
+     * 名前解決を外したので end() するだけ.
      *
      * @param <X> 戻り型
      * @param rb 解析対象
@@ -60,13 +61,11 @@ public abstract class FindABNF extends AbstractABNF {
      */
     @Override
     public <X> Match<X> find(ReadableBlock rb, Object ns, BNFParser<? extends X>... parsers) {
-         BNFParser<? extends X> mp = matchParser(parsers);
-        Match<X> ret = buildFind(rb, ns, mp == null ? parsers : new BNFParser[0]);
-        if ( ret == null ) {
-            return null;
+        Match<X> ret = buildFind(rb, ns, parsers);
+        if ( ret != null ) {
+            ret.end(rb);
         }
-        ret.end(rb);
-        return subBuild(ret, ns, mp);
+        return ret;
     }
 
     /**

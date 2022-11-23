@@ -21,6 +21,7 @@ import net.siisise.bnf.BNF;
 import net.siisise.bnf.parser.BNFParser;
 import net.siisise.lang.CodePoint;
 import net.siisise.block.ReadableBlock;
+import net.siisise.bnf.BNFReg;
 
 /**
  *
@@ -93,7 +94,7 @@ public class EBNFor extends FindEBNF {
      * @return 複製
      */
     @Override
-    public EBNFor copy(EBNFReg reg) {
+    public EBNFor copy(BNFReg<EBNF> reg) {
         BNF[] l = new BNF[list.length];
 
         for (int i = 0; i < list.length; i++) {

@@ -48,13 +48,11 @@ public abstract class FindEBNF extends AbstractEBNF {
      */
     @Override
     public <X> Match<X> find(ReadableBlock pac, Object ns, BNFParser<? extends X>... parsers) {
-        BNFParser<? extends X> mp = matchParser(parsers);
-        Match<X> ret = buildFind(pac, ns, mp == null ? parsers : new BNFParser[0] );
-        if ( ret == null ) {
-            return null;
+        Match<X> ret = buildFind(pac, ns, parsers );
+        if ( ret != null ) {
+            ret.end(pac);
         }
-        ret.end(pac);
-        return subBuild(ret, ns, mp);
+        return ret;
     }
 
     /**

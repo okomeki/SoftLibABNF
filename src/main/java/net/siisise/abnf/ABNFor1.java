@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import net.siisise.block.ReadableBlock;
 import net.siisise.bnf.BNF;
+import net.siisise.bnf.BNFReg;
 import net.siisise.bnf.parser.BNFParser;
 import net.siisise.lang.CodePoint;
 
@@ -70,7 +71,7 @@ public class ABNFor1 extends ABNFor {
      * @return 複製
      */
     @Override
-    public ABNFor1 copy(ABNFReg reg) {
+    public ABNFor1 copy(BNFReg<ABNF> reg) {
         BNF[] l = new BNF[list.length];
 
         for (int i = 0; i < list.length; i++) {

@@ -16,6 +16,7 @@
 package net.siisise.abnf;
 
 import net.siisise.block.ReadableBlock;
+import net.siisise.bnf.BNFReg;
 
 /**
  * casesensitiveではない方
@@ -54,7 +55,7 @@ public class ABNFtext extends IsABNF {
      * @return 複製
      */
     @Override
-    public ABNFtext copy(ABNFReg reg) {
+    public ABNFtext copy(BNFReg<ABNF> reg) {
         return new ABNFtext(text);
     }
 

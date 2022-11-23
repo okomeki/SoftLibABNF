@@ -226,6 +226,15 @@ public interface BNF<B extends BNF> {
     B x(int min, int max);
 
     /**
+     * numXXX.
+     * 指定回繰り返し
+     *
+     * @param num 指定回
+     * @return 繰り返しのABNF
+     */
+    B x(int num);
+
+    /**
      * *XXX 繰り返し
      *
      * @return 繰り返しABNF
@@ -248,12 +257,22 @@ public interface BNF<B extends BNF> {
     B c();
 
     /**
+     * マイナス演算
+     * ABNFにはないので仮
+     *
+     * @deprecated 未定
+     * @param val 引かれるABNF
+     * @return 引き算できるABNF
+     */
+    B mn(BNF val);
+
+    /**
      * 複製可能な構造を推奨(ループがあると複製は難しい)
      *
      * @param reg 複製先
      * @return ABNFの複製
      */
-    B copy(BNFReg reg);
+    B copy(BNFReg<B> reg);
     
     /**
      * テキスト
@@ -266,5 +285,28 @@ public interface BNF<B extends BNF> {
     
     static BNFtext text(String txt) {
         return new BNFtext(txt);
+    }
+
+    /**
+     * 
+     * @param ch 文字
+     * @return 文字と一致するABNF
+     */
+    static BNFbin bin(int ch) {
+        return new BNFbin(ch);
+    }
+
+    /**
+     * 文字列/文字との比較
+     *
+     * @param str utf-8で一致文字列
+     * @return 一致するABNF
+     */
+    static BNFbin bin(String str) {
+        return new BNFbin(str);
+    }
+
+    static BNFrange range(int min, int max) {
+        return new BNFrange(min, max);
     }
 }

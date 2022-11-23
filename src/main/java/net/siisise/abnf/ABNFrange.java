@@ -16,6 +16,7 @@
 package net.siisise.abnf;
 
 import net.siisise.block.ReadableBlock;
+import net.siisise.bnf.BNFReg;
 import net.siisise.lang.CodePoint;
 
 /**
@@ -34,7 +35,7 @@ public class ABNFrange extends IsABNF {
     }
 
     @Override
-    public ABNFrange copy(ABNFReg reg) {
+    public ABNFrange copy(BNFReg<ABNF> reg) {
         return new ABNFrange(min, max);
     }
 

@@ -31,11 +31,11 @@ public abstract class AbstractEBNF extends AbstractBNF<EBNF> implements EBNF {
     
     @Override
     public EBNF name(String name) {
-        return new EBNFor(name,this);
+        return new EBNFrule(name,this);
     }
 
      @Override
-    public EBNF copy(BNFReg reg) {
+    public EBNF copy(BNFReg<EBNF> reg) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 

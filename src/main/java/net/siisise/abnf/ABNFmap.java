@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import net.siisise.block.ReadableBlock;
 import net.siisise.bnf.BNF;
+import net.siisise.bnf.BNFReg;
 import net.siisise.lang.CodePoint;
 
 /**
@@ -67,7 +68,7 @@ public class ABNFmap extends IsABNF {
      * @return 複製
      */
     @Override
-    public ABNF copy(ABNFReg reg) {
+    public ABNF copy(BNFReg<ABNF> reg) {
         ABNFmap nm = new ABNFmap();
         nm.map.addAll(map);
         return nm;
@@ -101,4 +102,31 @@ public class ABNFmap extends IsABNF {
         return super.or(abnf);
     }
 
+    @Override
+    public ABNF or1(BNF... abnf) {
+        List<Integer> tmap = new ArrayList<>();
+        List<BNF> xabnf = new ArrayList<>();
+
+        for (BNF a : abnf) {
+            int ach;
+            if (a instanceof ABNFbin && (ach = ((ABNFbin) a).ch()) >= 0) {
+                if (!map.contains(ach)) {
+                    tmap.add(ach);
+                }
+            } else {
+                xabnf.add(a);
+            }
+        }
+        if (!tmap.isEmpty()) {
+            ABNFmap nm = new ABNFmap();
+            nm.map.addAll(map);
+            nm.map.addAll(tmap);
+            if (xabnf.isEmpty()) {
+                return nm;
+            }
+            xabnf.add(0,nm);
+            return new ABNFor1(xabnf.toArray(new BNF[0]));
+        }
+        return super.or1(abnf);
+    }
 }

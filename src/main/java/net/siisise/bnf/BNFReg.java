@@ -11,8 +11,9 @@ import net.siisise.io.FrontPacket;
 
 /**
  * ABNFのルールのままBNFに持ってきたもの
+ * @param <B>
  */
-public class BNFReg {
+public class BNFReg<B extends BNF> {
 
     protected final Map<String, BNF> reg = new HashMap<>();
     protected final Map<String, Class<? extends BNFParser>> CL = new HashMap<>();
@@ -20,7 +21,7 @@ public class BNFReg {
     /**
      * BNF の Parser
      */
-    protected BNFCC bnfReg;
+    protected BNFCC<B> bnfReg;
     /**
      * rulename の制約
      * bnfParser側を使え?
@@ -30,15 +31,10 @@ public class BNFReg {
     /**
      * 名前の参照を先に済ませる
      */
-    public class BNFRef extends FindBNF {
+    public class BNFRef extends AbstractBNF<B> {
 
         BNFRef(String rulename) {
             this.name = rulename;
-        }
-
-        @Override
-        public <X> Match<X> buildFind(ReadableBlock pac, Object ns, BNFParser<? extends X>... parsers) {
-            return reg.get(name).find(pac, ns, parsers);
         }
 
         /**
@@ -48,10 +44,24 @@ public class BNFReg {
          * @return 複製
          */
         @Override
-        public BNF copy(BNFReg reg) {
+        public B copy(BNFReg<B> reg) {
             return reg.ref(name);
         }
 
+        @Override
+        public ReadableBlock is(ReadableBlock src, Object ns) {
+            return reg.get(name).is(src,ns);
+        }
+
+        @Override
+        public ReadableBlock is(ReadableBlock src) {
+            return reg.get(name).is(src);
+        }
+
+        @Override
+        public <X> Match<X> find(ReadableBlock pac, Object ns, BNFParser<? extends X>... parsers) {
+            return reg.get(name).find(pac, ns, parsers);
+        }
     }
     
     /**
@@ -62,7 +72,7 @@ public class BNFReg {
      * @param up 前提とする定義など継承もと
      * @param bnfParser ruleをparseするParserの種類 ABNF5234.REG,RFC 7405, RFC 7230など微妙に違うとき。利用しないときのみ省略したい
      */
-    public BNFReg(BNFReg up, BNFCC bnfParser) {
+    public BNFReg(BNFReg<B> up, BNFCC<B> bnfParser) {
         if (up != null) {
             //reg = new HashMap<>(up.reg); // 複製しておくのが簡単
             up.CL.forEach((key,val) -> {
@@ -108,8 +118,8 @@ public class BNFReg {
      * @param rulename rulename
      * @return rulenameへの参照
      */
-    public BNF ref(String rulename) {
-        return new BNFRef(rulename);
+    public B ref(String rulename) {
+        return (B)new BNFRef(rulename);
     }
 
     /**
@@ -211,19 +221,19 @@ public class BNFReg {
      * ruleの登録。
      * ref の参照先を変えないよう書き換えたい
      *
-     * @param <B> 型
+     * @param <E> BNF型
      * @param rulename rulename
      * @param elements rule の element
      * @return rule elements にrulenameをつけたABNF
      */
-    public <B extends BNF<B>> B rule(String rulename, B elements) {
+    public <E extends BNF> E rule(String rulename, E elements) {
         // ABNF5234の初期化時はnullなので無視できるようにする
         if ( bnfReg != null && !bnfReg.isRulename(rulename)) {
             System.err.println("BNF:" + rulename + " BNFの名称には利用できません");
         }
 
         if (!rulename.equals(elements.getName())) {
-            elements = elements.name(rulename);
+            elements = (E)elements.name(rulename);
         }
         reg.put(rulename, elements);
         return elements;
@@ -234,13 +244,12 @@ public class BNFReg {
      * 主要なところにParse結果をオブジェクトに変換する機能を埋め込むと、いろいろ楽。
      * パースされたABNFにParserを紐づけて登録する。
      *
-     * @param <B> 型
      * @param rulename ABNFの名
      * @param parser ソースまたは子の要素を渡され対象オブジェクトに組み上げる機能
      * @param elements ruleのelements部分
      * @return 名前つき rule
      */
-    public <B extends BNF<B>> B rule(String rulename, Class<? extends BNFParser> parser, B elements) {
+    public <E extends BNF> E rule(String rulename, Class<? extends BNFParser> parser, E elements) {
         elements = rule(rulename, elements);
         CL.put(rulename, parser);
         return elements;
@@ -251,35 +260,32 @@ public class BNFReg {
      * ABNFの解析ついでに対応するParserを埋め込む。
      * 該当する場合はparserによって対象オブジェクトに変換する機能をつけたABNFを登録する
      *
-     * @param <B> 型
      * @param rulename ABNFの名
      * @param parser ABNFから対象オブジェクトに変換する解析装置
      * @param elements ABNF構文
      * @return elementsを解析してrulenameをつけたABNF
      */
-    public <B extends BNF<B>> B rule(String rulename, Class<? extends BNFParser> parser, String elements) {
+    public B rule(String rulename, Class<? extends BNFParser> parser, String elements) {
         return rule(rulename, parser, (B)elements(elements));
     }
 
     /**
      * element を作る. 名前は持っていないことがある.
      * elements は ABNFの名
-     * @param <B> 型
      * @param elements bnf系の = から右
      * @return element に変換されたABNF
      */
-    public <B extends BNF<B>> B elements(String elements) {
+    public B elements(String elements) {
         return bnfReg.parse(bnfReg.elements, elements, this);
     }
 
     /**
      * rule 1行のパース.
      * 最後の改行は省略可能
-     * @param <B> 型
      * @param rule name = value 改行を省略可能に改変している
      * @return rule 1行をABNFにしたもの
      */
-    public <B extends BNF<B>> B rule(String rule) {
+    public BNF rule(String rule) {
         B bnf = bnfReg.parse(bnfReg.rule, rule + "\r\n", this);
         return rule(bnf.getName(), bnf);
     }
