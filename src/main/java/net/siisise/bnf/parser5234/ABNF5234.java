@@ -87,7 +87,7 @@ public class ABNF5234 {
     public static final BNF elements = REG.rule("elements", SubAlternation.class, alternation.pl(cWsp.x()));
     public static final BNF definedAs = REG.rule("defined-as", BNFStringParser.class, cWsp.x().pl(BNF.bin('=').or(BNF.bin("=/")), cWsp.x()));
     public static final BNF rule = REG.rule("rule", Rule.class, rulename.pl(definedAs, elements, cNl));
-    public static final BNF rulelist = REG.rule("rulelist", Rulelist.class, rule.or(cWsp.x().pl(cNl)).ix());
+    public static final BNF rulelist = REG.rule("rulelist", Rulelist.class, rule.or1(cWsp.x().pl(cNl)).ix());
 
     /**
      * 複製できる弱結合版
@@ -117,7 +117,7 @@ public class ABNF5234 {
         reg.rule("elements", SubAlternation.class, reg.ref("alternation").pl(cWsp.x()));
         reg.rule("defined-as", BNFStringParser.class, ABNF5234.definedAs);
         reg.rule("rule", Rule.class, reg.ref("rulename").pl(definedAs, reg.ref("elements"), cNl));
-        reg.rule("rulelist", Rulelist.class, reg.ref("rule").or(cWsp.x().pl(cNl)).ix());
+        reg.rule("rulelist", Rulelist.class, reg.ref("rule").or1(cWsp.x().pl(cNl)).ix());
 
         return reg;
     }
