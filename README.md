@@ -100,7 +100,9 @@ plu : unicode base
     orb = foo / bar / baz
 
     ABNF ora = REG.rule("ora", foo.or( bar ) );
-    ABNF orb = REG.rule("orb", foo.or( bar. baz ) );
+    ABNF orb = REG.rule("orb", foo.or1( bar. baz ) );
+
+使い方がいろいろあるので or(bar,baz) では最長一致で判定していますが、やや計算量が爆発気味なので or1(bar,baz) という先頭一致(barが一致したらbazの判定はしない)なものも用意しているので使い分けるといいかも。
    
 ### 増分選択肢 Incremental Alternatives: Rule1 =/ Rule2 #or(複数)
 
