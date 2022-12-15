@@ -48,6 +48,11 @@ public class ABNFtext extends IsABNF {
         name = "\"" + text + "\"";
         utf8 = text.getBytes(UTF8);
     }
+    
+    @Override
+    public String toJava() {
+        return "ABNF.text("+name+")";
+    }
 
     /**
      * ABNFtextの複製.

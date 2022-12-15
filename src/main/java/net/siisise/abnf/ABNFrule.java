@@ -63,4 +63,9 @@ public class ABNFrule extends AbstractABNF {
     public ABNF copy(BNFReg<ABNF> reg) {
         return new ABNFrule(name, bnf.copy(reg));
     }
+
+    @Override
+    public String toJava() {
+        return name;// + " = " + bnf.toJava();
+    }
 }

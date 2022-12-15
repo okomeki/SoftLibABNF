@@ -60,4 +60,9 @@ public class BNFtext extends IsBNF {
     public BNF copy(BNFReg reg) {
         return new BNFtext(text);
     }
+
+    @Override
+    public String toJava() {
+        return "BNF.text(" +text+ ")";
+    }
 }

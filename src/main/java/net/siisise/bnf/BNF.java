@@ -275,6 +275,14 @@ public interface BNF<B extends BNF> {
     B copy(BNFReg<B> reg);
     
     /**
+     * java source code
+     * @return ソースっぽいもの
+     */
+    default String toJava() {
+        return "まだ" + this.getClass().getName();
+    }
+    
+    /**
      * テキスト
      * @param ch 文字
      * @return 文字用BNF

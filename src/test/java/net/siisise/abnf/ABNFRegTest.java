@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.util.List;
+import net.siisise.abnf.parser5234.ABNF5234;
 import net.siisise.abnf.parser7405.ABNF7405;
 import net.siisise.io.StreamFrontPacket;
 import org.junit.jupiter.api.Test;
@@ -93,6 +94,8 @@ public class ABNFRegTest {
         result = reg.rulelist(new StreamFrontPacket(new StringReader(rulelist)));
         assertNotNull(result);
         ABNF a = reg.href("a");
+        System.out.println(reg.toJava("REG"));
+        System.out.println(ABNF5234.REG.toJava("REG"));
         assertNotNull(a);
     }
 

@@ -53,4 +53,8 @@ public class BNFrange extends IsBNF<BNF> {
         return null;
     }
 
+    @Override
+    public String toJava() {
+        return "ABNF.range(0x" + Integer.toHexString(min) +", 0x" + Integer.toHexString(max) + ")";
+    }
 }

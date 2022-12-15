@@ -181,4 +181,20 @@ public class ABNFor extends FindABNF {
         src.skip(ret.sub.length());
         return ret;
     }
+
+    @Override
+    public String toJava() {
+        StringBuilder src = new StringBuilder();
+        src.append(list[0].toJava());
+        if ( list.length > 1 ) {
+            src.append(".or(");
+            for ( int i = 1; i < list.length - 1; i++ ) {
+                src.append(list[i].toJava());
+                src.append(",");
+            }
+            src.append(list[list.length-1].toJava());
+            src.append(")");
+        }
+        return src.toString();
+    }
 }

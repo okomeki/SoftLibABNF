@@ -93,4 +93,12 @@ public class ABNFbin extends IsABNF {
         int ch = CodePoint.utf8(src); // 1文字デコード
         return src.length() == 0 ? ch : -1;
     }
+
+    @Override
+    public String toJava() {
+        StringBuilder src = new StringBuilder("ABNF.bin(");
+        src.append(name);
+        src.append(")");
+        return src.toString();
+    }
 }

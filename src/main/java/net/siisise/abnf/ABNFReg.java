@@ -73,6 +73,11 @@ public class ABNFReg extends BNFCC<ABNF> {
         public ABNF copy(BNFReg<ABNF> reg) {
             return reg.ref(name);
         }
+        
+        @Override
+        public String toJava() {
+            return name;
+        }
     }
 
     /**
@@ -314,5 +319,30 @@ public class ABNFReg extends BNFCC<ABNF> {
         } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             throw new java.lang.UnsupportedOperationException(ex);
         }
+    }
+    
+    String javaLine(String ruleName, String regName, ABNFrule rule) {
+        StringBuilder src = new StringBuilder();
+            src.append("\r\n    static final ABNF ");
+            src.append(ruleName).append(" = ").append(regName);
+            src.append(".rule(\"").append(ruleName).append("\",");
+            src.append(rule.bnf.toJava());
+            src.append(");");
+        return src.toString();
+    }
+    
+    public String toJava(String regName) {
+        StringBuilder src = new StringBuilder();
+        src.append("class Example {");
+        src.append("\r\n    static ABNFReg ").append(regName).append(" = new ABNFReg();");
+        src.append("\r\n");
+        
+        for (String ruleName : reg.keySet() ) {
+            ABNFrule bnf = (ABNFrule)reg.get(ruleName);
+            src.append(javaLine(ruleName, regName, bnf));
+        }
+        src.append("\r\n}");
+        
+        return src.toString();
     }
 }

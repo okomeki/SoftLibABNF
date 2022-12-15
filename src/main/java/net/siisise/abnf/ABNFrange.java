@@ -28,6 +28,12 @@ public class ABNFrange extends IsABNF {
     private final int min;
     private final int max;
 
+    /**
+     * UTF-8 バイト列ではなく文字としてのコードで比較する.
+     * 
+     * @param min デコード後の最小
+     * @param max デコード後の最大
+     */
     public ABNFrange(int min, int max) {
         this.min = min;
         this.max = max;
@@ -54,5 +60,9 @@ public class ABNFrange extends IsABNF {
         }
         rb.seek(of);
         return null;
+    }
+
+    public String toJava() {
+        return "ABNF.range(0x" + Integer.toHexString(min) +", 0x" + Integer.toHexString(max) + ")";
     }
 }

@@ -81,4 +81,18 @@ public class ABNFx extends FindABNF {
         }
         return ret;
     }
+
+    @Override
+    public String toJava() {
+        if ( a == 0  && b == 1 ) {
+            return abnf.toJava() + ".c()";
+        } else if ( a == 1 && b < 0 ) {
+            return abnf.toJava() + ".ix()";
+        } else if ( a == b ) {
+            return abnf.toJava() + ".x("+a+")";
+        } else if ( a != 0 || b >= 0 ) {
+            return abnf.toJava() + ".x("+a+","+b+")";
+        }
+        return abnf.toJava() + ".x()";
+    }
 }

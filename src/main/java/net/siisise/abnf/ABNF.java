@@ -86,6 +86,12 @@ public interface ABNF extends BNF<ABNF> {
         return new ABNFbin(str);
     }
 
+    /**
+     * 
+     * @param min
+     * @param max
+     * @return 
+     */
     static ABNFrange range(int min, int max) {
         return new ABNFrange(min, max);
     }

@@ -79,4 +79,16 @@ public class BNFx extends FindBNF<BNF> {
         }
         return ret;
     }
+
+    @Override
+    public String toJava() {
+        if ( a == 0  && b == 1 ) {
+            return bnf.toJava() + ".c()";
+        } else if ( a == 1 && b < 0 ) {
+            return bnf.toJava() + ".ix()";
+        } else if ( a != 0 || b >= 0 ) {
+            return bnf.toJava() + ".x("+a+","+b+")";
+        }
+        return bnf.toJava() + ".x()";
+    }
 }

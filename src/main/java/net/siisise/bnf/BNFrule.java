@@ -55,4 +55,9 @@ public class BNFrule<B extends BNF> extends AbstractBNF<B> {
     public B copy(BNFReg reg) {
         return (B)new BNFrule(name, bnf.copy(reg));
     }
+
+    @Override
+    public String toJava() {
+        return name;// + " = " + bnf.toJava();
+    }
 }

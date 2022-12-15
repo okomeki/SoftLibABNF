@@ -69,5 +69,20 @@ public class BNFpl extends FindBNF<BNF> {
         return new BNFpl(cplist);
     }
 
-    
+    @Override
+    public String toJava() {
+        StringBuilder src = new StringBuilder();
+        
+        src.append(list[0].toJava());
+        if ( list.length > 1 ) {
+            src.append(".pl(");
+            src.append(list[1].toJava());
+            for ( int i = 2; i < list.length; i++ ) {
+                src.append(",");
+                src.append(list[i].toJava());
+            }
+            src.append(")");
+        }
+        return src.toString();
+    }
 }

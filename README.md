@@ -102,7 +102,7 @@ plu : unicode base
     ABNF ora = REG.rule("ora", foo.or( bar ) );
     ABNF orb = REG.rule("orb", foo.or1( bar. baz ) );
 
-使い方がいろいろあるので or(bar,baz) では最長一致で判定していますが、やや計算量が爆発気味なので or1(bar,baz) という先頭一致(barが一致したらbazの判定はしない)なものも用意しているので使い分けるといいかも。
+使い方がいろいろあるので or(bar,baz) では最長一致で判定していますが、算量が爆発気味なので or1(bar,baz) という先頭一致(barが一致したらbazの判定はしない)なものも用意しているので使い分けることもできます。
    
 ### 増分選択肢 Incremental Alternatives: Rule1 =/ Rule2 #or(複数)
 
@@ -131,7 +131,8 @@ REG.rule() または #name(String)を通さないと名前はつかない。
     element.x(a,b)
     element.ix() // a=1,bの省略 1*element
     element.x() // a,bの省略 *element
-    値で省略する場合、a = 0, b = -1 と少々複雑
+
+値で省略する場合、a = 0, b = -1 と少々複雑
 
 ### 特定回数反復 Specific Repetition: nRule
 

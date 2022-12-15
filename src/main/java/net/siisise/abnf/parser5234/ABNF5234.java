@@ -29,7 +29,7 @@ import net.siisise.bnf.parser.BNFStringParser;
  */
 public class ABNF5234 {
 
-    public static final ABNFReg BASE = new ABNFReg((BNFReg)null, null);
+    public static final ABNFReg BASE = new ABNFReg((BNFReg) null, null);
 
     // classのようなもの RFC 2234 6.1 Core Rules から変わらず
     public static final ABNF ALPHA = BASE.rule("ALPHA", ABNF.range(0x41, 0x5a).or1(ABNF.range(0x61, 0x7a)));
@@ -49,9 +49,14 @@ public class ABNF5234 {
     public static final ABNF WSP = BASE.rule("WSP", SP.or1(HTAB));
     public static final ABNF LWSP = BASE.rule("LWSP", WSP.or1(CRLF.pl(WSP)).x());
 
+    // 拡張
+    public static final ABNFReg EX = new ABNFReg((ABNFReg) null, null);
+    // 大雑把な判定
+    public static final ABNF HIRAGANA = EX.rule("HIRAGANA", ABNF.range(0x3041, 0x3096).or1(ABNF.range(0x3099, 0x309f)));
+    public static final ABNF KATAKANA = EX.rule("KATAKANA", ABNF.range(0x30a0, 0x30ff));
+
     /**
      * 各ABNFの定義をParserを使わずJavaで書いたもの
-     * 
      */
     public static final ABNFCC REG = new ABNFCC(BASE, null);
 
