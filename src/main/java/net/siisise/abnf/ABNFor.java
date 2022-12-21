@@ -32,11 +32,6 @@ import net.siisise.lang.CodePoint;
 public class ABNFor extends FindABNF {
 
     protected BNF[] list;
-    
-    // or1用
-    protected ABNFor() {
-        
-    }
 
     public ABNFor(BNF... abnfs) {
         list = abnfs;

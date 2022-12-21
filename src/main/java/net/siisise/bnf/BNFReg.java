@@ -4,6 +4,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
+import net.siisise.abnf.ABNFrule;
 import net.siisise.block.ReadableBlock;
 import net.siisise.bnf.parser.BNFPacketParser;
 import net.siisise.bnf.parser.BNFParser;
@@ -15,7 +16,7 @@ import net.siisise.io.FrontPacket;
  */
 public class BNFReg<B extends BNF> {
 
-    protected final Map<String, BNF> reg = new HashMap<>();
+    protected final Map<String, B> reg = new HashMap<>();
     protected final Map<String, Class<? extends BNFParser>> CL = new HashMap<>();
 
     /**
@@ -62,6 +63,11 @@ public class BNFReg<B extends BNF> {
         public <X> Match<X> find(ReadableBlock pac, Object ns, BNFParser<? extends X>... parsers) {
             return reg.get(name).find(pac, ns, parsers);
         }
+        
+        @Override
+        public String toJava() {
+            return name;
+        }
     }
     
     /**
@@ -79,39 +85,13 @@ public class BNFReg<B extends BNF> {
                 CL.put(key, val);
             });
             up.reg.forEach((key,val) -> { // 循環参照対策が必要
-                reg.put(key, val.copy(this));
+                reg.put(key, (B)val.copy(this));
             });
         }
         bnfReg = bnfParser;
         rn = bnfParser == null ? null : bnfParser.reg.get(bnfParser.rulename);
     }
 
-    /**
-     * 名前空間作成.
-     * @param up 前提とする定義など継承もと
-     *
-    public BNFReg(BNFReg up) {
-        this(up, ABNF5234.REG);
-    }
-
-    public BNFReg(URL url, BNFReg up, BNFReg exParser) throws IOException {
-        this(up, exParser);
-        rulelist(url);
-    }
-*/
-    /**
-     * ファイルに定義を書いておけばプログラム不要説(パーサは必要)。
-     * ファイルではなくURLで渡すと幅が広がる
-     *
-     * @param url ABNF定義ファイルのURL
-     * @param up 前提とする定義など継承もと
-     * @throws IOException 入力エラー全般
-     *
-    public BNFReg(URL url, BNFReg up) throws IOException {
-        this(up);
-        rulelist(url);
-    }
-*/
     /**
      * 参照リンク優先。 間接参照のため、あとの定義でいろいろ変わるときに便利。
      *
@@ -120,6 +100,21 @@ public class BNFReg<B extends BNF> {
      */
     public B ref(String rulename) {
         return (B)new BNFRef(rulename);
+    }
+
+    /**
+     * 直リンク優先 差し替えが困難
+     * rulenameに該当するものがない場合は参照を返す。
+     *
+     * @param rulename rulename
+     * @return REGに登録されているrulenameの値
+     */
+    public BNF href(String rulename) {
+        BNF bnf = (BNF) reg.get(rulename);
+        if (bnf == null) {
+            bnf = new BNFRef(rulename);
+        }
+        return bnf;
     }
 
     /**
@@ -201,6 +196,13 @@ public class BNFReg<B extends BNF> {
         return (T) parser(rulename).parse(pac, ns);
     }
 
+    /**
+     * ruleで指定されたclassを基にしてParserを生成する.
+     *
+     * @param <T> Parserが返す解析型
+     * @param rulename 解析装置付き構文の名。駆動コマンドのようなもの
+     * @return Parser実体
+     */
     public <T> BNFParser<T> parser(String rulename) {
         BNF rule = reg.get(rulename);
         Class<? extends BNFParser> rulep = CL.get(rulename);
@@ -221,12 +223,12 @@ public class BNFReg<B extends BNF> {
      * ruleの登録。
      * ref の参照先を変えないよう書き換えたい
      *
-     * @param <E> BNF型
+     * @param <E>
      * @param rulename rulename
      * @param elements rule の element
      * @return rule elements にrulenameをつけたABNF
      */
-    public <E extends BNF> E rule(String rulename, E elements) {
+    public <E extends B> E rule(String rulename, E elements) {
         // ABNF5234の初期化時はnullなので無視できるようにする
         if ( bnfReg != null && !bnfReg.isRulename(rulename)) {
             System.err.println("BNF:" + rulename + " BNFの名称には利用できません");
@@ -244,15 +246,29 @@ public class BNFReg<B extends BNF> {
      * 主要なところにParse結果をオブジェクトに変換する機能を埋め込むと、いろいろ楽。
      * パースされたABNFにParserを紐づけて登録する。
      *
+     * @param <E>
      * @param rulename ABNFの名
      * @param parser ソースまたは子の要素を渡され対象オブジェクトに組み上げる機能
      * @param elements ruleのelements部分
      * @return 名前つき rule
      */
-    public <E extends BNF> E rule(String rulename, Class<? extends BNFParser> parser, E elements) {
+    public <E extends B> E rule(String rulename, Class<? extends BNFParser> parser, E elements) {
         elements = rule(rulename, elements);
         CL.put(rulename, parser);
         return elements;
+    }
+    
+    /**
+     * BNFをパースする。
+     * 名前とelementsを個別に渡せると何かと楽かもしれないと思うので作った。
+     * ToDo: ABNF5234 へ
+     *
+     * @param rulename ABNF構文の名
+     * @param elements ABNF式
+     * @return 解析されたABNF
+     */
+    public B rule(String rulename, String elements) {
+        return rule(rulename, elements(elements));
     }
 
     /**
@@ -285,8 +301,74 @@ public class BNFReg<B extends BNF> {
      * @param rule name = value 改行を省略可能に改変している
      * @return rule 1行をABNFにしたもの
      */
-    public BNF rule(String rule) {
+    public B rule(String rule) {
         B bnf = bnfReg.parse(bnfReg.rule, rule + "\r\n", this);
         return rule(bnf.getName(), bnf);
     }
+
+    /**
+     * @param pac 解析対象
+     * @param rulename rulename
+     * @param subrulenames サブ要素rulename
+     * @return 仮型
+     */
+    public BNF.Match find(FrontPacket pac, String rulename, String... subrulenames) {
+        return find(ReadableBlock.wrap(pac), rulename, subrulenames);
+    }
+    
+    /**
+     * @param rb 解析対象
+     * @param rulename rulename
+     * @param subrulenames サブ要素rulename
+     * @return 仮型
+     */
+    public BNF.Match find(ReadableBlock rb, String rulename, String... subrulenames) {
+        BNF rule = href(rulename);
+
+        BNFParser[] cll = new BNFParser[subrulenames.length];
+        for (int i = 0; i < subrulenames.length; i++) {
+            cll[i] = parser(subrulenames[i]);
+        }
+        return rule.find(rb, cll);
+    }
+
+    String javaLine(String ruleName, String regName, BNFrule rule) {
+        StringBuilder src = new StringBuilder();
+            src.append("\r\n    static final BNF ");
+            src.append(ruleName).append(" = ").append(regName);
+            src.append(rule.toJavaLine());
+            src.append(";");
+        return src.toString();
+    }
+
+    String javaLine(String ruleName, String regName, ABNFrule rule) {
+        StringBuilder src = new StringBuilder();
+            src.append("\r\n    static final BNF ");
+            src.append(ruleName).append(" = ").append(regName);
+            src.append(rule.toJavaLine());
+            src.append(";");
+        return src.toString();
+    }
+
+    public String toJava(String regName) {
+        StringBuilder src = new StringBuilder();
+        src.append("class Example {");
+        src.append("\r\n    static BNFReg ").append(regName).append(" = new BNFReg();");
+        src.append("\r\n");
+        
+        for (String ruleName : reg.keySet() ) {
+            BNF b = reg.get(ruleName);
+            if ( b instanceof BNFrule ) {
+                BNFrule bnf = (BNFrule)b;
+                src.append(javaLine(ruleName, regName, bnf));
+            } else if (b instanceof ABNFrule ) {
+                ABNFrule bnf = (ABNFrule)b;
+                src.append(javaLine(ruleName, regName, bnf));
+            }
+        }
+        src.append("\r\n}");
+        
+        return src.toString();
+    }
+
 }

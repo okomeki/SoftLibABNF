@@ -23,7 +23,7 @@ import net.siisise.bnf.parser.BNFParser;
  */
 public class BNFor extends FindBNF<BNF> {
 
-    protected final BNF[] list;
+    protected BNF[] list;
 
     public BNFor(BNF... bnfs) {
         list = bnfs;
@@ -84,6 +84,16 @@ public class BNFor extends FindBNF<BNF> {
             l[i] = list[i].copy(reg);
         }
         return new BNFor(name, l);
+    }
+
+    public void add(BNF... val) {
+        BNF[] n = new BNF[list.length + val.length];
+        System.arraycopy(list, 0, n, 0, list.length);
+        System.arraycopy(val, 0, n, list.length, val.length);
+//        if (name.contains("(")) {
+            name = toName(n);
+//        }
+        list = n;
     }
 
     @Override

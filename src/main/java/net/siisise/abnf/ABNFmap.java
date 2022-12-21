@@ -102,6 +102,12 @@ public class ABNFmap extends IsABNF {
         return super.or(abnf);
     }
 
+    /**
+     * 順番が前後することがある.
+     * 
+     * @param abnf 付け
+     * @return 繋いだABNF
+     */
     @Override
     public ABNF or1(BNF... abnf) {
         List<Integer> tmap = new ArrayList<>();
@@ -128,5 +134,30 @@ public class ABNFmap extends IsABNF {
             return new ABNFor1(xabnf.toArray(new BNF[0]));
         }
         return super.or1(abnf);
+    }
+
+    /**
+     * 
+     * @return Javaっぽく
+     */
+    @Override
+    public String toJava() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("ABNF.binlist(\"");
+        for ( Integer ch : map ) {
+            switch (ch) { // Java なのでなんとかなる?
+                case 0x08:  sb.append("\\b");   break;
+                case 0x09:  sb.append("\\t");   break;
+                case 0x0a:  sb.append("\\n");   break;
+                case 0x0c:  sb.append("\\f");   break;
+                case 0x0d:  sb.append("\\r");   break;
+                case 0x22:  sb.append("\\\"");  break;
+                case 0x5c:  sb.append("\\\\");  break;
+                default:
+                    sb.appendCodePoint(ch);
+            }
+        }
+        sb.append("\")");
+        return sb.toString();
     }
 }

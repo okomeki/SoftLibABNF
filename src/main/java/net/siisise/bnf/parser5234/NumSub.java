@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.siisise.abnf.parser5234;
+package net.siisise.bnf.parser5234;
 
-import net.siisise.abnf.ABNF;
 import net.siisise.block.ReadableBlock;
 import net.siisise.bnf.BNF;
 import net.siisise.bnf.parser.BNFBaseParser;
@@ -28,23 +27,15 @@ import net.siisise.lang.CodePoint;
  * 数値の抽出でだいたい共通の部分。
  *
  */
-class NumSub extends BNFBaseParser<ABNF> {
+class NumSub extends BNFBaseParser<BNF> {
 
-    private static final ABNF hf = ABNF.bin('-');
-    private static final ABNF dot = ABNF.bin('.');
+    private static final BNF hf = BNF.bin('-');
+    private static final BNF dot = BNF.bin('.');
 
     private final BNF nrule;
-    private final int dig; // 基数 2,10,16
+    private final int dig;
     private final char a, b;
 
-    /**
-     * 
-     * @param rule
-     * @param numrule
-     * @param dig 基数
-     * @param a 判別文字小
-     * @param b 判別文字大
-     */
     NumSub(BNF rule, BNF numrule, int dig, char a, char b) {
         super(rule);
         nrule = numrule.ix();
@@ -59,58 +50,31 @@ class NumSub extends BNFBaseParser<ABNF> {
      * @return 適度にABNF化した結果
      */
     @Override
-    public ABNF parse(ReadableBlock pac) {
+    public BNF parse(ReadableBlock pac) {
         int c = pac.read();
         if (c != a && c != b) {
             pac.back(1);
             return null;
         }
-        long nl1 = pac.length();
         int v = num(pac);
-        nl1 -= pac.length();
-        boolean oct1 = isBin(v, nl1);
 
         ReadableBlock r = hf.is(pac);
         if (r != null) {
-            long nl2 = pac.length();
             int max = num(pac);
-            nl2 -= pac.length();
-            if ( oct1 && isBin(max,nl2)) { // 特殊解釈 %x80-%xff はバイナリ
-                return ABNF.binRange(v, max);
-            }
-            return ABNF.range(v, max);
+            return BNF.range(v, max);
         }
 
         r = dot.is(pac);
         if (r == null) {
-            if ( oct1 ) {
-                return ABNF.bin(new byte[] {(byte)v});
-            }
-            return ABNF.bin(v);
+            return BNF.bin(v);
         }
         Packet data = new PacketA();
-        if ( oct1 ) {
-            data.write(new byte[] {(byte)v});
-        } else {
-            data.write(CodePoint.utf8(v));
-        }
+        data.write(CodePoint.utf8(v));
         do {
-            long nlx = pac.length();
-            int c2 = num(pac);
-            nlx -= pac.length();
-            if ( isBin(c2,nlx) ) {
-                data.write(c2);
-            } else {
-                data.write(CodePoint.utf8(c2));
-            }
+            data.write(CodePoint.utf8(num(pac)));
             r = dot.is(pac);
         } while (r != null);
-        return ABNF.bin(data.toByteArray());
-    }
-    
-    private boolean isBin(int v, long nl) {
-        return ( dig == 2 && nl == 8 ) || ( dig == 16 && nl == 2 ) || (dig == 10 && nl < 4 && v < 256);
-        
+        return BNF.bin(str(data));
     }
 
     private int num(ReadableBlock pac) {

@@ -26,7 +26,7 @@ public class BNFrule<B extends BNF> extends AbstractBNF<B> {
     
     B bnf;
     
-    BNFrule(String name, B elements) {
+    public BNFrule(String name, B elements) {
         this.name = name;
         bnf = elements;
     }
@@ -59,5 +59,9 @@ public class BNFrule<B extends BNF> extends AbstractBNF<B> {
     @Override
     public String toJava() {
         return name;// + " = " + bnf.toJava();
+    }
+
+    public String toJavaLine() {
+        return ".rule(\"" + name + "\"," + bnf.toJava() + ")";
     }
 }

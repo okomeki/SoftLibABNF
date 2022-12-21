@@ -15,18 +15,6 @@
  */
 package net.siisise.bnf.parser5234;
 
-import net.siisise.abnf.parser5234.Alternation;
-import net.siisise.abnf.parser5234.CharVal;
-import net.siisise.abnf.parser5234.Concatenation;
-import net.siisise.abnf.parser5234.Element;
-import net.siisise.abnf.parser5234.NumVal;
-import net.siisise.abnf.parser5234.Option;
-import net.siisise.abnf.parser5234.ProseVal;
-import net.siisise.abnf.parser5234.Repetition;
-import net.siisise.abnf.parser5234.Rule;
-import net.siisise.abnf.parser5234.Rulelist;
-import net.siisise.abnf.parser5234.Rulename;
-import net.siisise.abnf.parser5234.SubAlternation;
 import net.siisise.bnf.BNF;
 import net.siisise.bnf.BNFCC;
 import net.siisise.bnf.BNFReg;

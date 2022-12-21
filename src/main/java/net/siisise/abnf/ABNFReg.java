@@ -17,16 +17,12 @@ package net.siisise.abnf;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.List;
 import net.siisise.abnf.parser5234.ABNF5234;
 import net.siisise.block.ReadableBlock;
-import net.siisise.bnf.BNF;
 import net.siisise.bnf.BNFCC;
 import net.siisise.bnf.BNFReg;
-import net.siisise.bnf.parser.BNFPacketParser;
 import net.siisise.bnf.parser.BNFParser;
 import net.siisise.io.FrontPacket;
 import net.siisise.io.StreamFrontPacket;
@@ -34,6 +30,7 @@ import net.siisise.io.StreamFrontPacket;
 /**
  * ABNFの名前担当、Parserの機能もあり。
  * Namespace
+ * BNFCCに役割分担できそうなのでBNFRegに統合してしまう計画.
  *
  * rule: 基本は RFC 5234 に準拠するが、一部改変したParserの対応も可能
  */
@@ -76,7 +73,7 @@ public class ABNFReg extends BNFCC<ABNF> {
         
         @Override
         public String toJava() {
-            return name;
+            return "REG.ref(\"" + name + "\")";
         }
     }
 
@@ -88,29 +85,16 @@ public class ABNFReg extends BNFCC<ABNF> {
     }
 
     /**
-     * 名前空間作成. いろいろ未定 up の定義を複製する HTTP7230では拡張の実験をしている
-     * BNF Parserは作れない.
-     * @param up 前提とする定義など継承もと
-     * @param ruleParser ruleをparseするParserの種類 ABNF5234.REG,RFC 7405, RFC
-     * 7230など微妙に違うとき。利用しないときのみ省略したい
-     */
-    public ABNFReg(BNFReg up, BNFCC ruleParser) {
-        super(up, ruleParser, null, null, null, null);
-    }
-
-    /**
-     * BNF Parser系を定義する場合に利用する
-     * BNF parser 以外は rulelist, rule, rulename, elements が不要
+     * ファイルに定義を書いておけばプログラム不要説(パーサは必要)。
+     * ファイルではなくURLで渡すと幅が広がる
      *
+     * @param url ABNF定義ファイルのURL
      * @param up 前提とする定義など継承もと, 参照先とか include元とか
-     * @param ruleParser ruleの解析に使うBNFの実装
-     * @param rulelist rulelist として使用する BNF name
-     * @param rule rule BNF name
-     * @param rulename rulename BNF name
-     * @param elements elements BNF name
+     * @throws IOException 入力エラー全般
      */
-    public ABNFReg(BNFReg up, BNFCC ruleParser, String rulelist, String rule, String rulename, String elements) {
-        super(up, ruleParser, rulelist, rule, rulename, elements);
+    public ABNFReg(URL url, BNFReg up) throws IOException {
+        this(up);
+        rulelist(url);
     }
 
     /**
@@ -136,16 +120,29 @@ public class ABNFReg extends BNFCC<ABNF> {
     }
 
     /**
-     * ファイルに定義を書いておけばプログラム不要説(パーサは必要)。
-     * ファイルではなくURLで渡すと幅が広がる
-     *
-     * @param url ABNF定義ファイルのURL
-     * @param up 前提とする定義など継承もと, 参照先とか include元とか
-     * @throws IOException 入力エラー全般
+     * 名前空間作成. いろいろ未定 up の定義を複製する HTTP7230では拡張の実験をしている
+     * BNF Parserは作れない.
+     * @param up 前提とする定義など継承もと
+     * @param ruleParser ruleをparseするParserの種類 ABNF5234.REG,RFC 7405, RFC
+     * 7230など微妙に違うとき。利用しないときのみ省略したい
      */
-    public ABNFReg(URL url, BNFReg up) throws IOException {
-        this(up);
-        rulelist(url);
+    public ABNFReg(BNFReg up, BNFCC ruleParser) {
+        super(up, ruleParser, null, null, null, null);
+    }
+
+    /**
+     * BNF Parser系を定義する場合に利用する
+     * BNF parser 以外は rulelist, rule, rulename, elements が不要
+     *
+     * @param up 前提とする定義など継承もと, 参照先とか include元とか
+     * @param ruleParser ruleの解析に使うBNFの実装 Javaのみで組む場合はnullも可
+     * @param rulelist rulelist として使用する BNF name
+     * @param rule rule BNF name
+     * @param rulename rulename BNF name
+     * @param elements elements BNF name
+     */
+    public ABNFReg(BNFReg up, BNFCC ruleParser, String rulelist, String rule, String rulename, String elements) {
+        super(up, ruleParser, rulelist, rule, rulename, elements);
     }
 
     /**
@@ -167,47 +164,13 @@ public class ABNFReg extends BNFCC<ABNF> {
      * @param rulename rulename
      * @return REGに登録されているrulenameの値
      */
+    @Override
     public ABNF href(String rulename) {
         ABNF bnf = (ABNF) reg.get(rulename);
         if (bnf == null) {
             bnf = new ABNFRef(rulename);
         }
         return bnf;
-    }
-
-    /**
-     * rule 1行のパース. 最後の改行は省略可能
-     *
-     * @param rule name = value 改行を省略可能に改変している
-     * @return rule 1行をABNFにしたもの
-     */
-    @Override
-    public ABNF rule(String rule) {
-        ABNF abnf = bnfReg.parse(bnfReg.rule, rule + "\r\n", this);
-        return rule(abnf.getName(), abnf);
-    }
-
-    /**
-     * ABNFをパースする。
-     * 名前とelementsを個別に渡せると何かと楽かもしれないと思うので作った。
-     * ToDo: ABNF5234 へ
-     *
-     * @param rulename ABNF構文の名
-     * @param elements ABNF式
-     * @return 解析されたABNF
-     */
-    public ABNF rule(String rulename, String elements) {
-        return rule(rulename, elements(elements));
-    }
-
-    /**
-     * elements の parse.
-     * @param elements 名前のないelements
-     * @return 名前のないelements
-     */
-    @Override
-    public ABNF elements(String elements) {
-        return (ABNF) bnfReg.parse(bnfReg.elements, elements, this);
     }
 
     /**
@@ -279,62 +242,26 @@ public class ABNFReg extends BNFCC<ABNF> {
         return rl;
     }
 
-    /**
-     * 特殊なので使わない方がいい。
-     *
-     * @deprecated なくなるかも
-     * @param pac 解析対象
-     * @param rulename rulename
-     * @param subrulenames サブ要素rulename
-     * @return 仮型
-     */
-    public ABNF.Match find(FrontPacket pac, String rulename, String... subrulenames) {
-        ABNF rule = href(rulename);
-
-        BNFParser[] cll = new BNFParser[subrulenames.length];
-        for (int i = 0; i < subrulenames.length; i++) {
-            cll[i] = parser(subrulenames[i]);
-        }
-        return rule.find(ReadableBlock.wrap(pac), cll);
-    }
-
-    /**
-     * ruleで指定されたclassを基にしてParserを生成する.
-     *
-     * @param <T> Parserが返す解析型
-     * @param rulename 解析装置付き構文の名。駆動コマンドのようなもの
-     * @return Parser実体
-     */
-    @Override
-    public <T> BNFParser<T> parser(String rulename) {
-        ABNF rule = (ABNF) reg.get(rulename);
-        Class<? extends BNFParser> rulep = CL.get(rulename);
-        if (rulep == null) {
-            return (BNFParser<T>) new BNFPacketParser(rule);
-        }
-        try {
-            Constructor<? extends BNFParser> cnst;
-            cnst = (Constructor<? extends BNFParser<T>>) rulep.getConstructor(BNF.class, BNFReg.class);
-            return cnst.newInstance(rule, this);
-        } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-            throw new java.lang.UnsupportedOperationException(ex);
-        }
-    }
-    
     String javaLine(String ruleName, String regName, ABNFrule rule) {
         StringBuilder src = new StringBuilder();
             src.append("\r\n    static final ABNF ");
-            src.append(ruleName).append(" = ").append(regName);
+            src.append(ruleName.replace('-', '_')).append(" = ").append(regName);
             src.append(".rule(\"").append(ruleName).append("\",");
             src.append(rule.bnf.toJava());
             src.append(");");
         return src.toString();
     }
-    
+
+    /**
+     * Java っぽいコードを出力する.
+     * @param regName 静的変数名 REG
+     * @return Javaっぽいなにか
+     */
+    @Override
     public String toJava(String regName) {
         StringBuilder src = new StringBuilder();
         src.append("class Example {");
-        src.append("\r\n    static ABNFReg ").append(regName).append(" = new ABNFReg();");
+        src.append("\r\n    static final ABNFReg ").append(regName).append(" = new ABNFReg();");
         src.append("\r\n");
         
         for (String ruleName : reg.keySet() ) {

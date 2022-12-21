@@ -19,23 +19,24 @@ import net.siisise.abnf.ABNF;
 import net.siisise.abnf.ABNFCC;
 import net.siisise.abnf.parser5234.ABNF5234;
 import net.siisise.abnf.parser5234.Element;
+import net.siisise.bnf.parser7405.QuotedString;
 
 /**
+ * RFC 7405 Case-Sensitive String Support in ABNF
  *
  * https://tools.ietf.org/html/rfc7405
  * 差分だけでどうにかしたい
- *
  */
 public class ABNF7405 {
 
     public static final ABNFCC REG = new ABNFCC(ABNF5234.copyREG());
 
-    static final ABNF caseInsensitiveString = REG.rule("case-insensitive-string", IS.class, "[ \"%i\" ] quoted-string");
-    static final ABNF caseSensitiveString = REG.rule("case-sensitive-string", SS.class, "\"%s\" quoted-string");
-    static final ABNF charVal = REG.rule("char-val", CharVal7405.class, caseInsensitiveString.or(caseSensitiveString));
-    static final ABNF quotedString = REG.rule("quoted-string", QS.class, "DQUOTE *(%x20-21 / %x23-7E) DQUOTE");
+    static final ABNF quotedString = REG.rule("quoted-string", QuotedString.class, ABNF5234.DQUOTE.pl(ABNF.range(0x20, 0x21).or1(ABNF.range(0x23, 0x7e)).x(), ABNF5234.DQUOTE));
+    static final ABNF caseInsensitiveString = REG.rule("case-insensitive-string", CaseInsensitiveString.class, ABNF.text("%i").c().pl(quotedString));
+    static final ABNF caseSensitiveString = REG.rule("case-sensitive-string", CaseSensitiveString.class, ABNF.text("%s").pl(quotedString));
+    static final ABNF charVal = REG.rule("char-val", CharVal7405.class, caseInsensitiveString.or1(caseSensitiveString));
 
     // ここだけで差し替え
-    static final ABNF element = REG.rule("element", Element.class, REG.ref("rulename").or(REG.ref("group"),
+    static final ABNF element = REG.rule("element", Element.class, REG.ref("rulename").or1(REG.ref("group"),
             REG.ref("option"), REG.ref("char-val"), REG.ref("num-val"), REG.ref("prose-val")));
 }

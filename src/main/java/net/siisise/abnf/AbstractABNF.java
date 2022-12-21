@@ -20,6 +20,7 @@ import net.siisise.bnf.BNF;
 
 /**
  * 簡単なプレ実装
+ * AbstractBNF に統合中
  */
 public abstract class AbstractABNF extends AbstractBNF<ABNF> implements ABNF {
 

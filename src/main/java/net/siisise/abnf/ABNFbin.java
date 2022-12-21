@@ -23,6 +23,7 @@ import net.siisise.lang.CodePoint;
 
 /**
  * バイナリ表現。
+ * まだ utf-8 の範囲内で
  * 一文字に限らずかもしれない
  */
 public class ABNFbin extends IsABNF {
@@ -52,6 +53,15 @@ public class ABNFbin extends IsABNF {
         }
         name = sb.toString();
         data = str.getBytes(UTF8);
+    }
+
+    /**
+     * バイト列 (予定)
+     * @param src 
+     */
+    ABNFbin(byte[] src) {
+        data = src;
+        name = "バイト列(" + src.length + ")";
     }
 
     /**
@@ -93,11 +103,52 @@ public class ABNFbin extends IsABNF {
         int ch = CodePoint.utf8(src); // 1文字デコード
         return src.length() == 0 ? ch : -1;
     }
+/*
+    static ABNF range = ABNF5234.ALPHA.or1(ABNF5234.DIGIT);
+    static ABNF esc = ABNF5234.DQUOTE.or1(ABNF.range(0x0, 0x1f), ABNF.bin(0x7f));
 
+    private String toJavaString(byte[] d) {
+        ReadableBlock bl = ReadableBlock.wrap(d);
+        StringBuilder sb = new StringBuilder();
+        sb.append('"');
+        while ( bl.length() > 0 ) {
+            ReadableBlock res = esc.is(bl);
+            if ( res != null) {
+                
+            } else {
+                int cp = CodePoint.utf8(bl);
+                if ( cp >= 0 ) {
+                    sb.appendCodePoint(cp);
+                }
+            }
+        }
+        sb.append('"');
+        return sb.toString();
+    }
+*/
+
+    /**
+     * @return Javaっぽくする
+     */
     @Override
     public String toJava() {
         StringBuilder src = new StringBuilder("ABNF.bin(");
-        src.append(name);
+        if ( data.length == 1 ) {
+            src.append(toJavaCh(data[0]));
+        } else {
+            src.append("new byte[] {");
+            boolean st = true;
+            for ( byte d : data ) {
+                if ( st ) {
+                    st = false;
+                } else {
+                    src.append(",");
+                }
+                src.append(toJavaCh(d));
+//                src.append("0x").append(Integer.toHexString(((int)d) & 0xff).toUpperCase());
+            }
+            src.append("}");
+        }
         src.append(")");
         return src.toString();
     }

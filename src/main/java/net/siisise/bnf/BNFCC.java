@@ -15,7 +15,8 @@
  */
 package net.siisise.bnf;
 
-import net.siisise.bnf.parser5234.ABNF5234;
+import net.siisise.abnf.ABNF;
+import net.siisise.abnf.parser5234.ABNF5234;
 
 /**
  * REGとCCの分離実験
@@ -32,7 +33,7 @@ public class BNFCC<B extends BNF> extends BNFReg<B> {
      * BNF Parser系を定義する場合に利用する
      * 
      * @param up 前提とする定義など継承もと, 参照先とか include元とか
-     * @param cc ruleの解析に使うBNFの実装
+     * @param cc ruleの解析に使うBNFの実装 Javaのみで組む場合はnullも可
      * @param rulelist rulelist として使用する BNF name
      * @param rule rule BNF name
      * @param rulename rulename BNF name
@@ -50,8 +51,12 @@ public class BNFCC<B extends BNF> extends BNFReg<B> {
         return reg.get(rulename).eq(name);
     }
 
-    public static BNFCC<BNF> abnf(BNFReg<BNF> up) {
+    public static BNFCC<ABNF> abnf(BNFReg<ABNF> up) {
         return abnf(up, ABNF5234.REG);
+    }
+    
+    public static BNFCC<BNF> abnf2bnf(BNFReg<BNF> up) {
+        return abnf(up, net.siisise.bnf.parser5234.ABNF5234.REG);
     }
 
     /**

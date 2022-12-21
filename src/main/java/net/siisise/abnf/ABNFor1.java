@@ -15,54 +15,26 @@
  */
 package net.siisise.abnf;
 
-import java.util.ArrayList;
-import java.util.List;
 import net.siisise.block.ReadableBlock;
 import net.siisise.bnf.BNF;
 import net.siisise.bnf.BNFReg;
 import net.siisise.bnf.parser.BNFParser;
-import net.siisise.lang.CodePoint;
 
 /**
  * 最初に一致したものを返す簡単な方.
  * 最長一致が不要な場合に高速になることがある.
  */
 public class ABNFor1 extends ABNFor {
-    
+
     /**
      * 入り口
      */
     ABNFor1(BNF[] list) {
         super(toName(list), list);
     }
-    
+
     ABNFor1(String n, BNF... abnfs) {
         super(n,abnfs);
-    }
-
-    /**
-     * text として
-     * ABNFmap 推奨
-     *
-     * @param chlist 文字の一覧として
-     */
-    public ABNFor1(String chlist) {
-        this(null, chlist);
-    }
-
-    public ABNFor1(String name, String chlist) {
-        super();
-        ReadableBlock src = ReadableBlock.wrap(chlist);
-        List<BNF> abnfs = new ArrayList<>();
-        while (src.length() > 0) {
-            abnfs.add(new ABNFtext(CodePoint.utf8(src)));
-        }
-        list = abnfs.toArray(new BNF[abnfs.size()]);
-        if ( name != null ) {
-            this.name = name;
-        } else {
-            this.name = ABNFor.toName(list);
-        }
     }
 
     /**

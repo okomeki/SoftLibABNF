@@ -65,4 +65,8 @@ public class EBNFrule extends AbstractEBNF {
         return new EBNFrule(name, bnf.copy(reg));
     }
 
+    @Override
+    public String toJava() {
+        return name;// + " = " + bnf.toJava();
+    }
 }

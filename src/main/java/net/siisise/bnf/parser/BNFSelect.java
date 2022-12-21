@@ -47,7 +47,7 @@ public class BNFSelect<T> extends BNFBuildParser<T, T> {
         }
         return other(src.sub, ns);
     }
-    
+
     protected <N> T other(ReadableBlock src, N ns) {
         return other(src);
     }
@@ -60,6 +60,5 @@ public class BNFSelect<T> extends BNFBuildParser<T, T> {
     protected T other(ReadableBlock src) {
         return null;
     }
-
 }
 

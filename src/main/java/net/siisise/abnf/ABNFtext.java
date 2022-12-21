@@ -65,18 +65,6 @@ public class ABNFtext extends IsABNF {
     }
 
     /**
-     * 1文字単位でor分割
-     *
-     * ABNFor(text) も同じ
-     *
-     * @param chlist orで処理する文字の列
-     * @return 1文字毎にor分割したABNF
-     */
-    public static ABNF list(String chlist) {
-        return new ABNFor1(chlist);
-    }
-
-    /**
      *
      * @param pac
      * @return 一致した結果

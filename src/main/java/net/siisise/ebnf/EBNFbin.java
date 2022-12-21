@@ -80,4 +80,12 @@ public class EBNFbin extends IsEBNF {
         }
         return ReadableBlock.wrap(d);
     }
+
+    @Override
+    public String toJava() {
+        StringBuilder src = new StringBuilder("EBNF.bin(");
+        src.append(name);
+        src.append(")");
+        return src.toString();
+    }
 }

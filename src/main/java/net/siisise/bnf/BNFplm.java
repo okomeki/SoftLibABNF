@@ -19,7 +19,9 @@ import net.siisise.block.ReadableBlock;
 import net.siisise.bnf.parser.BNFParser;
 
 /**
- *
+ * 完全一致検索。
+ * 重いかもしれない
+ * example = *( a / b ) a に対応したもの
  */
 public class BNFplm extends BNFpl {
 

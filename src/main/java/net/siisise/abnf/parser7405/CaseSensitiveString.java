@@ -20,9 +20,12 @@ import net.siisise.bnf.BNF;
 import net.siisise.bnf.BNFReg;
 import net.siisise.bnf.parser.BNFBuildParser;
 
-public class SS extends BNFBuildParser<ABNF, String> {
-    
-    public SS(BNF rule, BNFReg base) {
+/**
+ * 大文字小文字を区別する文字列.
+ */
+public class CaseSensitiveString extends BNFBuildParser<ABNF, String> {
+
+    public CaseSensitiveString(BNF rule, BNFReg base) {
         super(rule, base, "quoted-string");
     }
 
@@ -30,5 +33,5 @@ public class SS extends BNFBuildParser<ABNF, String> {
     protected ABNF build(BNF.Match<String> src) {
         return ABNF.bin(src.get("quoted-string").get(0));
     }
-    
+
 }

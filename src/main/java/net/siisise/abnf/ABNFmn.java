@@ -31,6 +31,7 @@ public class ABNFmn extends IsABNF {
     ABNFmn(BNF a, BNF b) {
         this.a = a;
         this.b = b;
+        name = "(" + a.getName() + "-" + b.getName() + ")";
     }
 
     /**
@@ -43,6 +44,13 @@ public class ABNFmn extends IsABNF {
         return new ABNFmn(a.copy(reg), b.copy(reg));
     }
 
+    /**
+     * b と一致すると null
+     * 
+     * @param pac
+     * @param ns
+     * @return 
+     */
     @Override
     public ReadableBlock is(ReadableBlock pac, Object ns) {
         ReadableBlock p2 = b.is(pac, ns);
@@ -56,5 +64,10 @@ public class ABNFmn extends IsABNF {
     @Override
     public ReadableBlock is(ReadableBlock src) {
         return is(src, null);
+    }
+
+    @Override
+    public String toJava() {
+        return a.toJava() + ".mn(" + b.toJava() + ")";
     }
 }

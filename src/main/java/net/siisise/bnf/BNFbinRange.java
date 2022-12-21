@@ -18,45 +18,36 @@ package net.siisise.bnf;
 import net.siisise.block.ReadableBlock;
 
 /**
- * 引き算
+ *
  */
-public class BNFmn extends IsBNF<BNF> {
-
-    private final BNF a;
-    private final BNF b;
-
-    BNFmn(BNF a, BNF b) {
-        this.a = a;
-        this.b = b;
-    }
-
-    /**
-     * 複製する.
-     * @param reg 複製先
-     * @return 複製
-     */
-    @Override
-    public BNFmn copy(BNFReg reg) {
-        return new BNFmn(a.copy(reg), b.copy(reg));
-    }
-
-    @Override
-    public ReadableBlock is(ReadableBlock pac, Object ns) {
-        ReadableBlock p2 = b.is(pac, ns);
-        if (p2 != null) {
-            pac.back(p2.length());
-            return null;
-        }
-        return a.is(pac, ns);
+public class BNFbinRange extends IsBNF {
+    
+    private int min, max;
+    
+    BNFbinRange(int min, int max) {
+        this.min = min;
+        this.max = max;
     }
 
     @Override
     public ReadableBlock is(ReadableBlock src) {
-        return is(src, null);
+        int v = src.read();
+        if ( min <= v && v <= max ) {
+            ReadableBlock.wrap(new byte[] {(byte)v});
+        }
+        src.back(1);
+        return null;
+    }
+
+    @Override
+    public BNF copy(BNFReg reg) {
+        return new BNFbinRange(min, max);
     }
 
     @Override
     public String toJava() {
-        return a.toJava() + ".mn(" + b.toJava() + ")";
+        
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
+    
 }

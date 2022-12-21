@@ -13,22 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.siisise.abnf.parser7405;
+package net.siisise.bnf.parser7405;
 
 import net.siisise.bnf.BNF;
 import net.siisise.bnf.BNFReg;
 import net.siisise.bnf.parser.BNFBuildParser;
-import net.siisise.io.Packet;
 
-public class QS extends BNFBuildParser<String,Packet> {
+public class CaseSensitiveString extends BNFBuildParser<BNF, String> {
 
-    public QS(BNF rule, BNFReg base) {
-        super(rule, base);
+    public CaseSensitiveString(BNF rule, BNFReg base) {
+        super(rule, base, "quoted-string");
     }
 
     @Override
-    protected String build(BNF.Match<Packet> src) {
-        return str(src.sub.sub(1, src.sub.length() - 2));
+    protected BNF build(BNF.Match<String> src) {
+        return BNF.bin(src.get("quoted-string").get(0));
     }
-    
+
 }

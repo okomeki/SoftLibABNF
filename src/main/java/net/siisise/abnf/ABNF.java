@@ -15,8 +15,12 @@
  */
 package net.siisise.abnf;
 
+import java.util.ArrayList;
+import java.util.List;
+import net.siisise.block.ReadableBlock;
 import net.siisise.bnf.BNF;
 import net.siisise.bnf.BNFReg;
+import net.siisise.lang.CodePoint;
 
 /**
  * RFC 5234.
@@ -49,12 +53,21 @@ public interface ABNF extends BNF<ABNF> {
 
     /**
      * 1文字ずつAlternationで結合する。
+     * text caseInsensitive っぽく
+     * ABNFor1(text) も同じ
+     * ABNFmap 推奨
      *
      * @param chlist 文字の列(UCS2単位)
-     * @return 文字のor繋ぎABNF構文
+     * @return 文字のor1繋ぎABNF構文
      */
     static ABNF list(String chlist) {
-        return new ABNFor1(chlist);
+        ReadableBlock src = ReadableBlock.wrap(chlist);
+        List<ABNF> abnfs = new ArrayList<>();
+        while (src.length() > 0) {
+            int c = CodePoint.utf8(src);
+            abnfs.add(new ABNFtext(c));
+        }
+        return new ABNFor1(abnfs.toArray(new ABNF[abnfs.size()]));
     }
 
     /**
@@ -87,13 +100,42 @@ public interface ABNF extends BNF<ABNF> {
     }
 
     /**
-     * 
-     * @param min
-     * @param max
+     * (仮)
+     * @param b
+     * @return 
+     */
+    static ABNFbin bin(byte b) {
+        return new ABNFbin(new byte[] {b});
+    }
+    
+    /**
+     * (仮)
+     * @param bin
+     * @return 
+     */
+    static ABNFbin bin(byte[] bin) {
+        return new ABNFbin(bin);
+    }
+
+    /**
+     * 文字の範囲.
+     * utf-8 をデコードするので0x80以上はバイト列と同じではない
+     * @param min 最小文字コード 0 - 0x10ffff
+     * @param max 最大文字コード 0 - 0x10ffff
      * @return 
      */
     static ABNFrange range(int min, int max) {
         return new ABNFrange(min, max);
+    }
+
+    /**
+     * 1バイト比較
+     * @param min 最小コード 0x00 - 0xff
+     * @param max 最大コード 0x00 - 0xff
+     * @return 
+     */
+    static ABNFbinRange binRange(int min, int max) {
+        return new ABNFbinRange(min, max);
     }
 
     /**

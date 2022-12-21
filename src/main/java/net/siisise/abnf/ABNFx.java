@@ -16,6 +16,7 @@
 package net.siisise.abnf;
 
 import net.siisise.block.ReadableBlock;
+import net.siisise.bnf.BNF;
 import net.siisise.bnf.BNFReg;
 import net.siisise.bnf.parser.BNFParser;
 
@@ -28,12 +29,12 @@ public class ABNFx extends FindABNF {
     // a 初期値: 0
     // b 初期値: -1
     private final int a, b;
-    private final ABNF abnf;
+    private final BNF bnf;
 
     ABNFx(int a, int b, AbstractABNF abnf) {
         this.a = a;
         this.b = b;
-        this.abnf = abnf;
+        this.bnf = abnf;
         StringBuilder sb = new StringBuilder();
         if (a == 0 && b == 1) {
             String n = abnf.getName();
@@ -60,14 +61,14 @@ public class ABNFx extends FindABNF {
 
     @Override
     public ABNFx copy(BNFReg<ABNF> reg) {
-        return new ABNFx(a, b, (AbstractABNF) abnf.copy(reg));
+        return new ABNFx(a, b, (AbstractABNF) bnf.copy(reg));
     }
 
     @Override
     public <X> Match<X> buildFind(ReadableBlock pac, Object ns, BNFParser<? extends X>... names) {
         Match<X> ret = new Match<>(pac);
         for (int i = 0; b == -1 || i < b; i++) {
-            Match sub = abnf.find(pac, ns, names);
+            Match sub = bnf.find(pac, ns, names);
             if (sub == null) {
                 if (i < a) {
                     ret.end(pac);
@@ -85,14 +86,14 @@ public class ABNFx extends FindABNF {
     @Override
     public String toJava() {
         if ( a == 0  && b == 1 ) {
-            return abnf.toJava() + ".c()";
+            return bnf.toJava() + ".c()";
         } else if ( a == 1 && b < 0 ) {
-            return abnf.toJava() + ".ix()";
+            return bnf.toJava() + ".ix()";
         } else if ( a == b ) {
-            return abnf.toJava() + ".x("+a+")";
+            return bnf.toJava() + ".x("+a+")";
         } else if ( a != 0 || b >= 0 ) {
-            return abnf.toJava() + ".x("+a+","+b+")";
+            return bnf.toJava() + ".x("+a+","+b+")";
         }
-        return abnf.toJava() + ".x()";
+        return bnf.toJava() + ".x()";
     }
 }

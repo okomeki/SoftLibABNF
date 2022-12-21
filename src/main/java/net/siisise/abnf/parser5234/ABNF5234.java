@@ -43,7 +43,8 @@ public class ABNF5234 {
     public static final ABNF DQUOTE = BASE.rule("DQUOTE", ABNF.bin(0x22));
     public static final ABNF HEXDIG = BASE.rule("HEXDIG", DIGIT.or1(ABNF.range('a', 'f'), ABNF.range('A', 'F')));
     public static final ABNF HTAB = BASE.rule("HTAB", ABNF.bin(0x09));
-    public static final ABNF OCTET = BASE.rule("OCTET", ABNF.range(0x0, 0xff));
+    // 意味的にはバイト情報なので改変する
+    public static final ABNF OCTET = BASE.rule("OCTET", ABNF.binRange(0x0, 0xff));
     public static final ABNF SP = BASE.rule("SP", ABNF.bin(0x20));
     public static final ABNF VCHAR = BASE.rule("VCHAR", ABNF.range(0x21, 0x7e));
     public static final ABNF WSP = BASE.rule("WSP", SP.or1(HTAB));
@@ -55,7 +56,8 @@ public class ABNF5234 {
     public static final ABNF HIRAGANA = EX.rule("HIRAGANA", ABNF.range(0x3041, 0x3096).or1(ABNF.range(0x3099, 0x309f)));
     public static final ABNF KATAKANA = EX.rule("KATAKANA", ABNF.range(0x30a0, 0x30ff));
 
-    /**
+    /**.
+     * UTF-8 デコード前提.
      * 各ABNFの定義をParserを使わずJavaで書いたもの
      */
     public static final ABNFCC REG = new ABNFCC(BASE, null);
@@ -85,7 +87,7 @@ public class ABNF5234 {
     public static final ABNF definedAs = REG.rule("defined-as", BNFStringParser.class, cWsp.x().pl(ABNF.bin('=').or(ABNF.bin("=/")), cWsp.x()));
     public static final ABNF rule = REG.rule("rule", Rule.class, rulename.pl(definedAs, elements, cNl));
     public static final ABNF rulelist = REG.rule("rulelist", Rulelist.class, rule.or1(cWsp.x().pl(cNl)).ix());
-
+    
     /**
      * 複製できる弱結合版
      *

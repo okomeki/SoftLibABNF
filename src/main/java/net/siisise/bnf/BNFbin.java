@@ -50,6 +50,11 @@ public class BNFbin extends IsBNF<BNF> {
         name = sb.toString();
         data = str.getBytes(UTF8);
     }
+    
+    BNFbin(byte[] src) {
+        data = src;
+        name = "バイト列(" + src.length + ")";
+    }
 
     /**
      * 複製する.

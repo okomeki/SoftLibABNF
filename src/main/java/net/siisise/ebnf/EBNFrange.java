@@ -57,5 +57,10 @@ public class EBNFrange extends IsEBNF {
         pac.seek(of);
         return null;
     }
+
+    @Override
+    public String toJava() {
+        return "EBNF.range(0x" + Integer.toHexString(min) +", 0x" + Integer.toHexString(max) + ")";
+    }
 }
 

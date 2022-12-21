@@ -26,6 +26,7 @@ import net.siisise.block.ReadableBlock;
 import net.siisise.bnf.parser.BNFParser;
 import net.siisise.io.FrontPacket;
 import net.siisise.io.Packet;
+import net.siisise.lang.CodePoint;
 
 /**
  * 抽象的なBNF全般
@@ -278,9 +279,7 @@ public interface BNF<B extends BNF> {
      * java source code
      * @return ソースっぽいもの
      */
-    default String toJava() {
-        return "まだ" + this.getClass().getName();
-    }
+    String toJava();
     
     /**
      * テキスト
@@ -295,6 +294,16 @@ public interface BNF<B extends BNF> {
         return new BNFtext(txt);
     }
 
+    static BNF list(String chlist) {
+        ReadableBlock src = ReadableBlock.wrap(chlist);
+        List<BNF> abnfs = new ArrayList<>();
+        while (src.length() > 0) {
+            int c = CodePoint.utf8(src);
+            abnfs.add(new BNFtext(c));
+        }
+        return new BNFor1(abnfs.toArray(new BNF[abnfs.size()]));
+    }
+    
     /**
      * 
      * @param ch 文字
@@ -312,6 +321,14 @@ public interface BNF<B extends BNF> {
      */
     static BNFbin bin(String str) {
         return new BNFbin(str);
+    }
+    
+    static BNFbin bin(byte b) {
+        return new BNFbin(new byte[] {b});
+    }
+
+    static BNFbin bin(byte[] src) {
+        return new BNFbin(src);
     }
 
     static BNFrange range(int min, int max) {

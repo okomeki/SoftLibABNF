@@ -13,52 +13,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.siisise.ebnf;
+package net.siisise.abnf;
 
-import net.siisise.bnf.BNF;
 import net.siisise.block.ReadableBlock;
 import net.siisise.bnf.BNFReg;
 
 /**
- * 引き算
+ * バイト的な範囲
  */
-public class EBNFmn extends IsEBNF {
-
-    private final BNF a;
-    private final BNF b;
-
-    EBNFmn(BNF a, BNF b) {
-        this.a = a;
-        this.b = b;
-    }
-
-    /**
-     * 複製する.
-     * @param reg 複製先
-     * @return 複製
-     */
-    @Override
-    public EBNFmn copy(BNFReg<EBNF> reg) {
-        return new EBNFmn(a.copy(reg), b.copy(reg));
-    }
-
-    @Override
-    public ReadableBlock is(ReadableBlock pac, Object ns) {
-        ReadableBlock p2 = b.is(pac, ns);
-        if (p2 != null) {
-            pac.back(p2.length());
-            return null;
-        }
-        return a.is(pac, ns);
+public class ABNFbinRange extends IsABNF {
+    private int min, max;
+    
+    ABNFbinRange(int min, int max) {
+        this.min = min;
+        this.max = max;
     }
 
     @Override
     public ReadableBlock is(ReadableBlock src) {
-        return is(src, null);
+        if ( src.length() < 1 ) {
+            return null;
+        }
+        int b = src.read();
+        if ( min <= b && b <= max ) {
+            return ReadableBlock.wrap(new byte[] {(byte)b});
+        }
+        src.back(1);
+        return null;
+    }
+
+    @Override
+    public ABNF copy(BNFReg<ABNF> reg) {
+        return new ABNFbinRange(min, max);
     }
 
     @Override
     public String toJava() {
-        return a.toJava() + ".mn(" + b.toJava() + ")";
+        String minHex = toJavaCh((byte)min);
+        String maxHex = toJavaCh((byte)max);
+        return "ABNF.binRange(" +minHex +", " + maxHex +  ")";
     }
+    
 }

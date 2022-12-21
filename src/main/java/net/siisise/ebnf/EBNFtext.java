@@ -90,4 +90,9 @@ public class EBNFtext extends IsEBNF {
         pac.back(d.length);
         return null;
     }
+
+    @Override
+    public String toJava() {
+        return "EBNF.text(" +text+ ")";
+    }
 }

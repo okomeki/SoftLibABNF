@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 okome.
+ * Copyright 2022 Siisise Net.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,12 +19,19 @@ import net.siisise.block.ReadableBlock;
 import net.siisise.lang.CodePoint;
 
 /**
- *
+ * 文字範囲.
  */
 public class BNFrange extends IsBNF<BNF> {
+
     private final int min;
     private final int max;
 
+    /**
+     * UTF-8 バイト列ではなく文字としてのコードで比較する.
+     * 
+     * @param min 最小
+     * @param max 最大
+     */
     public BNFrange(int min, int max) {
         this.min = min;
         this.max = max;
@@ -53,8 +60,7 @@ public class BNFrange extends IsBNF<BNF> {
         return null;
     }
 
-    @Override
     public String toJava() {
-        return "ABNF.range(0x" + Integer.toHexString(min) +", 0x" + Integer.toHexString(max) + ")";
+        return "BNF.range(0x" + Integer.toHexString(min) +", 0x" + Integer.toHexString(max) + ")";
     }
 }

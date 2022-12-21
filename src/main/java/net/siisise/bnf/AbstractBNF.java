@@ -63,12 +63,14 @@ public abstract class AbstractBNF<B extends BNF> implements BNF<B> {
     
     @Override
     public Packet is(FrontPacket pac) {
-        return pac(is(rb(pac)));
+        ReadableBlock res = is(rb(pac));
+        return res != null ? pac(res) : null;
     }
     
     @Override
     public Packet is(FrontPacket pac, Object ns) {
-        return pac(is(rb(pac), ns));
+        ReadableBlock res = is(rb(pac), ns);
+        return res != null ? pac(res) : null;
     }
 
     /**
@@ -211,6 +213,7 @@ public abstract class AbstractBNF<B extends BNF> implements BNF<B> {
         return (B) new BNFx(min, max, this);
     }
     
+    @Override
     public B x(int num) {
         return x(num,num);
     }
@@ -323,6 +326,11 @@ public abstract class AbstractBNF<B extends BNF> implements BNF<B> {
         });
     }
 
+    /**
+     * %x00, %x0000, %x000000 のどれか
+     * @param ch 1文字
+     * @return っぽく
+     */
     protected String hex(int ch) {
         if (ch < 0x100) {
             return "%x" + Integer.toHexString(0x100 + ch).substring(1);
@@ -331,5 +339,37 @@ public abstract class AbstractBNF<B extends BNF> implements BNF<B> {
         } else {
             return "%x" + Integer.toHexString(0x1000000 + ch).substring(1);
         }
+    }
+    
+    protected String toJavaCh(byte ch) {
+        switch( ch ) {
+            case '\b':
+                return "'\\b'";
+            case '\t':
+                return "'\\t'";
+            case '\n':
+                return "'\\n'";
+            case '\r':
+                return "'\\r'";
+            case '\f':
+                return "'\\f'";
+            case '\'':
+                return "'\\''";
+            case '\"':
+                return "'\\\"'";
+            case '\\':
+                return "'\\\\'";
+        }
+        StringBuilder s = new StringBuilder();
+        if ( ch >= 0x20 && ch <= 0x7e) {
+            s.append('\'');
+            s.append((char)ch);
+            s.append('\'');
+        } else {
+            s.append("0x");
+            String hex = "0" + Integer.toHexString(ch & 0xff).toUpperCase();
+            s.append(hex.substring(hex.length() - 2));
+        }
+        return s.toString();
     }
 }

@@ -66,6 +66,10 @@ public class ABNFrule extends AbstractABNF {
 
     @Override
     public String toJava() {
-        return name;// + " = " + bnf.toJava();
+        return name.replace('-', '_');// + " = " + bnf.toJava();
+    }
+    
+    public String toJavaLine() {
+        return ".rule(\"" + name + "\"," + bnf.toJava() + ")";
     }
 }

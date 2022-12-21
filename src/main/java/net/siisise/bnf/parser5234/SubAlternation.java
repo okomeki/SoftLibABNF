@@ -13,22 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.siisise.abnf.parser7405;
+package net.siisise.bnf.parser5234;
 
-import net.siisise.abnf.ABNF;
 import net.siisise.bnf.BNF;
 import net.siisise.bnf.BNFReg;
-import net.siisise.bnf.parser.BNFBuildParser;
+import net.siisise.bnf.parser.BNFSelect;
 
-public class IS extends BNFBuildParser<ABNF, String> {
-
-    public IS(BNF rule, BNFReg base) {
-        super(rule, base, "quoted-string");
+/**
+ * elementsとgroup のParser.
+ * alternationを取り出すだけ
+ * 定義のみなので消せる?
+ */
+public class SubAlternation extends BNFSelect<BNF> {
+    
+    /**
+     * 
+     * @param rule groupのABNF構文
+     * @param base Parser駆動用
+     */
+    public SubAlternation(BNF rule, BNFReg base) {
+        super(rule, base, "alternation");
     }
-
-    @Override
-    protected ABNF build(BNF.Match<String> src) {
-        return ABNF.text(src.get("quoted-string").get(0));
-    }
-
 }

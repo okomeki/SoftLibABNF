@@ -20,8 +20,7 @@ import net.siisise.bnf.BNFReg;
 import net.siisise.lang.CodePoint;
 
 /**
- * 文字
- *
+ * 文字範囲.
  */
 public class ABNFrange extends IsABNF {
 
@@ -62,6 +61,7 @@ public class ABNFrange extends IsABNF {
         return null;
     }
 
+    @Override
     public String toJava() {
         return "ABNF.range(0x" + Integer.toHexString(min) +", 0x" + Integer.toHexString(max) + ")";
     }

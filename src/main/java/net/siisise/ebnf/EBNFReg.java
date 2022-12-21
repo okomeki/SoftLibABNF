@@ -15,13 +15,14 @@
  */
 package net.siisise.ebnf;
 
+import net.siisise.bnf.BNF;
 import net.siisise.bnf.BNFCC;
 import net.siisise.ebnf.parser.EBNFISO14977;
 
 /**
  *
  */
-public class EBNFReg extends BNFCC<EBNF> {
+public class EBNFReg extends BNFCC<BNF> {
     
     public EBNFReg() {
         super(null, EBNFISO14977.REG, "syntax","syntax-rule","meta-identifier","definitions-list");

@@ -16,6 +16,7 @@
 package net.siisise.abnf;
 
 import net.siisise.abnf.parser5234.ABNF5234;
+import net.siisise.bnf.BNFCC;
 import net.siisise.bnf.BNFReg;
 
 /**
@@ -25,11 +26,21 @@ import net.siisise.bnf.BNFReg;
  */
 public class ABNFCC extends ABNFReg {
     
+    /**
+     * BNFCC の abnf を使おう?
+     * @param up 
+     */
+    
     public ABNFCC(BNFReg up) {
         this(up, ABNF5234.REG);
     }
-    
-    public ABNFCC(BNFReg up, ABNFCC cc) {
+
+    /**
+     * 
+     * @param up
+     * @param cc ABNF の parser, parserを発動しない(ParserをJavaのみで組む)場合は nullも可
+     */
+    public ABNFCC(BNFReg up, BNFCC<ABNF> cc) {
         super(up, cc, "rulelist", "rule", "rulename", "elements");
     }
     
