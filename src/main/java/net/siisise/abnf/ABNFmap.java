@@ -31,17 +31,31 @@ public class ABNFmap extends IsABNF {
     private final List<Integer> map = new ArrayList<>();
 
     public ABNFmap() {
-        name = "略";
+        name = "()";
     }
 
     public ABNFmap(String val) {
         ReadableBlock pac = ReadableBlock.wrap(val);
+        StringBuilder n = new StringBuilder();
+        n.append("( ");
         while (pac.size() > 0) {
+            if ( n.length() > 2) {
+                n.append(" / ");
+            }
             int ch = CodePoint.utf8(pac);
             if (!map.contains(ch)) {
                 map.add(ch);
+                if ( (ch >= 0x20 && ch <= 0x7e && ch != 0x22) ) {
+                    n.append('"');
+                    n.append(ch);
+                    n.append('"');
+                } else {
+                    n.append(hex(ch));
+                }
             }
         }
+        n.append(" )");
+        name = n.toString();
     }
 
     @Override

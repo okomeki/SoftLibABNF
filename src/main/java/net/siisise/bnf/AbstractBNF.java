@@ -332,7 +332,7 @@ public abstract class AbstractBNF<B extends BNF> implements BNF<B> {
      * @return っぽく
      */
     protected String hex(int ch) {
-        if (ch < 0x100) {
+        if (ch < 0x80) { // 文字としては 0x80以降は4桁にしておきたい
             return "%x" + Integer.toHexString(0x100 + ch).substring(1);
         } else if (ch < 0x10000) {
             return "%x" + Integer.toHexString(0x10000 + ch).substring(1);

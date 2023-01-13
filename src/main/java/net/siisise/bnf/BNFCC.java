@@ -62,7 +62,7 @@ public class BNFCC<B extends BNF> extends BNFReg<B> {
     /**
      * ABNF用
      * @param <E> BNFが無難
-     * @param up 
+     * @param up 取り込む定義
      * @param cc ABNF5234.REG など
      * @return ABNFが使えるよ
      */

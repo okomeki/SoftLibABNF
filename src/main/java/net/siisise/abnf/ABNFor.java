@@ -72,6 +72,11 @@ public class ABNFor extends FindABNF {
         }
     }
 
+    /**
+     * 名前をつくる.
+     * @param abnfs
+     * @return 
+     */
     static String toName(BNF[] abnfs) {
         StringBuilder sb = new StringBuilder();
         //if ( list.length > 1) {

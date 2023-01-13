@@ -81,7 +81,7 @@ public interface ABNF extends BNF<ABNF> {
     }
 
     /**
-     * 
+     * 1文字 Unicodeふる
      * @param ch 文字
      * @return 文字と一致するABNF
      */
@@ -101,8 +101,8 @@ public interface ABNF extends BNF<ABNF> {
 
     /**
      * (仮)
-     * @param b
-     * @return 
+     * @param b バイト
+     * @return 1バイトのABNF
      */
     static ABNFbin bin(byte b) {
         return new ABNFbin(new byte[] {b});
@@ -110,8 +110,8 @@ public interface ABNF extends BNF<ABNF> {
     
     /**
      * (仮)
-     * @param bin
-     * @return 
+     * @param bin バイト列
+     * @return バイト列のABNF
      */
     static ABNFbin bin(byte[] bin) {
         return new ABNFbin(bin);
@@ -122,17 +122,17 @@ public interface ABNF extends BNF<ABNF> {
      * utf-8 をデコードするので0x80以上はバイト列と同じではない
      * @param min 最小文字コード 0 - 0x10ffff
      * @param max 最大文字コード 0 - 0x10ffff
-     * @return 
+     * @return 文字のABNF
      */
     static ABNFrange range(int min, int max) {
         return new ABNFrange(min, max);
     }
 
     /**
-     * 1バイト比較
+     * 1バイト比較.
      * @param min 最小コード 0x00 - 0xff
      * @param max 最大コード 0x00 - 0xff
-     * @return 
+     * @return バイトのABNF
      */
     static ABNFbinRange binRange(int min, int max) {
         return new ABNFbinRange(min, max);
