@@ -114,6 +114,10 @@ public class ABNFor extends FindABNF {
         return new ABNFor(name, l);
     }
 
+    /**
+     * 条件を追加する.
+     * @param val 追加条件
+     */
     public void add(ABNF... val) {
         ABNF[] n = new ABNF[list.length + val.length];
         System.arraycopy(list, 0, n, 0, list.length);

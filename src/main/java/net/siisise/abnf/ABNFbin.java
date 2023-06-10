@@ -34,7 +34,7 @@ public class ABNFbin extends IsABNF {
         if (ch >= 0x20 && ((ch != 0x22 && ch < 0x41) || (ch > 0x5a && ch < 0x61) || (ch > 0x7a && ch < 0x7f))) {
             name = "\"" + (char) ch + "\"";
         } else {
-            name = hex(ch);
+            name = uhex(ch);
         }
 
         data = CodePoint.utf8(ch);
@@ -42,26 +42,42 @@ public class ABNFbin extends IsABNF {
 
     /**
      * ascii ?
-     * @param str 
+     * @param str null empty 不可
      */
     ABNFbin(String str) {
         StringBuilder sb = new StringBuilder(50);
-        sb.append(hex(str.charAt(0)));
+        sb.append(uhex(str.charAt(0)));
         for (int i = 1; i < str.length(); i++) {
             sb.append(".");
-            sb.append(hex(str.charAt(i)).substring(2));
+            sb.append(uhex(str.charAt(i)).substring(2));
         }
         name = sb.toString();
         data = str.getBytes(UTF8);
     }
 
     /**
-     * バイト列 (予定)
-     * @param src 
+     * バイト列
+     * @param src バイト列
      */
     ABNFbin(byte[] src) {
         data = src;
         name = "バイト列(" + src.length + ")";
+        
+        StringBuilder sb = new StringBuilder();
+        
+        if ( src.length > 0 ) {
+            sb.append("%x");
+            sb.append(binHex(src[0]));
+            
+            for ( int i = 1; i < src.length; i++ ) {
+                    sb.append('.').append(binHex(src[i]));
+            }
+            name = sb.toString();
+        }
+    }
+    
+    static String binHex(byte b) {
+        return Integer.toHexString(0x100 + (b & 0xff)).substring(1).toUpperCase();
     }
 
     /**

@@ -30,7 +30,7 @@ public class BNFbin extends IsBNF<BNF> {
         if (ch >= 0x20 && ((ch != 0x22 && ch < 0x41) || (ch > 0x5a && ch < 0x61) || (ch > 0x7a && ch < 0x7f))) {
             name = "\"" + (char) ch + "\"";
         } else {
-            name = hex(ch);
+            name = uhex(ch);
         }
 
         data = CodePoint.utf8(ch);
@@ -42,10 +42,10 @@ public class BNFbin extends IsBNF<BNF> {
      */
     BNFbin(String str) {
         StringBuilder sb = new StringBuilder(50);
-        sb.append(hex(str.charAt(0)));
+        sb.append(uhex(str.charAt(0)));
         for (int i = 1; i < str.length(); i++) {
             sb.append(".");
-            sb.append(hex(str.charAt(i)).substring(2));
+            sb.append(uhex(str.charAt(i)).substring(2));
         }
         name = sb.toString();
         data = str.getBytes(UTF8);

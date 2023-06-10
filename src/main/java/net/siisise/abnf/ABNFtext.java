@@ -29,8 +29,8 @@ public class ABNFtext extends IsABNF {
     private final byte[] utf8;
 
     /**
-     *
-     * @param ch
+     * 1文字対象.
+     * @param ch UTF-32 1文字
      */
     ABNFtext(int ch) {
         char[] chars = Character.toChars(ch);
@@ -38,7 +38,7 @@ public class ABNFtext extends IsABNF {
         if (ch < 0x7f && ch >= 0x20 && ch != 0x22) {
             name = "\"" + text + "\"";
         } else {
-            name = hex(ch);
+            name = uhex(ch);
         }
         utf8 = text.getBytes(UTF8);
     }

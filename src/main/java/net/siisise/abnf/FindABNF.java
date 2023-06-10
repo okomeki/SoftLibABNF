@@ -72,7 +72,7 @@ public abstract class FindABNF extends AbstractABNF {
      * find本体
      *
      * @param <X> 戻り型
-     * @param pac データ
+     * @param pac 解析対象
      * @param ns user name space ユーザ名前空間
      * @param parsers サブ要素のパーサ
      * @return サブ要素を含む解析結果

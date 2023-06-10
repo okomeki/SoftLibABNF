@@ -31,11 +31,24 @@ public class ABNFrule extends AbstractABNF {
         this.bnf = elements;
     }
 
+    /**
+     * 先頭一致でパースする。
+     *
+     * @param src source 解析対象
+     * @param ns user name space 名前空間
+     * @return 一致した範囲
+     */
     @Override
     public ReadableBlock is(ReadableBlock src, Object ns) {
         return bnf.is(src,ns);
     }
 
+    /**
+     * 先頭一致でパースする。
+     * 
+     * @param src source 解析対象
+     * @return 一致した範囲
+     */
     @Override
     public ReadableBlock is(ReadableBlock src) {
         return bnf.is(src);

@@ -35,7 +35,7 @@ public class BNFrange extends IsBNF<BNF> {
     public BNFrange(int min, int max) {
         this.min = min;
         this.max = max;
-        name = hex(min) + "-" + hex(max).substring(2);
+        name = uhex(min) + "-" + uhex(max).substring(2);
     }
 
     @Override

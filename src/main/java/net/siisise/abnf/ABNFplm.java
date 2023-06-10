@@ -47,9 +47,17 @@ public class ABNFplm extends ABNFpl {
         return new ABNFplm(l);
     }
 
+    /**
+     * 詳細検索.
+     * @param <X> 戻り型例
+     * @param pac source 解析対象
+     * @param ns user name space
+     * @param subparsers サブ要素パーサ
+     * @return ざっくり戻り
+     */
     @Override
-    public <X> Match<X> buildFind(ReadableBlock pac, Object ns, BNFParser<? extends X>... subps) {
-        return longfind(pac, ns, 0, subps);
+    public <X> Match<X> buildFind(ReadableBlock pac, Object ns, BNFParser<? extends X>... subparsers) {
+        return longfind(pac, ns, 0, subparsers);
     }
 
     /**

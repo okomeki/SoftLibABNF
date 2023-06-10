@@ -24,9 +24,16 @@ import net.siisise.bnf.parser.BNFParser;
  */
 public abstract class IsABNF extends AbstractABNF {
     
+    /**
+     * 先頭一致でパースする。
+     *
+     * @param src source 解析対象
+     * @param ns user name space 名前空間
+     * @return 一致した範囲
+     */
     @Override
-    public ReadableBlock is(ReadableBlock pac, Object ns) {
-        return is(pac);
+    public ReadableBlock is(ReadableBlock src, Object ns) {
+        return is(src);
     }
     
     /**

@@ -61,6 +61,12 @@ public abstract class AbstractBNF<B extends BNF> implements BNF<B> {
         return is(rb(val), ns) != null;
     }
     
+    /**
+     * 先頭一致でパースする。
+     * 
+     * @param pac 解析対象
+     * @return 一致した範囲
+     */
     @Override
     public Packet is(FrontPacket pac) {
         ReadableBlock res = is(rb(pac));
@@ -327,11 +333,12 @@ public abstract class AbstractBNF<B extends BNF> implements BNF<B> {
     }
 
     /**
+     * UTF-8 HEX
      * %x00, %x0000, %x000000 のどれか
      * @param ch 1文字
      * @return っぽく
      */
-    protected String hex(int ch) {
+    protected String uhex(int ch) {
         if (ch < 0x80) { // 文字としては 0x80以降は4桁にしておきたい
             return "%x" + Integer.toHexString(0x100 + ch).substring(1);
         } else if (ch < 0x10000) {

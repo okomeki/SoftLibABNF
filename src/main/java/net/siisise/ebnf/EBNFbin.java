@@ -31,7 +31,7 @@ public class EBNFbin extends IsEBNF {
         if (ch >= 0x20 && ((ch != 0x22 && ch < 0x41) || (ch > 0x5a && ch < 0x61) || (ch > 0x7a && ch < 0x7f))) {
             name = "\"" + (char) ch + "\"";
         } else {
-            name = hex(ch);
+            name = uhex(ch);
         }
 
         data = CodePoint.utf8(ch);
@@ -43,10 +43,10 @@ public class EBNFbin extends IsEBNF {
      */
     EBNFbin(String val) {
         StringBuilder sb = new StringBuilder(50);
-        sb.append(hex(val.charAt(0)));
+        sb.append(uhex(val.charAt(0)));
         for (int i = 1; i < val.length(); i++) {
             sb.append(".");
-            sb.append(hex(val.charAt(i)).substring(2));
+            sb.append(uhex(val.charAt(i)).substring(2));
         }
         name = sb.toString();
         data = val.getBytes(UTF8);

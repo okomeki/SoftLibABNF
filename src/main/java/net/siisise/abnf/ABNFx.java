@@ -64,11 +64,19 @@ public class ABNFx extends FindABNF {
         return new ABNFx(a, b, (AbstractABNF) bnf.copy(reg));
     }
 
+    /**
+     * find 本体.
+     * @param <X> 戻り型
+     * @param pac 元データ
+     * @param ns user name space ユーザ名前空間
+     * @param parsers サブ要素のパーサ
+     * @return サブ要素を含む解析結果
+     */
     @Override
-    public <X> Match<X> buildFind(ReadableBlock pac, Object ns, BNFParser<? extends X>... names) {
+    public <X> Match<X> buildFind(ReadableBlock pac, Object ns, BNFParser<? extends X>... parsers) {
         Match<X> ret = new Match<>(pac);
         for (int i = 0; b == -1 || i < b; i++) {
-            Match sub = bnf.find(pac, ns, names);
+            Match sub = bnf.find(pac, ns, parsers);
             if (sub == null) {
                 if (i < a) {
                     ret.end(pac);

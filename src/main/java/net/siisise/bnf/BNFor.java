@@ -60,7 +60,7 @@ public class BNFor extends FindBNF<BNF> {
     /**
      *
      * @param <X> return object type
-     * @param pac データ
+     * @param pac 解析対象
      * @param ns user name space
      * @param parsers サブ要素パーサ
      * @return 解析結果

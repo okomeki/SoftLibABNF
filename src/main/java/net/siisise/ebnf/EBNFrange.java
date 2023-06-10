@@ -31,7 +31,7 @@ public class EBNFrange extends IsEBNF {
     public EBNFrange(int min, int max) {
         this.min = min;
         this.max = max;
-        name = hex(min) + "-" + hex(max).substring(2); // ABNF風
+        name = uhex(min) + "-" + uhex(max).substring(2); // ABNF風
     }
 
     @Override

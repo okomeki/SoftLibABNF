@@ -45,22 +45,29 @@ public class ABNFmn extends IsABNF {
     }
 
     /**
+     * 先頭一致でパースする。
      * b と一致すると null
-     * 
-     * @param pac
-     * @param ns
-     * @return 
+     *
+     * @param src source 解析対象
+     * @param ns user name space 名前空間
+     * @return 一致した範囲
      */
     @Override
-    public ReadableBlock is(ReadableBlock pac, Object ns) {
-        ReadableBlock p2 = b.is(pac, ns);
+    public ReadableBlock is(ReadableBlock src, Object ns) {
+        ReadableBlock p2 = b.is(src, ns);
         if (p2 != null) {
-            pac.back(p2.length());
+            src.back(p2.length());
             return null;
         }
-        return a.is(pac, ns);
+        return a.is(src, ns);
     }
 
+    /**
+     * 先頭一致でパースする。
+     * 
+     * @param src source 解析対象
+     * @return 一致した範囲
+     */
     @Override
     public ReadableBlock is(ReadableBlock src) {
         return is(src, null);

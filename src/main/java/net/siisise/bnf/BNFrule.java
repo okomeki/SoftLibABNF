@@ -36,11 +36,24 @@ public class BNFrule<B extends BNF> extends AbstractBNF<B> {
         return bnf.is(src,ns);
     }
 
+    /**
+     * 
+     * @param src 解析対象
+     * @return 
+     */
     @Override
     public ReadableBlock is(ReadableBlock src) {
         return bnf.is(src);
     }
 
+    /**
+     * 
+     * @param <X>
+     * @param pac 解析対象
+     * @param ns
+     * @param parsers
+     * @return 
+     */
     @Override
     public <X> Match<X> find(ReadableBlock pac, Object ns, BNFParser<? extends X>... parsers) {
         BNFParser mp = matchParser(parsers);

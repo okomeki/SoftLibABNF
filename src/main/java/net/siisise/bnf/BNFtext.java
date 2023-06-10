@@ -20,7 +20,7 @@ public class BNFtext extends IsBNF {
         if (ch < 0x7f && ch >= 0x20 && ch != 0x22) {
             name = "\"" + text + "\"";
         } else {
-            name = hex(ch);
+            name = uhex(ch);
         }
         utf8 = text.getBytes(UTF8);
     }

@@ -28,16 +28,15 @@ public class ABNFCC extends ABNFReg {
     
     /**
      * BNFCC の abnf を使おう?
-     * @param up 
+     * @param up  前提とする定義など継承もと, 参照先とか include元とか
      */
-    
     public ABNFCC(BNFReg up) {
         this(up, ABNF5234.REG);
     }
 
     /**
      * 
-     * @param up
+     * @param up 前提とする定義など継承もと, 参照先とか include元とか
      * @param cc ABNF の parser, parserを発動しない(ParserをJavaのみで組む)場合は nullも可
      */
     public ABNFCC(BNFReg up, BNFCC<ABNF> cc) {

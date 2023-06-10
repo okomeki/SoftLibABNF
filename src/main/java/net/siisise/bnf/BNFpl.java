@@ -37,7 +37,7 @@ public class BNFpl extends FindBNF<BNF> {
     }
 
     /**
-     * 
+     * 詳細検索.
      * @param <X> 返却予定の型
      * @param pac 解析対象
      * @param ns user name space

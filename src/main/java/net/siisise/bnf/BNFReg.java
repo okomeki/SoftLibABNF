@@ -223,7 +223,7 @@ public class BNFReg<B extends BNF> {
      * ruleの登録。
      * ref の参照先を変えないよう書き換えたい
      *
-     * @param <E>
+     * @param <E> BNF拡張型
      * @param rulename rulename
      * @param elements rule の element
      * @return rule elements にrulenameをつけたABNF
@@ -246,7 +246,7 @@ public class BNFReg<B extends BNF> {
      * 主要なところにParse結果をオブジェクトに変換する機能を埋め込むと、いろいろ楽。
      * パースされたABNFにParserを紐づけて登録する。
      *
-     * @param <E>
+     * @param <E> BNF拡張型
      * @param rulename ABNFの名
      * @param parser ソースまたは子の要素を渡され対象オブジェクトに組み上げる機能
      * @param elements ruleのelements部分

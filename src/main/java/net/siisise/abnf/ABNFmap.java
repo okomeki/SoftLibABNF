@@ -50,7 +50,7 @@ public class ABNFmap extends IsABNF {
                     n.append(ch);
                     n.append('"');
                 } else {
-                    n.append(hex(ch));
+                    n.append(uhex(ch));
                 }
             }
         }

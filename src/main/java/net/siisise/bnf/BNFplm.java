@@ -44,6 +44,15 @@ public class BNFplm extends BNFpl {
         return new BNFplm(l);
     }
 
+    /**
+     * 詳細検索
+     *
+     * @param <X> 戻り型例
+     * @param pac source 解析対象
+     * @param ns user name space
+     * @param subps サブ要素パーサ
+     * @return ざっくり戻り
+     */
     @Override
     public <X> Match<X> buildFind(ReadableBlock pac, Object ns, BNFParser<? extends X>... subps) {
         return longfind(pac, ns, 0, subps);
@@ -55,7 +64,7 @@ public class BNFplm extends BNFpl {
      * @param <X> 戻り型例
      * @param pac source 解析対象
      * @param ns user name space
-     * @param start
+     * @param start 開始位置
      * @param subparsers サブ要素パーサ
      * @return ざっくり戻り
      */
