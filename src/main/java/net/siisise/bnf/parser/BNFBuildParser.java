@@ -28,7 +28,7 @@ import net.siisise.bnf.BNFReg;
 public class BNFBuildParser<T, M> extends BNFBaseParser<T> {
 
     /** ABNF Parser側 名前空間 */
-    private final BNFReg base;
+    protected final BNFReg base;
     private BNFParser<? extends M>[] subs;
     protected final String[] subName;
 
