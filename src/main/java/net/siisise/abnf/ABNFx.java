@@ -21,6 +21,8 @@ import net.siisise.bnf.BNFReg;
 import net.siisise.bnf.parser.BNFParser;
 
 /**
+ * 繰り返し.
+ * a*b
  * ループの結果は最長だけでなく、各長さで判定したいこともあり
  *
  */

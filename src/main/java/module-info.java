@@ -19,5 +19,6 @@ module net.siisise.abnf {
     exports net.siisise.abnf;
     exports net.siisise.abnf.parser5234;
     exports net.siisise.abnf.parser7405;
-//    requires softlib.abnf.module;
+    exports net.siisise.bnf;
+    exports net.siisise.bnf.parser;
 }

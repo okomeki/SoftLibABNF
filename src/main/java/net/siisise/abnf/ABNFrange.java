@@ -60,6 +60,22 @@ public class ABNFrange extends IsABNF {
         rb.seek(of);
         return null;
     }
+    
+    /**
+     * 複数連続指定する.
+     * 複数指定することもあるので.
+     * 1文字想定なので 内部ではor1を使う.
+     * @param min デコード後の最小
+     * @param max デコード後の最大
+     * @return 範囲を合成したもの
+     */
+    public ABNF or(int min, int max) {
+        return or1(new ABNFrange(min, max));
+    }
+
+    public ABNF or1(int min, int max) {
+        return or1(new ABNFrange(min, max));
+    }
 
     @Override
     public String toJava() {
