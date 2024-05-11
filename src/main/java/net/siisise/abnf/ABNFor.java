@@ -27,7 +27,7 @@ import net.siisise.bnf.parser.BNFParser;
 import net.siisise.lang.CodePoint;
 
 /**
- * 最長一致
+ * 最長一致 longest match
  */
 public class ABNFor extends FindABNF {
 
