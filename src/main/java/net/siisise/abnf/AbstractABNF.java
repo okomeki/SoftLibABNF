@@ -84,6 +84,11 @@ public abstract class AbstractABNF extends AbstractBNF<ABNF> implements ABNF {
         return new ABNFmn(this, val);
     }
 
+    /**
+     * 最長一致検索.
+     * @param val
+     * @return 
+     */
     @Override
     public ABNF or(BNF... val) {
         BNF[] list = new BNF[val.length + 1];
@@ -92,6 +97,12 @@ public abstract class AbstractABNF extends AbstractBNF<ABNF> implements ABNF {
         return new ABNFor(list);
     }
 
+    /**
+     * 初期一致検索.
+     * 最長を検索せず高速化を優先したもの.
+     * @param vals
+     * @return 
+     */
     @Override
     public ABNF or1(BNF... vals) {
         BNF[] list = new BNF[vals.length + 1];

@@ -265,6 +265,7 @@ public interface BNF<B extends BNF> {
      * @param val 引かれるABNF
      * @return 引き算できるABNF
      */
+    @Deprecated
     B mn(BNF val);
 
     /**

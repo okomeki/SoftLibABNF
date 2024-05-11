@@ -19,11 +19,13 @@ import net.siisise.block.ReadableBlock;
 import net.siisise.bnf.BNFReg;
 
 /**
- * バイト的な範囲
+ * バイト的な範囲.
+ * ABNFの書き方によっては文字コード以外にバイト列のこともあるので用意する。
  */
 public class ABNFbinRange extends IsABNF {
+
     private int min, max;
-    
+
     ABNFbinRange(int min, int max) {
         this.min = min;
         this.max = max;
@@ -31,12 +33,12 @@ public class ABNFbinRange extends IsABNF {
 
     @Override
     public ReadableBlock is(ReadableBlock src) {
-        if ( src.length() < 1 ) {
+        if (src.length() < 1) {
             return null;
         }
         int b = src.read();
-        if ( min <= b && b <= max ) {
-            return ReadableBlock.wrap(new byte[] {(byte)b});
+        if (min <= b && b <= max) {
+            return ReadableBlock.wrap(new byte[]{(byte) b});
         }
         src.back(1);
         return null;
@@ -47,11 +49,19 @@ public class ABNFbinRange extends IsABNF {
         return new ABNFbinRange(min, max);
     }
 
+    public ABNF or(int min, int max) {
+        return or1(new ABNFbinRange(min, max));
+    }
+
+    public ABNF or1(int min, int max) {
+        return or1(new ABNFbinRange(min, max));
+    }
+
     @Override
     public String toJava() {
-        String minHex = toJavaCh((byte)min);
-        String maxHex = toJavaCh((byte)max);
-        return "ABNF.binRange(" +minHex +", " + maxHex +  ")";
+        String minHex = toJavaCh((byte) min);
+        String maxHex = toJavaCh((byte) max);
+        return "ABNF.binRange(" + minHex + ", " + maxHex + ")";
     }
-    
+
 }

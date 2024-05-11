@@ -54,6 +54,7 @@ public class ABNFor extends FindABNF {
      * @deprecated ABNFor1 が最適かもしれない
      * @param chlist 文字の一覧として
      */
+    @Deprecated
     public ABNFor(String chlist) {
         this(null, chlist);
     }
