@@ -69,13 +69,13 @@ pom.xml に次のように追加します
 <dependency>
     <groupId>net.siisise<groupId>
     <artifactId>softlib-abnf</artifactId>
-    <version>1.2.3</version>
+    <version>1.2.4</version>
     <type>jar</type>
 </dependency>
 ~~~
 
-リリース版 1.2.3 ぐらい。
-次版 1.2.4-SNAPSHOT
+リリース版 1.2.4 ぐらい。
+次版 1.2.5-SNAPSHOT
 
 ## 演算子 Operators
 
@@ -115,6 +115,9 @@ REG.rule() または #name(String)を通さないと名前はつかない。
     DIGIT = %x30-39
 
     ABNF digit = REG.rule("digit", ABNF.range(0x30, 0x39));
+    ABNF bin = REG.rule("bin", ABNF.binRange(0x30, 0x39));
+
+ABNFではUTF-8、JavaではUTF-8用とバイナリ比較用とがあり。
 
 ### 並びグループ Sequence Group:
 
