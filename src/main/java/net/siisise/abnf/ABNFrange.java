@@ -15,7 +15,9 @@
  */
 package net.siisise.abnf;
 
+import java.util.Arrays;
 import net.siisise.block.ReadableBlock;
+import net.siisise.bnf.BNF;
 import net.siisise.bnf.BNFReg;
 import net.siisise.lang.CodePoint;
 
@@ -69,12 +71,35 @@ public class ABNFrange extends IsABNF {
      * @param max デコード後の最大
      * @return 範囲を合成したもの
      */
-    public ABNF or(int min, int max) {
-        return or1(new ABNFrange(min, max));
+    public orEx or(int min, int max) {
+        return or1(min, max);
     }
 
-    public ABNF or1(int min, int max) {
-        return or1(new ABNFrange(min, max));
+    public orEx or1(int min, int max) {
+        return new orEx(new BNF[] { this, new ABNFrange(min, max)});
+    }
+    
+    public static class orEx extends ABNFor1 {
+        orEx(BNF[] bnfs) {
+            super(bnfs);
+        }
+        
+        public ABNFor1 or1(int min, int max) {
+            ABNF b = new ABNFrange(min, max);
+            BNF[] nl = Arrays.copyOf(list,list.length + 1);
+            nl[list.length] = new ABNFrange(min, max);
+            list = nl;
+            return this;
+        }
+    }
+    
+    public ABNF or(int... ranges) {
+        BNF[] rs = new BNF[ranges.length / 2 + 1];
+        rs[0] = this;
+        for ( int i = 0; i < ranges.length; i+= 2) {
+            rs[i/2 + 1] = new ABNFrange(ranges[i], ranges[i+1]);
+        }
+        return new ABNFor1(rs);
     }
 
     @Override
