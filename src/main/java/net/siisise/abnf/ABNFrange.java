@@ -78,12 +78,16 @@ public class ABNFrange extends IsABNF {
     public orEx or1(int min, int max) {
         return new orEx(new BNF[] { this, new ABNFrange(min, max)});
     }
-    
+
     public static class orEx extends ABNFor1 {
         orEx(BNF[] bnfs) {
             super(bnfs);
         }
-        
+
+        public ABNFor1 or(int min, int max) {
+            return or1(min, max);
+        }
+
         public ABNFor1 or1(int min, int max) {
             ABNF b = new ABNFrange(min, max);
             BNF[] nl = Arrays.copyOf(list,list.length + 1);

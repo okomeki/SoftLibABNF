@@ -110,7 +110,7 @@ public abstract class AbstractABNF extends AbstractBNF<ABNF> implements ABNF {
         System.arraycopy(vals, 0, list, 1, vals.length);
         return new ABNFor1(list);
     }
-
+    
     @Override
     public ABNF x(int min, int max) {
         return new ABNFx(min, max, this);

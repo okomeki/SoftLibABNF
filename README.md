@@ -1,6 +1,7 @@
 # SoftLibABNF Augmented BNF for Java ライブラリ
 
 Twitter @okomeki
+Bluesky okome.dev.jp
 Mastodon @okome@oransns.com
 
 ## 概要 about
@@ -69,13 +70,13 @@ pom.xml に次のように追加します
 <dependency>
     <groupId>net.siisise<groupId>
     <artifactId>softlib-abnf</artifactId>
-    <version>1.2.4</version>
+    <version>1.2.5</version>
     <type>jar</type>
 </dependency>
 ~~~
 
-リリース版 1.2.4 ぐらい。
-次版 1.2.5-SNAPSHOT
+リリース版 1.2.5 ぐらい。
+次版 1.2.6-SNAPSHOT
 
 ## 演算子 Operators
 
