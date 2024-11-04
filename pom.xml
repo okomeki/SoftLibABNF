@@ -4,7 +4,7 @@
     <groupId>net.siisise</groupId>
     <artifactId>softlib-abnf.module</artifactId>
     <name>SoftLibABNF</name>
-    <version>1.2.5</version>
+    <version>1.2.6</version>
     <packaging>jar</packaging>
     <description>Java ABNF parser CC</description>
     <url>https://github.com/okomeki/SoftLib</url>

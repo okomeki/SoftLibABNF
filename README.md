@@ -70,13 +70,13 @@ pom.xml に次のように追加します
 <dependency>
     <groupId>net.siisise<groupId>
     <artifactId>softlib-abnf</artifactId>
-    <version>1.2.5</version>
+    <version>1.2.6</version>
     <type>jar</type>
 </dependency>
 ~~~
 
-リリース版 1.2.5 ぐらい。
-次版 1.2.6-SNAPSHOT
+リリース版 1.2.6 ぐらい。
+次版 1.2.7-SNAPSHOT
 
 ## 演算子 Operators
 
