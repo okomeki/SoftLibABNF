@@ -68,7 +68,7 @@ SoftLibとSoftLibABNFのjarが必要です。
 pom.xml に次のように追加します
 ~~~
 <dependency>
-    <groupId>net.siisise<groupId>
+    <groupId>net.siisise</groupId>
     <artifactId>softlib-abnf</artifactId>
     <version>1.2.6</version>
     <type>jar</type>
