@@ -20,12 +20,13 @@ import net.siisise.bnf.parser.BNFParser;
 
 /**
  * 名前専用にする
+ *
  * @param <B> 適度にBNF固定
  */
 public class BNFrule<B extends BNF> extends AbstractBNF<B> {
-    
+
     B bnf;
-    
+
     public BNFrule(String name, B elements) {
         this.name = name;
         bnf = elements;
@@ -33,13 +34,13 @@ public class BNFrule<B extends BNF> extends AbstractBNF<B> {
 
     @Override
     public ReadableBlock is(ReadableBlock src, Object ns) {
-        return bnf.is(src,ns);
+        return bnf.is(src, ns);
     }
 
     /**
-     * 
+     *
      * @param src 解析対象
-     * @return 
+     * @return
      */
     @Override
     public ReadableBlock is(ReadableBlock src) {
@@ -47,26 +48,26 @@ public class BNFrule<B extends BNF> extends AbstractBNF<B> {
     }
 
     /**
-     * 
+     *
      * @param <X>
      * @param pac 解析対象
-     * @param ns
+     * @param ns name space
      * @param parsers
-     * @return 
+     * @return
      */
     @Override
     public <X> Match<X> find(ReadableBlock pac, Object ns, BNFParser<? extends X>... parsers) {
         BNFParser mp = matchParser(parsers);
         Match<X> mc = bnf.find(pac, ns, parsers);
-        if ( mc != null ) {
-            subBuild(mc,ns,mp);
+        if (mc != null) {
+            subBuild(mc, ns, mp);
         }
         return mc;
     }
 
     @Override
     public B copy(BNFReg reg) {
-        return (B)new BNFrule(name, bnf.copy(reg));
+        return (B) new BNFrule(name, bnf.copy(reg));
     }
 
     @Override

@@ -27,19 +27,19 @@ public abstract class IsBNF<B extends BNF> extends AbstractBNF<B> {
     /**
      * 前方一致判定.
      * ns は捨ててもいいかな.
-     * @param pac data packet
+     * @param block data block
      * @param ns name space
      * @return match part
      */
     @Override
-    public ReadableBlock is(ReadableBlock pac, Object ns) {
-        return is(pac);
+    public ReadableBlock is(ReadableBlock block, Object ns) {
+        return is(block);
     }
 
     @Override
-    public <X> Match<X> find(ReadableBlock pac, Object ns, BNFParser<? extends X>... parsers) {
-        Match<X> mc = new Match(pac);
-        mc.sub = is(pac, ns);
+    public <X> Match<X> find(ReadableBlock block, Object ns, BNFParser<? extends X>... parsers) {
+        Match<X> mc = new Match(block);
+        mc.sub = is(block, ns);
         return (mc.sub == null) ? null : mc;
     }
 }

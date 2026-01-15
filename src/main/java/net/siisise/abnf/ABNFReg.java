@@ -56,8 +56,8 @@ public class ABNFReg extends BNFCC<ABNF> {
         }
 
         @Override
-        public <X> Match<X> find(ReadableBlock pac, Object ns, BNFParser<? extends X>... parsers) {
-            return reg.get(name).find(pac, ns, parsers);
+        public <X> Match<X> find(ReadableBlock src, Object ns, BNFParser<? extends X>... parsers) {
+            return reg.get(name).find(src, ns, parsers);
         }
 
         /**

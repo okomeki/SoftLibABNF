@@ -150,7 +150,7 @@ public class ABNFor extends FindABNF {
             Match<X> subret = sub.find(pac, ns, parsers);
             if (subret != null) {
                 long len = subret.sub.length();
-                if (ret == null || ret.sub.length() < len) {
+                if (ret == null || !ret.sub.readable(len)) {
                     ret = subret;
                     o = bp + len; // pac.backLength();
                 }

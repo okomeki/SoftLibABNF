@@ -28,7 +28,7 @@ public class BNFrange extends IsBNF<BNF> {
 
     /**
      * UTF-8 バイト列ではなく文字としてのコードで比較する.
-     * 
+     *
      * @param min 最小
      * @param max 最大
      */
@@ -61,6 +61,6 @@ public class BNFrange extends IsBNF<BNF> {
     }
 
     public String toJava() {
-        return "BNF.range(0x" + Integer.toHexString(min) +", 0x" + Integer.toHexString(max) + ")";
+        return "BNF.range(0x" + Integer.toHexString(min) + ", 0x" + Integer.toHexString(max) + ")";
     }
 }

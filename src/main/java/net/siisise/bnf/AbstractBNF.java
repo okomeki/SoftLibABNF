@@ -9,7 +9,8 @@ import net.siisise.io.PacketA;
 
 /**
  * 基本実装
- * @param <B>
+ *
+ * @param <B> 基本型
  */
 public abstract class AbstractBNF<B extends BNF> implements BNF<B> {
 
@@ -38,6 +39,7 @@ public abstract class AbstractBNF<B extends BNF> implements BNF<B> {
 
     /**
      * name に 一致する parser を選ぶ.
+     *
      * @param <X> Parserの戻り型
      * @param parsers parser候補
      * @return 一致するもの しないときはnull
@@ -60,10 +62,10 @@ public abstract class AbstractBNF<B extends BNF> implements BNF<B> {
     public boolean is(String val, Object ns) {
         return is(rb(val), ns) != null;
     }
-    
+
     /**
      * 先頭一致でパースする。
-     * 
+     *
      * @param pac 解析対象
      * @return 一致した範囲
      */
@@ -72,7 +74,7 @@ public abstract class AbstractBNF<B extends BNF> implements BNF<B> {
         ReadableBlock res = is(rb(pac));
         return res != null ? pac(res) : null;
     }
-    
+
     @Override
     public Packet is(FrontPacket pac, Object ns) {
         ReadableBlock res = is(rb(pac), ns);
@@ -81,6 +83,7 @@ public abstract class AbstractBNF<B extends BNF> implements BNF<B> {
 
     /**
      * sub要素のない場合の軽い対応
+     *
      * @param <X> パラメータっぽい型
      * @param pac 解析データ
      * @param parsers サブ要素のparser
@@ -93,6 +96,7 @@ public abstract class AbstractBNF<B extends BNF> implements BNF<B> {
 
     /**
      * sub要素のない場合の軽い対応
+     *
      * @param <X> パラメータっぽい型
      * @param pac 解析データ
      * @param parsers サブ要素のparser
@@ -105,9 +109,10 @@ public abstract class AbstractBNF<B extends BNF> implements BNF<B> {
 
     /**
      * sub要素のない場合の軽い対応
+     *
      * @param <X> パラメータっぽい型
      * @param pac 解析データ
-     * @param ns name space
+     * @param ns user name space 名前空間
      * @param parsers サブ要素のparser
      * @return 処理結果
      */
@@ -141,7 +146,8 @@ public abstract class AbstractBNF<B extends BNF> implements BNF<B> {
     /**
      * Concatenation の単純版
      * *(a / b ) a の様なものが解析できないが速そう
-     * @param val plus  する ABNF列
+     *
+     * @param val plus する ABNF列
      * @return 簡易に比較するABNF
      */
     @Override
@@ -156,8 +162,9 @@ public abstract class AbstractBNF<B extends BNF> implements BNF<B> {
     }
 
     /**
-     * やや厳密に対応する足し算版
+     * やや厳密に対応する足し算版.
      * *( a / b ) a にも対応
+     *
      * @param val plus する ABNF列
      * @return 厳密に比較できるABNF
      */
@@ -174,6 +181,7 @@ public abstract class AbstractBNF<B extends BNF> implements BNF<B> {
 
     /**
      * Unicode単位で比較する若干速いのかもしれない版 plm
+     *
      * @param vals plus する ABNF列
      * @return unicodeで比較されるABNF処理
      */
@@ -190,6 +198,7 @@ public abstract class AbstractBNF<B extends BNF> implements BNF<B> {
 
     /**
      * 最長一致系
+     *
      * @param vals 候補BNF
      * @return 候補から最長一致を出すBNF
      */
@@ -203,6 +212,7 @@ public abstract class AbstractBNF<B extends BNF> implements BNF<B> {
 
     /**
      * 初一致を返す処理系
+     *
      * @param vals 候補
      * @return thisと候補で最初に一致したものを返すBNF
      */
@@ -218,10 +228,10 @@ public abstract class AbstractBNF<B extends BNF> implements BNF<B> {
     public B x(int min, int max) {
         return (B) new BNFx(min, max, this);
     }
-    
+
     @Override
     public B x(int num) {
-        return x(num,num);
+        return x(num, num);
     }
 
     @Override
@@ -241,7 +251,7 @@ public abstract class AbstractBNF<B extends BNF> implements BNF<B> {
 
     @Override
     public B mn(BNF val) {
-        return (B)new BNFmn(this, val);
+        return (B) new BNFmn(this, val);
     }
 
     public static FrontPacket pac(String str) {
@@ -249,26 +259,27 @@ public abstract class AbstractBNF<B extends BNF> implements BNF<B> {
         pac.dwrite(str.getBytes(UTF8));
         return pac;
     }
-    
+
     /**
      * 文字列を読み込み専用Blockに.
+     *
      * @param str 元文字列
      * @return ReadableBlockに変換された文字列のバイト列
      */
     public static final ReadableBlock rb(String str) {
         return ReadableBlock.wrap(str);
     }
-    
+
     public static final ReadableBlock rb(FrontPacket p) {
         return ReadableBlock.wrap(p);
     }
-    
+
     public static final Packet pac(ReadableBlock rb) {
         Packet pac = new PacketA();
         pac.write(rb);
         return pac;
     }
-    
+
     public static String str(Input pac) {
         return new String(pac.toByteArray(), UTF8);
     }
@@ -276,6 +287,7 @@ public abstract class AbstractBNF<B extends BNF> implements BNF<B> {
     /**
      * 文字列に起こす。 データは元に戻すので減らない。
      * ABNFでは使ってないかも.
+     *
      * @param pac 元パケット
      * @return 文字に変えたもの
      */
@@ -320,12 +332,13 @@ public abstract class AbstractBNF<B extends BNF> implements BNF<B> {
 
     /**
      * 結果2を1に混ぜる
+     *
      * @param <X> 戻り型
      * @param ret 結果1
      * @param sub 結果2
      */
     protected static <X> void mix(Match<X> ret, Match<X> sub) {
-        sub.subs.forEach((key,vlist) -> {
+        sub.subs.forEach((key, vlist) -> {
             vlist.forEach((v) -> {
                 ret.add(key, v);
             });
@@ -335,6 +348,7 @@ public abstract class AbstractBNF<B extends BNF> implements BNF<B> {
     /**
      * UTF-8 HEX
      * %x00, %x0000, %x000000 のどれか
+     *
      * @param ch 1文字
      * @return っぽく
      */
@@ -347,9 +361,9 @@ public abstract class AbstractBNF<B extends BNF> implements BNF<B> {
             return "%x" + Integer.toHexString(0x1000000 + ch).substring(1);
         }
     }
-    
+
     protected String toJavaCh(byte ch) {
-        switch( ch ) {
+        switch (ch) {
             case '\b':
                 return "'\\b'";
             case '\t':
@@ -368,9 +382,9 @@ public abstract class AbstractBNF<B extends BNF> implements BNF<B> {
                 return "'\\\\'";
         }
         StringBuilder s = new StringBuilder();
-        if ( ch >= 0x20 && ch <= 0x7e) {
+        if (ch >= 0x20 && ch <= 0x7e) {
             s.append('\'');
-            s.append((char)ch);
+            s.append((char) ch);
             s.append('\'');
         } else {
             s.append("0x");

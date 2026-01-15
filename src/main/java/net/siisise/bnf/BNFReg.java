@@ -12,6 +12,7 @@ import net.siisise.io.FrontPacket;
 
 /**
  * ABNFのルールのままBNFに持ってきたもの
+ *
  * @param <B>
  */
 public class BNFReg<B extends BNF> {
@@ -51,7 +52,7 @@ public class BNFReg<B extends BNF> {
 
         @Override
         public ReadableBlock is(ReadableBlock src, Object ns) {
-            return reg.get(name).is(src,ns);
+            return reg.get(name).is(src, ns);
         }
 
         @Override
@@ -63,29 +64,30 @@ public class BNFReg<B extends BNF> {
         public <X> Match<X> find(ReadableBlock pac, Object ns, BNFParser<? extends X>... parsers) {
             return reg.get(name).find(pac, ns, parsers);
         }
-        
+
         @Override
         public String toJava() {
             return name;
         }
     }
-    
+
     /**
      * 名前空間作成.いろいろ未定。
      * up の定義を複製する
      * HTTP7230では拡張の実験をしている
      *
      * @param up 前提とする定義など継承もと
-     * @param bnfParser ruleをparseするParserの種類 ABNF5234.REG,RFC 7405, RFC 7230など微妙に違うとき。利用しないときのみ省略したい
+     * @param bnfParser ruleをparseするParserの種類 ABNF5234.REG,RFC 7405, RFC
+     * 7230など微妙に違うとき。利用しないときのみ省略したい
      */
     public BNFReg(BNFReg<B> up, BNFCC<B> bnfParser) {
         if (up != null) {
             //reg = new HashMap<>(up.reg); // 複製しておくのが簡単
-            up.CL.forEach((key,val) -> {
+            up.CL.forEach((key, val) -> {
                 CL.put(key, val);
             });
-            up.reg.forEach((key,val) -> { // 循環参照対策が必要
-                reg.put(key, (B)val.copy(this));
+            up.reg.forEach((key, val) -> { // 循環参照対策が必要
+                reg.put(key, (B) val.copy(this));
             });
         }
         bnfReg = bnfParser;
@@ -99,7 +101,7 @@ public class BNFReg<B extends BNF> {
      * @return rulenameへの参照
      */
     public B ref(String rulename) {
-        return (B)new BNFRef(rulename);
+        return (B) new BNFRef(rulename);
     }
 
     /**
@@ -131,6 +133,7 @@ public class BNFReg<B extends BNF> {
 
     /**
      * rulename のABNFでparseするとT型の結果に.
+     *
      * @param <T> 解析型
      * @param rulename 解析装置付き構文の名。駆動コマンドのようなもの
      * @param src パース対象ソース
@@ -142,7 +145,7 @@ public class BNFReg<B extends BNF> {
     }
 
     /**
-     * 
+     *
      * @param <T> 解析型
      * @param rulename 解析装置付き構文の名。駆動コマンドのようなもの
      * @param src パース対象ソース
@@ -153,7 +156,7 @@ public class BNFReg<B extends BNF> {
     }
 
     /**
-     * 
+     *
      * @param <T> 解析型
      * @param rulename 解析装置付き構文の名。駆動コマンドのようなもの
      * @param src パース対象ソース
@@ -230,12 +233,12 @@ public class BNFReg<B extends BNF> {
      */
     public <E extends B> E rule(String rulename, E elements) {
         // ABNF5234の初期化時はnullなので無視できるようにする
-        if ( bnfReg != null && !bnfReg.isRulename(rulename)) {
+        if (bnfReg != null && !bnfReg.isRulename(rulename)) {
             System.err.println("BNF:" + rulename + " BNFの名称には利用できません");
         }
 
         if (!rulename.equals(elements.getName())) {
-            elements = (E)elements.name(rulename);
+            elements = (E) elements.name(rulename);
         }
         reg.put(rulename, elements);
         return elements;
@@ -257,7 +260,7 @@ public class BNFReg<B extends BNF> {
         CL.put(rulename, parser);
         return elements;
     }
-    
+
     /**
      * BNFをパースする。
      * 名前とelementsを個別に渡せると何かと楽かもしれないと思うので作った。
@@ -282,12 +285,13 @@ public class BNFReg<B extends BNF> {
      * @return elementsを解析してrulenameをつけたABNF
      */
     public B rule(String rulename, Class<? extends BNFParser> parser, String elements) {
-        return rule(rulename, parser, (B)elements(elements));
+        return rule(rulename, parser, (B) elements(elements));
     }
 
     /**
      * element を作る. 名前は持っていないことがある.
      * elements は ABNFの名
+     *
      * @param elements bnf系の = から右
      * @return element に変換されたABNF
      */
@@ -298,6 +302,7 @@ public class BNFReg<B extends BNF> {
     /**
      * rule 1行のパース.
      * 最後の改行は省略可能
+     *
      * @param rule name = value 改行を省略可能に改変している
      * @return rule 1行をABNFにしたもの
      */
@@ -313,9 +318,29 @@ public class BNFReg<B extends BNF> {
      * @return 仮型
      */
     public BNF.Match find(FrontPacket pac, String rulename, String... subrulenames) {
-        return find(ReadableBlock.wrap(pac), rulename, subrulenames);
+        return href(rulename).find(pac, toParser(subrulenames));
     }
-    
+
+    public BNF.Match find(FrontPacket pac, BNF rule, BNF... subrules) {
+        return rule.find(pac, toParser(subrules));
+    }
+
+    /**
+     * 文字列解析.
+     *
+     * @param str 解析対象
+     * @param rulename rulename
+     * @param subrulenames サブ要素rulename
+     * @return 仮型
+     */
+    public BNF.Match find(String str, String rulename, String... subrulenames) {
+        return href(rulename).find(ReadableBlock.wrap(str), subrulenames);
+    }
+
+    public BNF.Match find(String src, BNF rule, BNF... subrules) {
+        return rule.find(ReadableBlock.wrap(src), toParser(subrules));
+    }
+
     /**
      * @param rb 解析対象
      * @param rulename rulename
@@ -323,30 +348,46 @@ public class BNFReg<B extends BNF> {
      * @return 仮型
      */
     public BNF.Match find(ReadableBlock rb, String rulename, String... subrulenames) {
-        BNF rule = href(rulename);
+        return href(rulename).find(rb, toParser(subrulenames));
+    }
 
-        BNFParser[] cll = new BNFParser[subrulenames.length];
-        for (int i = 0; i < subrulenames.length; i++) {
-            cll[i] = parser(subrulenames[i]);
+    public BNF.Match find(ReadableBlock rb, BNF rule, BNF... subrules) {
+        return rule.find(rb, toParser(subrules));
+    }
+
+    private BNFParser[] toParser(String[] rulenames) {
+        BNFParser[] parsers = new BNFParser[rulenames.length];
+        int off = 0;
+        for (String rulename : rulenames) {
+            parsers[off++] = parser(rulename);
         }
-        return rule.find(rb, cll);
+        return parsers;
+    }
+
+    private BNFParser[] toParser(BNF[] rules) {
+        BNFParser[] parsers = new BNFParser[rules.length];
+        int off = 0;
+        for (BNF bnf : rules) {
+            parsers[off++] = parser(bnf.getName());
+        }
+        return parsers;
     }
 
     String javaLine(String ruleName, String regName, BNFrule rule) {
         StringBuilder src = new StringBuilder();
-            src.append("\r\n    static final BNF ");
-            src.append(ruleName).append(" = ").append(regName);
-            src.append(rule.toJavaLine());
-            src.append(";");
+        src.append("\r\n    static final BNF ");
+        src.append(ruleName).append(" = ").append(regName);
+        src.append(rule.toJavaLine());
+        src.append(";");
         return src.toString();
     }
 
     String javaLine(String ruleName, String regName, ABNFrule rule) {
         StringBuilder src = new StringBuilder();
-            src.append("\r\n    static final BNF ");
-            src.append(ruleName).append(" = ").append(regName);
-            src.append(rule.toJavaLine());
-            src.append(";");
+        src.append("\r\n    static final BNF ");
+        src.append(ruleName).append(" = ").append(regName);
+        src.append(rule.toJavaLine());
+        src.append(";");
         return src.toString();
     }
 
@@ -355,19 +396,19 @@ public class BNFReg<B extends BNF> {
         src.append("class Example {");
         src.append("\r\n    static BNFReg ").append(regName).append(" = new BNFReg();");
         src.append("\r\n");
-        
-        for (String ruleName : reg.keySet() ) {
+
+        for (String ruleName : reg.keySet()) {
             BNF b = reg.get(ruleName);
-            if ( b instanceof BNFrule ) {
-                BNFrule bnf = (BNFrule)b;
+            if (b instanceof BNFrule) {
+                BNFrule bnf = (BNFrule) b;
                 src.append(javaLine(ruleName, regName, bnf));
-            } else if (b instanceof ABNFrule ) {
-                ABNFrule bnf = (ABNFrule)b;
+            } else if (b instanceof ABNFrule) {
+                ABNFrule bnf = (ABNFrule) b;
                 src.append(javaLine(ruleName, regName, bnf));
             }
         }
         src.append("\r\n}");
-        
+
         return src.toString();
     }
 

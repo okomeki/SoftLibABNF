@@ -86,8 +86,8 @@ public abstract class AbstractABNF extends AbstractBNF<ABNF> implements ABNF {
 
     /**
      * 最長一致検索.
-     * @param val
-     * @return 
+     * @param val BNF or list
+     * @return or BNF
      */
     @Override
     public ABNF or(BNF... val) {
@@ -100,8 +100,8 @@ public abstract class AbstractABNF extends AbstractBNF<ABNF> implements ABNF {
     /**
      * 初期一致検索.
      * 最長を検索せず高速化を優先したもの.
-     * @param vals
-     * @return 
+     * @param vals BNF or list
+     * @return or BNF
      */
     @Override
     public ABNF or1(BNF... vals) {

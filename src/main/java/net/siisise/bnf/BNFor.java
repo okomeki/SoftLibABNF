@@ -78,12 +78,12 @@ public class BNFor extends FindBNF<BNF> {
 
     @Override
     public BNF copy(BNFReg reg) {
-        BNF[] l = new BNF[list.length];
+        BNF[] cp = new BNF[list.length];
 
         for (int i = 0; i < list.length; i++) {
-            l[i] = list[i].copy(reg);
+            cp[i] = list[i].copy(reg);
         }
-        return new BNFor(name, l);
+        return new BNFor(name, cp);
     }
 
     public void add(BNF... val) {

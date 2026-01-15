@@ -29,8 +29,9 @@ public class BNFplu extends BNFplm {
 
     /**
      * 複製する.
+     *
      * @param reg 複製先
-     * @return 複製 
+     * @return 複製
      */
     @Override
     public BNFpl copy(BNFReg reg) {
@@ -66,10 +67,10 @@ public class BNFplu extends BNFplm {
 
             Match<X> firstret = list[start].find(frontPac, ns, subparsers);
             pac.back(frontPac.length());
-            if ( firstret == null ) {
+            if (firstret == null) {
                 return null;
             }
-            
+
             firstret.st = op;
             if (list.length - start == 1) { // 一致しないか最後ならここで戻り
                 return firstret;
